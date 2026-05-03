@@ -1,467 +1,491 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ohm's Law - Tom Danley Calculator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ohm's Law & Power Calculator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
-        :root {
-            --cyan: #00e5ff;
-            --cyan-dim: rgba(0, 229, 255, 0.2);
-            --dark-bg: #030a10;
-            --panel-bg: rgba(3, 10, 16, 0.6);
-            --panel-border: rgba(0, 229, 255, 0.3);
-            --gold: #f0c040;
-            --gold-dim: rgba(240, 192, 64, 0.2);
-        }
+  :root {
+    --cyan: #00e5ff;
+    --blue-deep: #0a1628;
+    --gold: #f0c040;
+    --text: #c8daf0;
+    --bg-panel: rgba(10, 22, 40, 0.6);
+  }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--dark-bg);
-            color: #fff;
-            font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--blue-deep);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-        #three-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-        }
+  canvas#three-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
 
-        .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: var(--cyan);
-            text-decoration: none;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 2px;
-            padding: 10px 20px;
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
+  .top-bar {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(3,10,16,0.9), transparent);
+  }
+  .back-btn {
+    color: var(--cyan);
+    text-decoration: none;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: 1px solid var(--cyan);
+    border-radius: 8px;
+    transition: all 0.3s;
+    background: rgba(0,229,255,0.1);
+  }
+  .back-btn:hover {
+    background: var(--cyan);
+    color: #000;
+    box-shadow: 0 0 20px var(--cyan);
+  }
 
-        .back-btn:hover {
-            background: var(--cyan-dim);
-            box-shadow: 0 0 15px var(--cyan-dim);
-        }
+  h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(240, 192, 64, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 20px 0;
+    z-index: 10;
+  }
 
-        .main-container {
-            position: relative;
-            z-index: 1;
-            padding: 80px 20px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+  .calculator-container {
+    position: relative;
+    z-index: 10;
+    width: 90%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 50px;
+  }
 
-        .title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            color: var(--cyan);
-            text-shadow: 0 0 20px var(--cyan-dim);
-            margin-bottom: 20px;
-            text-align: center;
-        }
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 229, 255, 0.05);
+  }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 40px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+  .panel h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(0,229,255,0.3);
+    padding-bottom: 10px;
+    letter-spacing: 2px;
+  }
 
-        .calculator-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 30px;
-            width: 100%;
-            max-width: 1000px;
-        }
+  .input-group {
+    margin-bottom: 25px;
+  }
+  .input-group label {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--cyan);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
 
-        .calculator-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 16px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px var(--cyan-dim);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    background: rgba(0,0,0,0.5);
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--cyan);
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--cyan);
+  }
 
-        .panel-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            border-bottom: 1px solid var(--cyan-dim);
-            padding-bottom: 10px;
-            color: var(--cyan);
-        }
+  input[type=number] {
+    width: 90px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--cyan);
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: right;
+    outline: none;
+  }
+  input[type=number]:focus {
+    box-shadow: 0 0 15px rgba(0,229,255,0.4);
+  }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+  .unit {
+    font-family: 'Orbitron', monospace;
+    color: var(--gold);
+    font-size: 1.2rem;
+    width: 30px;
+  }
 
-        .input-group label {
-            font-size: 1.1rem;
-            color: #c8daf0;
-            font-weight: 500;
-        }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .result-box {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(240, 192, 64, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+  }
+  .result-box .label {
+    font-size: 0.9rem;
+    color: rgba(200,218,240,0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .result-box .value {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.8rem;
+    color: var(--gold);
+    margin-top: 5px;
+  }
 
-        .input-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+  .formulas {
+    margin-top: 30px;
+    font-family: 'Rajdhani', serif;
+    font-size: 1.1rem;
+    color: rgba(0, 229, 255, 0.7);
+    line-height: 1.8;
+  }
+  .formulas span {
+    display: inline-block;
+    background: rgba(0,229,255,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 4px;
+  }
 
-        .input-group input {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--cyan-dim);
-            border-radius: 6px;
-            padding: 10px 15px;
-            color: #fff;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.2rem;
-            width: 100%;
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
+  .chart-container {
+    position: relative;
+    width: 100%;
+    height: 350px;
+  }
 
-        .input-group input:focus {
-            border-color: var(--cyan);
-            box-shadow: 0 0 10px var(--cyan-dim);
-        }
-
-        .unit {
-            color: var(--cyan);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            width: 30px;
-        }
-
-        .btn-calc {
-            background: rgba(0, 229, 255, 0.1);
-            color: var(--cyan);
-            border: 1px solid var(--cyan);
-            padding: 12px 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .btn-calc:hover {
-            background: var(--cyan);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--cyan-dim);
-        }
-
-        .btn-clear {
-            background: transparent;
-            color: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 15px;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            align-self: flex-start;
-        }
-
-        .btn-clear:hover {
-            color: #fff;
-            border-color: #fff;
-        }
-
-        .graph-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .instructions {
-            font-size: 0.95rem;
-            color: rgba(255,255,255,0.6);
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        @media (max-width: 800px) {
-            .calculator-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  @media (max-width: 900px) {
+    .calculator-container { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
-    <canvas id="three-bg"></canvas>
-    
-    <a href="index.html" class="back-btn">← BACK</a>
 
-    <div class="main-container">
-        <h1 class="title">OHM'S LAW</h1>
-        <div class="subtitle">Voltage • Current • Impedance</div>
+<canvas id="three-bg"></canvas>
+
+<div class="top-bar">
+    <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+</div>
+
+<h1>Ohm's Law & Power</h1>
+
+<div class="calculator-container">
+    <!-- INPUTS AND FORMULAS PANEL -->
+    <div class="panel">
+        <h2>System Parameters</h2>
         
-        <div class="calculator-grid">
-            <div class="calculator-panel">
-                <div class="panel-header">Calculate</div>
-                <p class="instructions">Enter any TWO values to calculate the third.</p>
-                
-                <div class="input-group">
-                    <label>Voltage (V)</label>
-                    <div class="input-row">
-                        <input type="number" id="voltage" placeholder="e.g. 120" step="any">
-                        <span class="unit">V</span>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label>Current (I)</label>
-                    <div class="input-row">
-                        <input type="number" id="current" placeholder="e.g. 5" step="any">
-                        <span class="unit">A</span>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label>Impedance / Resistance (Z/R)</label>
-                    <div class="input-row">
-                        <input type="number" id="impedance" placeholder="e.g. 8" step="any">
-                        <span class="unit">Ω</span>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn-calc" onclick="calculateOhmsLaw()">CALCULATE</button>
-                    <button class="btn-clear" onclick="clearFields()">Clear</button>
-                </div>
+        <div class="input-group">
+            <label>Voltage (V)</label>
+            <div class="control-row">
+                <input type="range" id="vSlider" min="0.01" max="100" step="0.01" value="2.73">
+                <input type="number" id="vNum" min="0.01" max="1000" step="0.01" value="2.73">
+                <span class="unit">V</span>
             </div>
+        </div>
 
-            <div class="calculator-panel">
-                <div class="panel-header">Interactive Graph</div>
-                <p class="instructions">Voltage vs. Current for the calculated Impedance.</p>
-                <div class="graph-container">
-                    <canvas id="ohmsChart"></canvas>
-                </div>
+        <div class="input-group">
+            <label>Impedance (Z / R)</label>
+            <div class="control-row">
+                <input type="range" id="zSlider" min="1" max="600" step="1" value="8">
+                <input type="number" id="zNum" min="1" max="10000" step="1" value="8">
+                <span class="unit">Ω</span>
             </div>
+        </div>
+
+        <div class="input-group">
+            <label>Power (P)</label>
+            <div class="control-row">
+                <input type="range" id="pSlider" min="0.01" max="2000" step="0.1" value="0.93">
+                <input type="number" id="pNum" min="0.001" max="100000" step="0.01" value="0.93">
+                <span class="unit">W</span>
+            </div>
+        </div>
+
+        <div class="formulas">
+            <strong>Key Formulas:</strong><br>
+            <span>P = V² / R</span>
+            <span>I = V / R</span>
+            <span>dBu = 20 log₁₀(V / 0.7746)</span>
+            <span>dBV = 20 log₁₀(V / 1.0)</span>
+            <span>dBm = 10 log₁₀(P / 0.001)</span>
         </div>
     </div>
 
-    <script>
-        // Background Animation
-        const canvas = document.getElementById('three-bg');
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    <!-- RESULTS AND GRAPH PANEL -->
+    <div class="panel">
+        <h2>Calculated Values</h2>
+        <div class="results-grid">
+            <div class="result-box">
+                <div class="label">Voltage Level (dBV)</div>
+                <div class="value"><span id="outDBV">+8.72</span> <span style="font-size:1rem">dBV</span></div>
+            </div>
+            <div class="result-box">
+                <div class="label">Current</div>
+                <div class="value"><span id="outI">0.354</span> <span style="font-size:1rem">A</span></div>
+            </div>
+            <div class="result-box">
+                <div class="label">Voltage Level (dBu)</div>
+                <div class="value" style="color:var(--cyan)"><span id="outDBU">+11.26</span> <span style="font-size:1rem">dBu</span></div>
+            </div>
+            <div class="result-box">
+                <div class="label">Power Level (dBm)</div>
+                <div class="value" style="color:var(--cyan)"><span id="outDBM">+30.00</span> <span style="font-size:1rem">dBm</span></div>
+            </div>
+        </div>
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 30;
+        <h2 style="margin-top: 30px;">Power vs Voltage Curve</h2>
+        <div class="chart-container">
+            <canvas id="powerChart"></canvas>
+        </div>
+    </div>
+</div>
 
-        const geo = new THREE.IcosahedronGeometry(3, 1);
-        const mat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.08 });
-        const meshes = [];
-        
-        for (let i = 0; i < 15; i++) {
-            const m = new THREE.Mesh(geo, mat.clone());
-            m.position.set((Math.random()-0.5)*60, (Math.random()-0.5)*35, (Math.random()-0.5)*20-10);
-            m.scale.setScalar(0.4 + Math.random()*1.8);
-            m.userData = { 
-                rx: (Math.random()-0.5)*0.005, 
-                ry: (Math.random()-0.5)*0.005,
-                floatSpeed: Math.random() * 0.02
-            };
-            scene.add(m);
-            meshes.push(m);
-        }
+<script>
+// THREE.JS BACKGROUND
+const canvasBg = document.getElementById('three-bg');
+const renderer = new THREE.WebGLRenderer({ canvas: canvasBg, alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 20;
 
-        let time = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.01;
-            
-            meshes.forEach((m, i) => {
-                m.rotation.x += m.userData.rx;
-                m.rotation.y += m.userData.ry;
-                m.position.y += Math.sin(time + i) * m.userData.floatSpeed;
-            });
-            
-            renderer.render(scene, camera);
-        }
-        animate();
+const pGeo = new THREE.BufferGeometry();
+const pPos = new Float32Array(300 * 3);
+for (let i = 0; i < 900; i++) pPos[i] = (Math.random()-0.5)*60;
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xf0c040, size: 0.08, transparent: true, opacity: 0.2 }));
+scene.add(particles);
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+function animateBg(t) {
+  requestAnimationFrame(animateBg);
+  particles.rotation.y = t * 0.00005;
+  particles.rotation.x = t * 0.00002;
+  renderer.render(scene, camera);
+}
+animateBg(0);
 
-        // Calculator Logic & Chart
-        let chartInstance = null;
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-        function initChart() {
-            const ctx = document.getElementById('ohmsChart').getContext('2d');
-            
-            // Empty initial chart
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [0, 1, 2, 3, 4, 5],
-                    datasets: [{
-                        label: 'Voltage (V)',
-                        data: [0, 0, 0, 0, 0, 0],
-                        borderColor: '#00e5ff',
-                        backgroundColor: 'rgba(0, 229, 255, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.1,
-                        pointBackgroundColor: '#030a10',
-                        pointBorderColor: '#00e5ff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: { display: true, text: 'Current (A)', color: 'rgba(255,255,255,0.7)', font: {family: 'Rajdhani', size: 14} },
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: 'rgba(255,255,255,0.7)' }
-                        },
-                        y: {
-                            title: { display: true, text: 'Voltage (V)', color: 'rgba(255,255,255,0.7)', font: {family: 'Rajdhani', size: 14} },
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: 'rgba(255,255,255,0.7)' },
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: { color: '#fff', font: {family: 'Rajdhani', size: 14} }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(3, 10, 16, 0.9)',
-                            titleFont: {family: 'Orbitron'},
-                            bodyFont: {family: 'Rajdhani', size: 14},
-                            borderColor: '#00e5ff',
-                            borderWidth: 1
-                        }
+// CALCULATOR LOGIC
+const vSlider = document.getElementById('vSlider');
+const vNum = document.getElementById('vNum');
+const zSlider = document.getElementById('zSlider');
+const zNum = document.getElementById('zNum');
+const pSlider = document.getElementById('pSlider');
+const pNum = document.getElementById('pNum');
+
+// Outputs
+const outDBV = document.getElementById('outDBV');
+const outI = document.getElementById('outI');
+const outDBU = document.getElementById('outDBU');
+const outDBM = document.getElementById('outDBM');
+
+let isCalculating = false;
+
+// Sync inputs
+function syncInput(source, target, type) {
+    if (isCalculating) return;
+    
+    let val = parseFloat(source.value);
+    if (isNaN(val)) return;
+    
+    // Bounds checking
+    if (val < 0.001) val = 0.001;
+    if (source.id.includes('v') && val > 10000) val = 10000;
+    if (source.id.includes('z') && val > 100000) val = 100000;
+    if (source.id.includes('p') && val > 1000000) val = 1000000;
+    
+    target.value = val;
+    calculate(type);
+}
+
+vSlider.addEventListener('input', () => syncInput(vSlider, vNum, 'voltage'));
+vNum.addEventListener('input', () => syncInput(vNum, vSlider, 'voltage'));
+zSlider.addEventListener('input', () => syncInput(zSlider, zNum, 'impedance'));
+zNum.addEventListener('input', () => syncInput(zNum, zSlider, 'impedance'));
+pSlider.addEventListener('input', () => syncInput(pSlider, pNum, 'power'));
+pNum.addEventListener('input', () => syncInput(pNum, pSlider, 'power'));
+
+// Chart Initialization
+const ctx = document.getElementById('powerChart').getContext('2d');
+Chart.defaults.color = '#c8daf0';
+Chart.defaults.font.family = 'Rajdhani';
+
+let powerChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            {
+                label: 'Power (W)',
+                data: [],
+                borderColor: 'rgba(240, 192, 64, 0.8)',
+                backgroundColor: 'rgba(240, 192, 64, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                pointRadius: 0,
+                tension: 0.4
+            },
+            {
+                label: 'Current State',
+                data: [],
+                backgroundColor: '#00e5ff',
+                borderColor: '#00e5ff',
+                borderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                showLine: false
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 200 }, // Smooth short animation for sliding
+        scales: {
+            x: {
+                type: 'linear',
+                title: { display: true, text: 'Voltage (V)', color: '#00e5ff' },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+            },
+            y: {
+                title: { display: true, text: 'Power (W)', color: '#f0c040' },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+            }
+        },
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.raw.y.toFixed(2) + ' W @ ' + context.raw.x.toFixed(2) + ' V';
                     }
                 }
-            });
-        }
-
-        function updateChart(impedance, maxCurrent) {
-            if (!chartInstance) return;
-
-            const labels = [];
-            const data = [];
-            const step = maxCurrent > 0 ? maxCurrent / 10 : 1;
-            const maxI = maxCurrent > 0 ? maxCurrent * 1.5 : 10; // Show up to 150% of calculated current
-
-            for (let i = 0; i <= maxI; i += step) {
-                labels.push(i.toFixed(1));
-                data.push((i * impedance).toFixed(2));
-            }
-
-            chartInstance.data.labels = labels;
-            chartInstance.data.datasets[0].data = data;
-            chartInstance.data.datasets[0].label = `Voltage (V) at Z = ${impedance.toFixed(2)} Ω`;
-            chartInstance.update();
-        }
-
-        function calculateOhmsLaw() {
-            const vInput = document.getElementById('voltage');
-            const iInput = document.getElementById('current');
-            const zInput = document.getElementById('impedance');
-
-            let v = parseFloat(vInput.value);
-            let i = parseFloat(iInput.value);
-            let z = parseFloat(zInput.value);
-
-            let filledCount = (!isNaN(v) ? 1 : 0) + (!isNaN(i) ? 1 : 0) + (!isNaN(z) ? 1 : 0);
-
-            if (filledCount < 2) {
-                alert("Please enter at least TWO values to calculate the third.");
-                return;
-            }
-
-            if (!isNaN(v) && !isNaN(i) && isNaN(z)) {
-                if (i === 0) {
-                    alert("Current cannot be zero when calculating impedance.");
-                    return;
-                }
-                z = v / i;
-                zInput.value = z.toFixed(2);
-                zInput.style.borderColor = '#f0c040';
-                setTimeout(() => zInput.style.borderColor = '', 1500);
-            } 
-            else if (!isNaN(i) && !isNaN(z) && isNaN(v)) {
-                v = i * z;
-                vInput.value = v.toFixed(2);
-                vInput.style.borderColor = '#f0c040';
-                setTimeout(() => vInput.style.borderColor = '', 1500);
-            } 
-            else if (!isNaN(v) && !isNaN(z) && isNaN(i)) {
-                if (z === 0) {
-                    alert("Impedance cannot be zero when calculating current.");
-                    return;
-                }
-                i = v / z;
-                iInput.value = i.toFixed(2);
-                iInput.style.borderColor = '#f0c040';
-                setTimeout(() => iInput.style.borderColor = '', 1500);
-            }
-            else if (filledCount === 3) {
-                // If all three are filled, recalculate based on V and I (overwrite Z) to ensure consistency, 
-                // or just update graph. Let's update graph.
-            }
-
-            updateChart(z, i);
-        }
-
-        function clearFields() {
-            document.getElementById('voltage').value = '';
-            document.getElementById('current').value = '';
-            document.getElementById('impedance').value = '';
-            if (chartInstance) {
-                chartInstance.data.labels = [0, 1, 2, 3, 4, 5];
-                chartInstance.data.datasets[0].data = [0, 0, 0, 0, 0, 0];
-                chartInstance.data.datasets[0].label = 'Voltage (V)';
-                chartInstance.update();
             }
         }
+    }
+});
 
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', () => {
-            initChart();
-        });
-    </script>
+function calculate(sourceType = 'voltage') {
+    isCalculating = true;
+    let V = parseFloat(vNum.value);
+    let Z = parseFloat(zNum.value);
+    let P = parseFloat(pNum.value);
+    
+    if (isNaN(V) || isNaN(Z) || isNaN(P) || Z <= 0) {
+        isCalculating = false;
+        return;
+    }
+
+    if (sourceType === 'power') {
+        // Calculate Voltage from Power and Z
+        V = Math.sqrt(P * Z);
+        vNum.value = V.toFixed(2);
+        vSlider.value = V.toFixed(2);
+    } else {
+        // Calculate Power from Voltage and Z
+        P = (V * V) / Z;
+        pNum.value = P.toFixed(2);
+        pSlider.value = P.toFixed(2);
+    }
+    
+    // Current
+    const I = V / Z;
+    
+    // Decibels
+    const dBu = 20 * Math.log10(V / 0.7746);
+    const dBV = 20 * Math.log10(V / 1.0);
+    const dBm = 10 * Math.log10(P / 0.001);
+
+    // Format output
+    outDBV.innerText = (dBV > 0 ? '+' : '') + dBV.toFixed(2);
+    outI.innerText = I < 0.01 ? I.toExponential(2) : I.toFixed(3);
+    
+    outDBU.innerText = (dBu > 0 ? '+' : '') + dBu.toFixed(2);
+    outDBM.innerText = (dBm > 0 ? '+' : '') + dBm.toFixed(2);
+
+    // Update Chart
+    const maxV = Math.max(10, V * 2);
+    const points = 50;
+    const step = maxV / points;
+    
+    let curveData = [];
+    for(let v = 0; v <= maxV; v += step) {
+        curveData.push({ x: v, y: (v * v) / Z });
+    }
+    
+    powerChart.data.datasets[0].data = curveData;
+    powerChart.data.datasets[1].data = [{ x: V, y: P }];
+    
+    // Dynamically adjust axes
+    powerChart.options.scales.x.max = maxV;
+    powerChart.update();
+    
+    isCalculating = false;
+}
+
+// Initial calculation
+calculate();
+
+</script>
 </body>
 </html>

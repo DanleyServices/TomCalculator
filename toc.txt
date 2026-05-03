@@ -1,0 +1,741 @@
+
+--- PAGE 5 ---
+
+IV 
+11 
+PREFACE 
+dustrial expansion comes   an   increase in noise.   Work   is now under way 
+actively   
+to   control noise by   the   use   of   a variety of acoustic countermeasures. 
+The   preceding brief description   of   the   present status   of   acoustics shows 
+that it plays a very   
+important   part   in   our   modern civilization.   Furthermore, 
+the fundamentals and applications of   the   science   of   acoustics   are   so well 
+formulated and substantiated   
+that   a large   area   of   the   field of acoustics has 
+attained   
+an   engineering status.   In   preparing   new material and in revising 
+existing material in the   
+third   edition, the same principles were followed as in 
+the first and second editions.   
+Particular   efforts have been directed   towards 
+the development   of   analogies between electrical, mechanical   and   acoustical 
+systems because engineers have   found   
+that   the reduction   of   a vibrating 
+system to   
+the   analogous electrical network is a valuable tool   in   the analysis 
+of vibrating systems.   
+Each   chapter   has been brought   up   to   date   and ampli 
+fied.   Two   new chapters on Complete Sound   Reproducing   Systems   and 
+.Yfeans   for the Communication   of   Information   have been added.   As   in   the 
+first and second editions most   of   the   illustrations contain several parts so 
+that a complete theme is depicted   
+in   a single illustration. 
+The   author wishes to express his appreciation to Miss Patricia   Duman 
+for her work in typing   the   manuscript   and   to   his wife   Lorene   E. Olson 
+for assistance in compiling   
+and   correcting   the   manuscript. 
+HARRY   F.   OLSON 
+ March,1957 
+--- PAGE 6 ---
+
+CONTENTS 
+PAGE 
+CHAPTER 
+ 1.   SOUND   WAVES 
+1.1   INTRODUCTION   ..   .   ....................................•.   1 
+1.2   SOUND   WAVES   ...   .   ......................   •.•   . •   .....   •   ....   2 
+1.3   
+ACOUSTICAL   WAVE   EQUATION   ........•...   .   ..............   4 
+ A.   Equation   of   Continuity   ............................   4 
+ B.   Equation   of   Motion   ...............................   5 
+C.   Compressibility   of   a   Gas   ..........................   5 
+D. Condensation   ....................................   6 
+E.   D'Alembertian   Wave   Equation   ...   ....   .............   6 
+ 1.4   PLANE   SOUND   WAVES..................................   10 
+ A.   Particle Velocity in a   Plane   Sound   Wave...........   10 
+ B.   Pressure   in a   Plane   Sound   Wave   .   ..   ...............   10 
+C.   Particle Amplitude in a Plane Sound   Wave   .........   10 
+1.5   SPHERICAL   SOUND   WAVES   ..............................   11 
+A.   Pressure   in a Spherical Sound   Wave   ...............   12 
+B.   Particle   Velocity in a Spherical Sound   Wave.......   13 
+C.   Phase Angle Between the   Pressure   and   Particle   Veloc 
+ity in a Spherical Sound   
+Wave....................   13 
+D. Ratio   of   the Absolute Magnitudes   of   the   Particle   Ve 
+locity and the   
+Pressure   in a Spherical Sound   Wave.   ..   14 
+1.6   STATIONARY   SOUND   WAVES.............................   14 
+1.7   SOUND   ENERGY   DENSITY   . .   ....   ...•.   ....................   15 
+1.8   SOUND   INTENSITY   ........................•.........••.   15 
+1.9   DECIBELS   (BELs)   ......................................   15 
+1.10   DOPPLER   EFFECT   .•..•.•............   .•   ....•..   .   .•.••...   •.   17 
+1.11   REFRACTION   AND   DIFFRACTION   •..............•...   .   ......   17 
+1.12   ACOUSTIEAL   RECIPROCITY   THEOREM   ..   . .   ...   ...........   •   ...   24 
+1.13   
+ACOUSTICAL   PRINCIPLE   OF   SIMILARITY   ...................   26 
+1.14   
+LONGITUDINAL   WAVES   IN   A   ROD.....   ..   ..................   26 
+1.15   TORSIONAL   WAVES   IN   A   ROD........   .   ..   . . . . . . . . . . • . . . .   ..   28 
+1.16   
+CYLINDRICAL   SOUND   WAVES   ............................   28 
+II.   ACOUSTICAL   RADIATING   SYSTEMS 
+2.1   INTRODUCTION   ..........   .   ..............   ..   ..   .   ...........   30 
+ 2.2   SIMPLE   POINT   SOURCE   ...   •   ..   •   .............   •   ............   30 
+A.   
+Point   Source   Radiating   into an Infinite Medium.   Solid 
+Angle   
+of   471'   Steradians   ............................   30 
+ B.   Point   Source Radiating   into a   Semi-Jnfinite   Medium. 
+Solid Angle   
+of   271'   Steradians   ......................   31 
+v 
+--- PAGE 7 ---
+
+vi   
+CONTE:'-JTS 
+CHAPTER   PAGE 
+C.   Point   Source Radiating into a Solid Angle   of   71"   Stera 
+dians   ............................................   31 
+D.   Point   Source Radiating into a Solid Angle   of   ?T12   Ste 
+radians   
+.........................................   .   
+31 
+ E.   Application   of   the   Simple   Source   .................   .   
+31 
+2.3   DOUBLE   SOURCE   (DOUBLET   SOURCE)   ...•••••....•..•....•   32 
+2.4   SERIES   OF   POINT   SOURCES   ••.•..•.••••.•.•••••..•.••••••   35 
+2.5   
+STRAIGHT   LINE   SOURCE   ..•.••.••.••••....••..•.••.•.••.   
+36 
+2.6   
+BEAM   TILTING   BY   PHASE   SHIFTING   ...•••.•.•..•.•••...•   
+36 
+2.7   
+TAPERED   STRAIGHT   LINE   SOURCE   ••••••••••••••••••••••••   
+37 
+2.8   NONUNIFORM   STRAIGHT   LINE   SOURCE   ••.•••••••..••••••.   38 
+2.9   END   FIRED   LINE   SOURCE   •....••••....•.••....•••••.....   
+38 
+2.10   
+SUPER   DIRECTIVITY   SOURCE   .••••••....•.••••..••••••....   39 
+2.11   CURVED   LINE   SOURCE   (ARC   OF   A   CIRCLE)   ..••.••...••••.•   40 
+2.12   CIRCULAR   RING   SOURCE   ..•••••...••.•....••••••..••••••   
+43 
+2.13   
+PLANE   CIRCULAR-PISTON   SOURCE   .•......••....••.•.....•   
+43 
+2.14   
+NONUNIFORM   PLANE   CIRCULAR   SURFACE   SOURCE   •.......•   
+44 
+2.15   
+PLANE   CIRCULAR-PISTON   SOURCE   SET   IN   THE   END   OF   AN 
+INFINITE   PIPE   •.•••••.•.••••••.••••••.••.••••...••••••.   
+45 
+2.16   
+PLANE   CIRCULAR-PISTON   SOURCE   IN   FREE   SPACE   •.•••.•.•   
+45 
+2.17   
+PLANE   SQUARE   SURFACE   SOURCE   ••....••••....•••••....   ,   
+45 
+2.18   PLANE   RECTANGULAR   SURFACE   SOURCE   .....••••...•.•....   
+46 
+2.19   
+HORN   SOURCE   •.•.••..•.•••••••..••••.••..•••.•..•.••..   
+47 
+A. Exponential   
+Horns   ..............................   .   
+47 
+B.   Conical   Horns   ..................................   .   
+48 
+C.   Parabolic   Horns   .................................   .   
+48 
+2.20   
+CURVED   SURFACE   SOURCE   ..•.•.•••....••.••••.••••.••.•.   
+50 
+2.21   CONE   SURFACE   SOURCE   .........•.....•••........•....•.   53 
+III.   MECHANICAL   VIBRATING   SYSTEMS 
+3.1   INTRODUCTION   .•....••.....•.••••....••........•.•...•.   56 
+3.2   STRINGS   ..•••......••.•....•••.•...•••.•.•.••••.....••   56 
+3.3   TRANSVERSE   VIBRATION   OF   BARS   ..•••...•.••••...••••.•.   57 
+A.   Bar   Clamped at One   End   ..........................   58 
+ B.   Bar   Free   at   Both   Ends   ...........................   59 
+C.   Bar   Clamped at Both Ends   ........................   60 
+D.   Bar   Supported   at   Both   Ends   .......................   60 
+ E.   Bar   Clamped   at   One   End   and Supported   at   the   Other   60 
+F.   
+Bar   Supported   at   One   End   and   Free   at   the   Other.   .   ..   60 
+G.   Tapered   Cantilever   Bars   ..........................   60 
+ 3.4   STRETCHED   MEMBRANES   .•.••.•...••.•....•.••....••.•..   61 
+A.   Circular   Membrane   ..   ~   . . . . . . . . . . . . . . . . . . . . . . . . . .   ..   62 
+ B.   Square   Membrane   ................................   63 
+C.   Rectangular   Membrane   ............................   63 
+3.5   CIRCULAR   PLATES   ••••..••••....•.••.•....•.••....••....   63 
+A. Circular   Clamped   
+Plate   ...........................   64 
+ B.   Circular   Free   Plate   ...............................   66 
+C.   Circular Plate Supported at the Center   .............   66 
+D. Circular   
+Plate   Supported at the Outside   ...   . . . . . . . .   ..   66 
+--- PAGE 8 ---
+
+vii 
+CONTENTS 
+CHAPTER   
+PAGE 
+3.6   
+LONGITUDINAL   VIBRATION   OF   BARS   66 
+3.7   
+TORSIONAL   VIBRATION   OF   BARS   ••••....••..•.........••.   68 
+3.8   
+OPEN   AND   CLOSED   PIPES   •••...•.........••...•..•..•.•.•   
+69 
+IV.   DYNAMICAL   ANALOGIES 
+4.1   INTRODUCTION   .•.••........•.••..•••.•.•............••.   71 
+4.2   DEFINITIONS   ..•..•...•....••••••••••....••....•.•..•..   73 
+4.3   ELEMENTS   .............•••••.•.•.••........•....•.....   77 
+4.4   RESISTANCE   •.....•.•..........•...•.•........••••••••.   78 
+ A.   Electrical   Resistance   ..............................   78 
+ B.   Mechanical   Rectilineal   Resistance   ..................   78 
+ C.   Mechanical   Rotational   Resistance   ..................   78 
+D. Acoustical   Resistance   .............................   79 
+4.5   INDUCTANCE,   MASS,   MOMENT   OF   INERTIA,   INERTANCE   .•...   79 
+A.   Inductance   .......................................   79 
+B.   Mass   ............................................   79 
+ C.   Moment   of   Inertia   ................................   80 
+D.   
+Inertance   ........................................   80 
+4.6   ELECTRICAL   CAPACITANCE,   RECTILINEAL   COMPLIANCE,   ROTA 
+TIONAL   COMPLIANCE,   ACOUSTICAL   CAPACITANCE   •••.••..••   81 
+A.   Electrical   Capacitance   ............................   81 
+B.   Rectilineal   Compliance   ............................   81 
+ C.   Rotational   Compliance   ............................   82 
+D. Acoustical   Capacitance   
+............................   82 
+4.7   REPRESENTATION   OF   ELECTRICAL,   MECHANICAL   RECTILINEAL, 
+MECHANICAL   ROTATIONAL   AND   ACOUSTICAL   ELEMENTS.....   83 
+V.   ACOUSTICAL   ELEMENTS 
+5.1   INTRODUCTION   •..••.••.•...•.•••....••.....••••.•..•...   88 
+5.2   ACOUSTICAL   RESISTANCE   ....•.•.••••..•.•...••••.••••••   88 
+5.3   ACOUSTICAL   IMPEDANCE   OF   A   TUBE   OF   SMALL   DIAMETER.   .•   88 
+ 504   ACOUSTICAL   IMPEDANCE   OF   A   NARROW   SLIT   ...•••.••••...   89 
+5.5   ACOUSTICAL   RESISTANCE   OF   SILK   CLOTH   •...•.••.•••.••••   90 
+5.6   INERTANCE   ...........•••.••••••.••..••.•••••.•••••....   91 
+5.7   ACOUSTICAL   CAPACITANCE   ..•........•......•....•.•....   91 
+5.8   MECHANICAL   AND   ACOUSTICAL   IMPEDANCE   LOAD   UPON   A 
+VIBRATING   PISTON   ..•..••...........••..•........•...•.   92 
+ 5.9   MECHANICAL   AND   ACOUSTICAL   IMPEDANCE   LOAD   UPON   A 
+PULSATING   SPHERE   •...•••••..•.•••..............••...•   93 
+5.10   MECHANICAL   AND   ACOUSTICAL   IMPEDANCE   LOAD   UPON   AN 
+OSCILLATING   SPHERE   .••••.•....•..••••..••.•...•••••••   94 
+5.11   MECHANICAL   AND   ACOUSTICAL   IMPEDANCE   LOAD   UPON   A 
+PULSATING   CYLINDER   .....•....••..•.••.•••••.•..••.•.•   95 
+5.12   MECHANICAL   AND   ACOUSTICAL   IMPEDANCE   lOAD   UPON   A 
+VIBRATING   STRIP   ••••••••••••..•.•......•....••••••••..   96 
+5.13   MECHANICAL   AND   ACOUSTICAL   IMPEDANCE   LOAD   UPON   A 
+VIBRATING   PISTON   IN   THE   END   OF   AN   INFINITE   TUBE   ••••   97 
+5.14   MECHANICAL   AND   ACOUSTICAL   IMPEDANCE   LOAD   UPON   A 
+VIBRATING   PISTON   IN   FREE   SPACE   ••..••..••.......••••.   99 
+--- PAGE 9 ---
+
+., 
+VJ11   
+CONTENTS 
+CHAPTER   
+PAGE 
+5.15   ACOUSTICAL   IMPEDANCE   OF   A   CIRCULAR   ORIFICE   IN   A   WALL 
+OF   INFINITESIMAL   THICKNESS   ••••..........••••.••.....   99 
+5.16   
+ACOUSTICAL   IMPEDANCE   OF   AN   OPEN   PIPE   WITH   LARGE 
+FLANGES   ••.••.•..••..••••.•...••.........••••••••.....   99 
+5.17   
+HORNS   •••••••.••.••••••••••••••••...•.••••••••••••••••   100 
+5.18   
+FUNDAMENTAL   HORN   EQUATION   ..•••••••.•........•••.•   100 
+5.19   
+INFINITE   CYLINDRICAL   HORN   (INFINITE   PIPE)   .......•..   101 
+5.20   INFINITE   PARABOLIC   HORN   .......•••••••••.•......•••••   102 
+5.21   INFINITE   CONICAL   HORN   •••..•••.••••••.•••.•••••••••••   102 
+5.22   
+INFINITE   EXPONENTIAL   HORN   •.•••..•....•••••••••••...   103 
+5.23   
+INFINITE   HYPERBOLIC   HORN   ••••••...••....••.•••••••...   104 
+5.24   
+THROAT   ACOUSTICAL   IMPEDANCE   CHARACTERISTIC   OF   INFI 
+NITE   PARABOLIC,   CONICAL,   EXPONENTIAL,   HYPERBOLIC   AND 
+CYLINDRICAL   HORNS   •••.•.........••••••••........••..•   104 
+5.25   
+FINITE   CYLINDRICAL   HORN   .......•..•....•........•.•.•   105 
+5.26   
+FINITE   CONICAL   HORN   ••..•......••.••.•.•.....•..•••..   106 
+5.27   
+FINITE   EXPONENTIAL   HORN   .•.••.••.•••••••.•••••••••••   108 
+5.28   
+THROAT   ACOUSTICAL   IMPEDANCE   CHARACTERISTICS   OF   FI 
+NITE   EXPONENTIAL   HORNS   •••••.........•.•••••••••....   110 
+5.29   
+EXPONENTIAL   CONNECTORS   .••••.••........•.•••••••••.•   112 
+5.30   
+A   HORN   CONSISTING   OF   MANIFOLD   EXPONENTIAL   SECTIONS   114 
+5.31   CLOSED   PIPE   WITH   A   FLANGE   .....••.•.•••..........••.•   115 
+5.32   
+SOUND   TRANSMISSION   IN   TUBES   •..••...•.•........•..••   116 
+5.33   
+TRANSMISSION   FROM   ONE   PIPE   TO   ANOTHER   PIPE   OF   DIF 
+FERENT   CROSS-SECTIONAL   AREA   ......•..•..........•••.•.   117 
+5.34   
+TRANSMISSION   THROUGH   THREE   PIPES   .....•••••••••....   119 
+5.35   
+TRANSMISSION   FROM   ONE   MEDIUM   TO   ANOTHER   MEDIUM..   120 
+5;36   
+TRANSMISSION   THROUGH   THREE   MEDIA   ....•••••.•••..•.   121 
+5.37   TUBES   LINED   WITH   ABSORBING   MATERIAL   •••••••••••...•   121 
+5.38   RESPONSE   OF   A   VIBRATING   SYSTEM   OF   ONE   DEGREE   OF   FREE 
+DOM   ..•............•.•..........•....•..•...........••   122 
+VI.   DIRECT   RADIATOR   LOUDSPEAKERS 
+6.1   INTRODUCTION   ••........•••••••.•.....•...•••.••..••...   124 
+6.2   
+SINGLE-COIL,   SINGLE-CONE   LOUDSPEAKER   ....•.••.••.....   125 
+6.3   
+MULTIPLE,   SINGLE-CONE,   SINGLE-COIL   LOUDSPEAKER   •••...   137 
+6.4   
+SINGLE-COIL,   DOUBLE-CONE   LOUDSPEAKER   •..•••.•••••....   141 
+6.5   DOUBLE-COIL.   SINGLE-CONE   LOUDSPEAKER   •.........••.••   143 
+6.6   
+DOUBLE-COIL.   DOUBLE-CONE   LOUDSPEAKER   ••.....•..••••.   143 
+6.7   
+MECHANICAL   NETWORKS   FOR   CONTROLLING   THE   HIGH   FRE 
+QUENCY   RESPONSE   OF   A   LOUDSPEAKER   ••••••.•...•••.••••   147 
+ A.   Conventional Single-Coil Loudspeaker   ..   . . . . . . . . . . .   ..   147 
+ B.   Loudspeaker   with   a   Compliance   Shunting   the   Cone 
+Mechanical   Impedance   
+............................   148 
+ C.   Loudspeaker   with a   Compliance   Shunting;   a   Compli 
+ance   and   Mass   in   Parallel.   Connected   in   Series   with 
+the   Cone Mechanical   Impedance   
+...................   148 
+D.   
+Loudspeaker   with a   "T"   Type   Filter   Connecting   the 
+Voice Coil Mass   and   the Cone Mechanical   Impedance   148 
+--- PAGE 10 ---
+
+ix 
+CONTENTS 
+CHAPTER   PAGE 
+6.8   LOUDSPEAKER   BAFFLES   • •   ••   •   •...•...   •   .••   •••   ...   • .   •••   • • •   ••   149 
+A.   
+Irregular   Baffle   ........................   ...   ........   149 
+B.   
+Large   Baffle, Different Resonant Frequencies   ..   .   ...   . .   149 
+C.   Low   Resonant Frequency, Different Baffle Sizes   ...   . .   150 
+D. Different   Resonant   Frequencies   and   Different   Baffle 
+Sizes   
+...........................   .... ....   .   ...   .   ...   .   152 
+6.9   
+CABINET   LOUDSPEAKERS   ..•..•••.•••••.••   • • • •   ••   ••.•.•   .•   •   152 
+A. Low Resonant Frequency, Different Cabinet Sizes   
+....   153 
+ B.   Different Resonant Frequencies and   Different Cabinet 
+Sizes   
+.......................   .   ....   . . .   .....   .   .......   154 
+C.   Effect   of   the   Depth   of   the Cabinet   .. ..   ......   .   ..   .   ...   155 
+6.10   BACK   ENCLOSED   CABINET   LOUDSPEAKER   . • • • •   •••••   . •   ••..••   155 
+6.11   COMPOUND   DIRECT   RADIATOR   LOUDSPEAKER   •..•••   •   ..•.•.•   157 
+6.12   ACOUSTICAL   PHASE   INVERTER   LOUDSPEAKER   .   ••   .•••..•.••.   159 
+6.13   
+DRONE   CONE   PHASE   INVERTER   .•..•••••••.•   •••   •...••••••   161 
+6.14   ACOUSTICAL   LABYRINTH   LOUDSPEAKER   .••..•.••••.•.•....   162 
+6.15   
+COMBINATION   HORN   AND   DIRECT   RADIATOR   LOUDSPEAKER   ..   163 
+6.16   LOUDSPEAKER   MECHANISMS   FOR   SMALL   SPACE   REQUIRE 
+MENTS   •...•   .   ••.   •   •..   .   ....   ••   •.•..•.•   ••   .•   •   •••••••••••••.•   167 
+6.17   
+FEEDBACK   ApPLIED   TO   A   LOUDSPEAKER   •   ...   •   •...   •   ••••••.•   168 
+6.18   
+CABINET   CONFIGURATION   ...   .   ..   • . • • .   ••   .•.•.   • • •   ...••..•.•   169 
+6.19   
+LOUDSPEAKER   MOUNTING   ARRANGEMENT   IN   THE   CABINET 
+WALL   . •   .........••   • . • . • . .   ..   •...•   • • • .   •...•   ••   •••..•••••   169 
+6.20   
+LOUDSPEAKER   LOCATIONS   IN   TEL   E   VISION   RECEIVERS   • •   .••..   171 
+6.21   LOUDSPEAKER   LOCATIONS   IN   PHONOGRAPHS   . •   ......•....   •   173 
+6.22   LOUDSPEAKER   LOCATIONS   IN   RADIO   RECEIVERS   •   ..   ••   • •   •.   .   ••   176 
+6.23   
+LOUDSPEAKER   LOCATIONS   IN   COMBINATION   INSTRUMENTS   ..   177 
+6.24   
+CONCENTRATED   SOURCE   LOUDSPEAKER   .•..   • • •   .•.   •   ..•.•..   • .   178 
+6.25   
+TRANSIENT   RESPONSE   .........   •.   ...   . . . .   ..   . .   ..   . . • . .   .•.•.   178 
+6.26   
+DISTORTION   .............•.........   . .   .•.•   ...•.........•   .   183 
+A. Distortion Due to Nonlinear Cone System   ..........   183 
+ B.   Nonlinear Suspension System   ..   ...   .   ................   184 
+C.   Distortion   Characteristics   of   a   Nonlinear   Suspension 
+System   
+.........   .   ...   ...   ..   ..   . .   ...................   186 
+D. Response Frequency Characteristics   
+of   a   Direct   Radi 
+ator   Loudspeaker with a Nonlinear Suspension System 188 
+E. Distortion   
+Due   to   Inhomogeneity   of   the   Air   Gap   Flux   188 
+F.   Frequency   Modulation Distortion   ...................   190 
+G.   
+Air   Nonlinear Distortion   . .   .......   .   ................   190 
+6.27   
+DIAPHRAGMS,   SUSPENSIONS,   AND   VOICE   COILS   ••.••.••...•   192 
+6.28   
+HIGH   FREQUENCY   SOUND   DISTRIBUTOR   ••   •   ••   ..•.•....••..   197 
+ r   
+6.29   
+FIELD   STRUCTURES   .   .. ..   .••   .••.•.   •   •••••   •   .•..   •   .•.••...••   198 
+6.30   
+ELECTROSTATIC   LOUDSPEAKER   . .   •.   .•..•.   •••.   ..   •.   ..   •   •.....   205 
+6.31   SOUND   POWER   EMITTED   BY   A   LOUDSPEAKER   •   ...•..   . . .   •••.   210 
+6.32   
+LOUDSPEAKER   DIRECTIVITY   INDEX   ..•.•   ••   .••..   •   .•.••.••   ••   211 
+VII.   HORN   LOUDSPEAKERS 
+7.1   INTRODUCTION   ••   •.   • .   ••• •••   • • • • • . • • . . . . . • . . • • • • • . . . • • • •   212 
+7.2   
+EFFICIENCY   . •   ...   • . •   ...   ••   ••••.••.   .   •.   .   ..   ••   •.••   •••••   •.•••   212 
+--- PAGE 11 ---
+
+x   
+CONTEKTS 
+CHAPTER   PAGE 
+A.   The   Relation between the   Voice Coil Mass, the Load 
+Mechanical Resistance and the Initial Efficiency   
+......   213 
+B.   The   Effect   of   the Mass   of   the   Vibrating   System upon 
+the   Efficiency   ....................................   216 
+ C.   The   Effect   of   the   Air   Chamber upon   the   Efficiency . .   ..   218 
+D.   
+The   Effect   of   the Generator Electrical Impedance   and 
+the Mechanical Impedance   at   the   Throat   of   the   Horn 
+upon the   Efficiency   ...............................   220 
+E.   
+The   Effect   of   the Voice Coil   Temperature   upon the   Ef 
+ficiency   ..........................................   221 
+F.   The   Effect   of   the Sound Radiation from the Unloaded 
+Side   
+of   the   Diaphragm   upon the Efficiency   ..........   221 
+7.3   DISTORTION   •.•••••••••••••••.••••••••••••••••.••••••••   223 
+A.   Distortion Due to   Air   Overload in the   Horn   .........   223 
+B.   Distortion   Due   to   Variation   in   Volume   of   the   Air 
+Chamber   ..   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   ..   225 
+ C.   Distortion Due to the   Diaphragm   Suspension System   ..   226 
+D.   Distortion Due to a   Nonuniform   Magnetic Field in the 
+Air   Gap   .........................................   227 
+E.   Subharmonic   Distortion   
+..........................   228 
+F.   
+Power   Handling   Capacity and the Voice Coil   Tempera 
+ture   .............................................   228 
+G.   Power   Handling   Capacity   and   the   Amplitude   of   the 
+Diaphragm   ..................   . . . . . . . . . . . . . . . . . .   ..   229 
+7.4   HORN   LOUDSPEAKER   SYSTEMS   •••.•.•••.••••••••••••••.•   230 
+A.   Single   Horn,   Single Channel   System   ..............   230 
+B.   Multiple   Horn,   Multiple Channel System   ............   233 
+ C.   Compound   Horn   Loudspeaker   ......................   237 
+D.   Multiple   Horn,   Single Channel System   ..............   238 
+E.   Horn   Loudspeaker for Personal Radio Receivers   ....   239 
+F.   Folded   
+Horns   ....................................   240 
+G.   Horn   Loudspeaker   Mechanisms   ....................   242 
+H.   Diaphragms   and Voice Coils   ......................   242 
+1.   Field   Structures   ..................................   243 
+J.   Horn   Walls.   Vibration   and   Absorption   ............   243 
+7.5   THROTTLED   AIR   FLOW   LOUDSPEAKER   •••...••••••.••...••.   243 
+7.6   
+IONOPHONE   LOUDSPEAKER   244 
+VIII.   MICROPHONES 
+ 8.1   INTRODUCTION   
+246 
+ 8.2   
+PRESSURE   MICROPHONES   ••••.••••.•......•.••.•••••..•..   
+246 
+A. Carbon Microphones   
+.............................   . 246 
+1.   Single Button Carbon Microphone   ............   .   
+246 
+2.   Double   Button   Carbon Microphone   ...........   .   251 
+B.   Condenser   Microphone   (Electrostatic Microphone)   ..   
+253 
+ C.   Piezoelectric   (Crystal)   Microphones   ...............   . 257 
+1.   Direct   Actuated Crystal Microphone   ..........   . 259 
+2.   Diaphragm   Actuated Crystal Microphone   ......   . 260 
+--- PAGE 12 ---
+
+CONTENTS   
+Xl 
+CHAPTER   PAGE 
+3.   Diaphragm   Actuated   Barium   Titanate   Micro 
+phone   
+......   .   ................................   260 
+D. Moving   Conductor   Microphones   
+...................   260 
+ l.   Moving   Coil Microphone   (Dynamic   Microphone)   260 
+2.   Inductor   Microphone   (Straight   Line   Conductor)   263 
+3.   Ribbon   Microphone   ..........................   264 
+4.   Probe   Microphone   ..................   .   ......   . . 267 
+5.   Comparison   of   Electrodynamic   Microphones.   . .   ..   268 
+E.   Magnetic   Microphone   .............................   270 
+F.   Electronic   Microphone   
+............................   273 
+8.3   
+VELOCITY   MICROPHONES,   FIRST   ORDER   GRADIENT   MICRO 
+PHONES   ..•   •   •.•..•...•.••••....•••...............   .   ....   275 
+A.   
+Pressure   Gradient   Microphone   .....................   275 
+B.   Velocity Microphone   ..........................   .   ...   279 
+ 8.4   UNIDIRECTIONAL   MICROPHONES   .........   ..   ....•........   .   291 
+A. Combination Unidirectional Microphones   ............   291 
+ l.   The   Response   of   the Unidirectional Microphone as 
+a   
+Function   of   the Distance and the Frequency . .   ..   292 
+2. Efficiency   
+of   Energy   Response to Random Sounds 
+of   the Unidirectional Microphone   as   a   Function   of 
+the Relative Sensitivities   of   the Bidirectional and 
+Nondirectional   Microphones   
+..................   293 
+3.   Efficiency   of   Energy   Response to Random Sounds 
+of   a Unidirectional Microphone as a   Function   of 
+the   Phase   Angle Between the   Two   Units   ........   295 
+4.   Distortion   of   the Directional   Pattern   in the Uni 
+directional   Microphone   
+.......................   297 
+B.   Single   Element   Unidirectional Microphones   .........   297 
+ l.   Phase   Shifting   Unidirectional   Microphone   ....   . 297 
+2.   Polydirectional   Microphone   ...................   298 
+3.   Uniaxial   Microphone   ..   .   ..................   .   ...   303 
+4.   Uniphase Dynamic Microphone   ................   305 
+5.   Variable-Distance   Unidirectional   Microphon~   ..   307 
+6.   Directional Condenser Microphone   .............   307 
+7. Dipole Microphone   
+........   .   ................   ..   308 
+8.   Differential Microphone.   Lip Microphone   ......   310 
+8.5   HIGHER   ORDER   GRADIENT   MICROPHONES   ••......••....•...   311 
+A.   Second   Order   Gradient   Microphones   ...............   311 
+B.   Gradient Microphones   of   Any   Order   .   ...   ...........   311 
+ C.   Noise Discrimination   of   Gradient   Microphones   .......   312 
+D.   
+Higher   Order   Unidirectional Grau:   ~.lt   Microphones   ..   315 
+E.   Second   Order   Gradient Uniaxial Microphone   ........   316 
+8.6   
+W   AVE   TYPE   MICROPHONES   •.........•........•.....   ..   ...   319 
+A.   Parabolic   Reflector   
+...............................   320 
+B.   Lens   Microphone   ....   ..   . .   .........................   321 
+ C.   Large   Surface   Microphone   ........................   321 
+D.   Line   Microphones   ..................   .   .............   322 
+ l.   Line   Microphone: Useful Directivity on the Line 
+Axis.   Simple Line   
+..   .   ........................   323 
+--- PAGE 13 ---
+
+xu   
+CO   NT   E:-'.JT   S 
+ CHAPTER   PAGE 
+2.   Line Microphone: Useful Directivity on   the   Line 
+Axis.   Line with Progressive Delay   
+............   324 
+3. Line Microphone: Useful Directivity on   
+the   Line 
+Axis.   
+Two   Lines and a   Pressure   Gradient   Ele 
+ment   
+.......................................   325 
+4.   Ultradirectional   Microphone   ..................   327 
+8.7   
+THROAT   MICROPHONE   .•..••••.••.••••.•..•••••....•••••   329 
+8.8   
+LAPEL,   LAVALIER   AND   BOOM   MICROPHONES   ••..•••.•.•.•••   329 
+8.9   HOT-WIRE   MICROPHONE   •....••.•....•.••.......•••...•   330 
+8.10   RADIO   MICROPHONE   .•••.•.....•••....•.•.•...•.•••.....   331 
+8.11   DIRECTIONAL   EFFICIENCY   OF   A   SOUND   COLLECTING   SYSTEM   331 
+8.12   WIND   EXCITATION   AND   SCREENING   OF   MICROPHONES   ••••••   332 
+8.13   
+NONLINEAR   DISTORTION   IN   MICROPHONES   •........••.....   333 
+8.14   
+TRANSIENT   RESPONSE   OF   MICROPHONES   ...••.•.•....••••.   334 
+8.15   
+NOISE   IN   A   SOUND   PICKUP   SYSTEM   ••••....••••.••.••••••   335 
+A. Ambient Noise in the Studio   
+......................   335 
+ B.   Noise Due to   Thermal   Agitation   of   the   Air   Molecules 335 
+C. Noise Due to   
+Thermal   Agitation   of   the Atoms in the 
+Vibrating   System   
+................................   336 
+D.   Noise Due to   Thermal   Agitation   of   the Electrons in the 
+Conductor   
+.......................................   336 
+E.   Noise Due to Barkhausen Effect in the   
+Transformer   ..   337 
+F.   Noise in the   Vacuum   Tube   ........................   337 
+G.   Noise Due to   Thermal   Agitation   of   the Electrons in the 
+Plate   Resistor   ....................................   337 
+H.   Example   of   Noise in a Sound Pickup System   ......   ,.   337 
+8.16   
+SHAPES   OF   MICROPHONES   •.•.•.•.•••..•••...•.•••..••..•   339 
+IX.   MISCELLANEOUS   TRANSDUCERS 
+9.1   INTRODUCTION   •.•••••.•.•••••....••••.•...•.••....•..•.   340 
+9.2   
+TELEPHONE   RECEIVERS   .......••......••.•....••......••   340 
+A. Magnetic Telephone Receiver   
+......................   340 
+ B.   Crystal Telephone Receiver   ........................   346 
+C.   Dynamic Telephone Receiver   ......................   347 
+D.   Inductor Telephone Receiver   ......................   348 
+9.3   
+PHONOGRAPHS   .•   • • • • • • • • . • • • • . • • • • • • • • . • • • • • • • . . . • • •   ••   350 
+A. Recording   Systems   
+...............................   351 
+1.   Recorders   ...................................   351 
+2.   Lateral   Cutter   ...............................   351 
+3.   Vertical Cutter   ...............................   355 
+4. Recording Characteristics   
+.....................   355 
+5.   Heated   Stylus   ...............................   357 
+ B.   Reproducing   Systems   .............................   357 
+1.   Record   Player   ...............................   357 
+a.   Electrical Record   
+Player   .......   . . . . . . . . .   ..   357 
+b.   Mechanical   Phonograph   .................   358 
+2.   Phonograph   Pickups   .........................   359 
+a. Crystal   Pickup   
+........................•.   359 
+--- PAGE 14 ---
+
+CONTENTS   
+Xlll 
+CHAPTER   PAGE 
+b.   Ceramic   Turnover   Pickup   ................   362 
+c.   Magnetic   
+Pickup   ........................   364 
+d.   Dynamic   Pickup   .........................   367 
+e.   Frequency   Modulation   Pickup   ............   369 
+f.   Electronic   Pickup   .......................   371 
+g.   Variable   Resistance Pickup   ...............   371 
+h.   Feedback   Pickup   ........................   372 
+1.   Compliance   of   Pickups   ...................   373 
+j.   Tone   Arm   Resonance   ....................   373 
+3.   Distortion   in   Record Reproduction   .............   373 
+4.   Record   Noise   ................................   377 
+ C.   Selection   of   Rotational Speed   and   Record   Diameter   ...   378 
+D.   Commercial Disk   
+Phonograph   Records   ..............   379 
+9.4   
+VIBRATION   PICKUP   ••..••••••••..•.•••.•••.....••••....   380 
+9.5   
+SOUND-POWERED   PHONES   .•.....•........•.......•......   382 
+9.6   ELECTRICAL   MEGAPHONE   ••••.••......•.•.•.••••.......•   382 
+9.7   
+MAGNETIC   TAPE   SOUND   RECORDING   AND   REPRODUCING   SyS- 
+TEM   ••....•..•...•.•••...•.•..••.•..•....•••••••...•.•   384 
+9.8   MAGNETIC   TAPE   CONVERSION   SYSTEMS   .•..•...•...•.•.••   390 
+ A.   Frequency   Conversion System   .....................   390 
+B.   Frequency Compression System   ....................   391 
+ C.   Time   Compression   System   ........................   392 
+9.9   
+SOUND   MOTION   PICTURE   RECORDING   AND   REPRODUCING   SyS- 
+TEM   •.••...•.••..•.•••••...•••....•••.•.••••••...•.•••   393 
+A.   
+Film   and   Sound   Track   ............................   394 
+B.   Recording   System   ................................   395 
+1.   Variable   Area   ...............................   395 
+2.   Variable   Density   .............................   397 
+3.   
+Recording   Film   Transport   ....................   397 
+ C.   Reproducing   System   ..............................   399 
+1.   Optical   Electronic   Reproducer   ................   399 
+2.   Reproducing   Film   Transport   ..................   400 
+9.10   
+MOTION   PICTURE   MAGNETIC   TAPE   SOUND   RECORDING   AND 
+REPRODUCING   SYSTEM   •.•.•..•.•..•..••.•....••••••.••.   400 
+A.   Magnetic   Tape   ..................................   401 
+B.   Recording   Tape   Transport   ........................   402 
+ C.   Reproducing   Tape   Transport   ......................   403 
+9.11   VOLUME   LIMITERS,   COMPRESSORS   AND   EXPANDERS   •..•....   403 
+9.12   
+SYNTHETIC   REVERBERATION   •••..•••••••••••••••••••.•..•   404 
+9.13   
+HEARING   AIDS   .•.••..•.•••.•.•••..•••••.••....••.•••••   406 
+9.14   
+SIRENS   ...•••.•.•.•..•.•........••....•.•••...•....•••   409 
+9.15   
+SEISMIC   DETECTORS   •...•.•..•.•.••••.••••••..•..•.••...   409 
+9.16   
+STETHOSCOPES   ••.••..••.....••...••.•••.••••.••.•..•..•   410 
+9.17   
+EAR   DEFENDERS   .•.••.••••••..•.•..•..•••••.••••••.••••   414 
+9.18   
+ELECTRONIC   SOUND   AND   VIBRATION   REDUCERS   AND   AB 
+SORBERS   ..•.•..•.•...••..•..••.•.••.••.••...•••••••••..   415 
+A.   Free-Field   Zone-Type   Sound   Reducer   ...............   415 
+B.   Free-Field   Electronic   Sound   Absorber   ...............   415 
+ , 
+, 0 
+--- PAGE 15 ---
+
+XIV   
+CONTENTS 
+CHAPTER   
+PAGE 
+ C.   Headphone-Type   Noise Reducer   ....................   417 
+D. Electronic   Vibration   Reducer   ......................   418 
+9.19   NOISE   REDUCTION   CIRCUITS   .•.••••.•....•..•....••••.••   420 
+X.   
+MEASUREMENTS 
+10.1   INTRODUCTION   .•.•.....••..•......•..•...........••••••   423 
+10.2   
+CALIBRATION   OF   MICROPHONES   ..•..••.........•••...•.••   423 
+ A.   Response   Frequency   Characteristic   .................   423 
+1.   Pressure   Response   ...........................   423 
+a.   Pistonphone   
+.............................   424 
+b.   Thermophone   ...........................   425 
+c.   Electrostatic   Actuator   ....................   426 
+d.   Reciprocity   .............................   427 
+2.   Field   Response   ..............................   428 
+a.   Rayleigh Disk   
+...........................   429 
+b.   Reciprocity   .............................   430 
+3.   Secondary   Calibration   ........................   433 
+4.   Artificial Voice   ..............................   433 
+5.   Artificial   Throat   .............................   433 
+ B.   Directional   
+Characteristic   .........................   434 
+ C.   Nonlinear   Distortion   Characteristic   .................   435 
+D.   Phase   Distortion   Characteristic   ....................   436 
+E.   Electrical   Impedance   Frequency   Characteristic   ......   437 
+F.   Transient   Response   Characteristic   ..................   437 
+G.   Measurement   of   Wind   Response . . . . . . . . . . . . . . . . . .   ..   437 
+10.3   TESTING   OF   LOUDSPEAKERS   •..••••••••..•••.••••.•••.•••   438 
+A.   Response   
+Frequency   Characteristic   .................   438 
+1.   Pressure   Response   ...........................   438 
+2.   Apparatus   for   Measuring   the   Sound   Pressure   Fre 
+quency Relationship   of   a Sound   Source   ........   439 
+3.   Calibration   of   the Sound   Measuring   Equipment   ..   444 
+4.   Free   Field   Sound   Room   ......................   445 
+5.   Outdoor   Response   ............................   450 
+6.   Small   and   Partially   Deadened Room   ...   . . . . . . .   ..   450 
+7.   Arrangement   of   Loudspeakers for   Test   .........   451   
+• 
+8.   Living   Room Measurements   ...................   451 
+9.   Theater   Measurements   .......................   451 
+10.   Automobile   Measurements   ....................   451 
+ B.   Directional   Characteristic   .........................   452 
+ C.   Nonlinear   Distortion   Characteristic   .................   452 
+D. Efficiency   
+Frequency   Characteristic   ................   460 
+1.   Direct   Determination   of   Radiated   Power   .......   461 
+2.   Indirect   Determination   of   Radiated   Power   ......   463 
+E.   Phase   Distortion   Characteristic   ....................   464 
+F.   Electrical Impedance   
+Frequency   Characteristic   ......   464 
+G.   Transient   Response Characteristic   ..................   465 
+H.   Subjective Measurements   .........................   466 
+1.   Loudspeaker   Environment   ....................   466 
+2.   Loudspeaker Housing, Placement   and   Mounting   . 466 

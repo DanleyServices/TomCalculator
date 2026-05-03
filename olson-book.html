@@ -8,6 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
     <!-- Chart.js for interactive graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <!-- Three.js for background -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -30,11 +33,14 @@
             color: var(--ink);
             font-family: 'Rajdhani', sans-serif;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            justify-items: center;
+            align-items: start;
+            padding-top: 20px;
             height: 100vh;
+            box-sizing: border-box;
+            gap: 10px;
         }
 
         #three-bg {
@@ -46,10 +52,21 @@
             z-index: -1;
         }
 
+        .top-bar {
+            position: relative;
+            width: 90vw;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
         .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+            position: relative;
+            flex-shrink: 0;
             color: var(--cyan);
             text-decoration: none;
             font-family: 'Orbitron', sans-serif;
@@ -67,15 +84,52 @@
             box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
         }
 
+        /* TOP MENU */
+        #top-menu {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(18, 24, 32, 0.7);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 30px;
+            padding: 10px 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            width: max-content;
+            max-width: 60vw;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: none;
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+
+        .menu-btn:hover {
+            background: rgba(0, 229, 255, 0.2);
+            color: var(--gold);
+            text-shadow: 0 0 8px rgba(240, 192, 64, 0.5);
+        }
+
         /* 3D BOOK CONTAINER */
         .book-wrapper {
             position: relative;
             width: 90vw;
             max-width: 1200px;
-            height: 80vh;
+            height: 100%;
+            min-height: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             z-index: 2;
             perspective: 2000px;
             filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
@@ -116,10 +170,22 @@
 
         .page-content {
             position: absolute;
-            inset: 30px;
+            inset: 25px;
             display: flex;
             flex-direction: column;
             z-index: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 229, 255, 0.3) transparent;
+        }
+
+        .page-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .page-content::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 229, 255, 0.3);
+            border-radius: 4px;
         }
 
         /* Cover styling */
@@ -158,16 +224,17 @@
         
         .equation-box {
             font-family: 'Orbitron', monospace;
-            font-size: 2.2rem;
+            font-size: clamp(1.2rem, 3vw, 2.2rem);
             color: var(--cyan);
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             background: rgba(0, 229, 255, 0.05);
             border: 1px solid rgba(0, 229, 255, 0.2);
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
             box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            flex-shrink: 0;
         }
 
         .description {
@@ -215,6 +282,8 @@
             border: 1px solid rgba(0,229,255,0.1);
             border-radius: 8px;
             padding: 10px;
+            min-height: 200px;
+            flex-shrink: 0;
         }
 
         .page-number {
@@ -242,13 +311,160 @@
         .page.--left .hint { right: 20px; }
         .page.--right .hint { left: 20px; }
 
+        /* History Button & Modal */
+        .history-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2a1f16 0%, #17110c 100%);
+            border: 2px solid #a67c00;
+            color: #f0c040;
+            width: 50px;
+            height: 50px;
+            border-radius: 8px 0 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            z-index: 10;
+            animation: pulseVintage 3s infinite;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.8), inset 0 0 10px rgba(166, 124, 0, 0.3);
+        }
+
+        .history-btn:hover {
+            background: linear-gradient(135deg, #3a2a18 0%, #2a1f16 100%);
+            border-color: #f0c040;
+            color: #fff;
+            transform: translateX(-50%) scale(1.15);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.9), inset 0 0 15px rgba(240, 192, 64, 0.5);
+            animation: none;
+        }
+
+        .history-btn svg {
+            width: 26px;
+            height: 26px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
+        }
+
+        @keyframes pulseVintage {
+            0% { box-shadow: 0 4px 10px rgba(0,0,0,0.8), 0 0 0 0 rgba(166, 124, 0, 0.4); }
+            70% { box-shadow: 0 4px 10px rgba(0,0,0,0.8), 0 0 0 10px rgba(166, 124, 0, 0); }
+            100% { box-shadow: 0 4px 10px rgba(0,0,0,0.8), 0 0 0 0 rgba(166, 124, 0, 0); }
+        }
+
+        .history-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 10, 16, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .history-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .history-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(240, 192, 64, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #0f141a;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .history-modal.active .history-content {
+            transform: scale(1);
+        }
+
+        .history-content img {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 5px;
+            filter: sepia(0.3) contrast(1.1) brightness(0.9);
+            object-fit: contain;
+        }
+
+        .history-close {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            background: var(--dark-bg);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 2;
+        }
+        .history-close:hover {
+            background: var(--gold);
+            color: var(--dark-bg);
+            transform: rotate(90deg);
+        }
+
+        .history-caption {
+            color: var(--gold);
+            font-family: 'Special Elite', cursive;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
     <canvas id="three-bg"></canvas>
     
-    <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+        <nav id="top-menu">
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(0)">Cover</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(1)">Preface</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(2)">1.3 Wave Eq</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(3)">1.4 Plane</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(4)">1.5 Sphere</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(6)">2.2 Point</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(7)">2.3 Dipole</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(8)">2.5 Line</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(9)">2.6 Tilting</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(10)">2.13 Piston</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(12)">3.2 Strings</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(13)">3.3 Bars</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(14)">3.4 Membranes</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(16)">4.7 Analogies</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(18)">5.21 Conical</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(19)">5.22 Exp</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(20)">5.27 Finite</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(23)">6.8 Baffles</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(25)">8.3 Mics</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(31)">11.2 Reverb</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(33)">12.6 Hearing</button>
+            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(42)">End</button>
+        </nav>
+    </div>
 
     <div class="book-wrapper">
         <div class="flip-book" id="olsonBook">
@@ -276,125 +492,725 @@
                 </div>
             </div>
 
-            <!-- PAGE 2: EQ 1 WAVELENGTH -->
+            <!-- PAGE 2: CHAPTER 1 - WAVE EQUATION -->
             <div class="page">
                 <div class="page-content">
-                    <div class="page-header">1. Wavelength & Frequency</div>
-                    <p class="description">The wavelength of a sound wave is inversely proportional to its frequency, governed by the speed of sound in the medium.</p>
+                    <button class="history-btn" onclick="openHistory(24, 'Olson 1.3: Acoustical Wave Equation (Page 24)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">1.3 Acoustical Wave Equation</div>
+                    <p class="description">
+                        The fundamental equation of sound wave propagation in three dimensions. 
+                        It relates the spatial variation of sound pressure (p) to its temporal variation, governed by the speed of sound (c).
+                    </p>
                     
-                    <div class="equation-box">
-                        λ = c / f
+                    <div class="equation-box" style="font-size: 1.5rem;">
+                        ∇²p = (1/c²) · (∂²p / ∂t²)
                     </div>
+                    
+                    <p class="description" style="font-size: 0.95rem;">
+                        Where ∇² is the Laplacian operator:<br>
+                        ∇² = ∂²/∂x² + ∂²/∂y² + ∂²/∂z²<br><br>
+                        This implies that the acceleration of the particle is proportional to the pressure gradient.
+                    </p>
 
-                    <div class="controls">
-                        <div class="control-group">
-                            <label>Frequency (f)</label>
-                            <input type="range" id="freq1" min="20" max="2000" value="1000">
-                            <div class="control-value"><span id="freqVal1">1000</span> Hz</div>
-                        </div>
-                        <div class="control-group">
-                            <label>Speed of Sound (c)</label>
-                            <input type="range" id="speed1" min="300" max="1500" value="343">
-                            <div class="control-value"><span id="speedVal1">343</span> m/s</div>
-                        </div>
-                    </div>
-                    
-                    <div class="graph-wrapper">
-                        <canvas id="chartWavelength"></canvas>
+                    <div class="graph-wrapper" style="margin-top: 10px;">
+                        <canvas id="chartWave3D"></canvas>
                     </div>
 
                     <div class="page-number">1</div>
                 </div>
             </div>
 
-            <!-- PAGE 3: EQ 2 SOUND PRESSURE LEVEL -->
+            <!-- PAGE 3: 1.4 PLANE WAVES -->
             <div class="page">
                 <div class="page-content">
-                    <div class="page-header">2. Sound Pressure Level</div>
-                    <p class="description">Sound Pressure Level (SPL) is a logarithmic measure of the effective pressure of a sound relative to a reference value (20 μPa).</p>
+                    <button class="history-btn" onclick="openHistory(27, 'Olson 1.4: Plane Sound Waves (Page 27)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">1.4 Plane Sound Waves</div>
+                    <p class="description">
+                        In a plane wave, the sound pressure (p) and particle velocity (u) are everywhere in phase. 
+                        The ratio of pressure to velocity is the specific acoustic resistance (ρc) of the medium.
+                    </p>
                     
                     <div class="equation-box">
-                        L_p = 20 log₁₀(p / p₀)
+                        p = ρ c u
                     </div>
 
                     <div class="controls">
                         <div class="control-group">
-                            <label>Pressure (p) in Pascals</label>
-                            <input type="range" id="pres2" min="0.00002" max="20" step="0.01" value="2.0">
-                            <div class="control-value"><span id="presVal2">2.0</span> Pa</div>
+                            <label>Particle Velocity Amplitude (u₀) [cm/s]</label>
+                            <input type="range" id="velPlane" min="0.1" max="10" step="0.1" value="2">
+                            <div class="control-value"><span id="velPlaneVal">2.0</span> cm/s</div>
                         </div>
                     </div>
                     
                     <div class="graph-wrapper">
-                        <canvas id="chartSPL"></canvas>
+                        <canvas id="chartPlaneWave"></canvas>
                     </div>
+                    <p class="description" style="text-align: center; font-size: 0.8rem; margin-top: 5px;">Pressure (Solid) and Velocity (Dashed) in Phase</p>
 
                     <div class="page-number">2</div>
                 </div>
             </div>
 
-            <!-- PAGE 4: EQ 3 REVERBERATION TIME (SABINE) -->
+            <!-- PAGE 4: 1.5 SPHERICAL WAVES -->
             <div class="page">
                 <div class="page-content">
-                    <div class="page-header">3. Sabine Reverberation</div>
-                    <p class="description">The time required for sound to decay by 60 dB in an enclosed space depends on the room volume and total acoustic absorption.</p>
+                    <button class="history-btn" onclick="openHistory(29, 'Olson 1.5: Spherical Sound Waves (Page 29)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">1.5 Spherical Sound Waves</div>
+                    <p class="description">
+                        Unlike plane waves, in a spherical wave expanding from a point source, the particle velocity ($u$) leads the pressure ($p$) by an angle that approaches 90° near the source, and 0° far from the source.
+                    </p>
                     
-                    <div class="equation-box">
-                        T₆₀ = 0.161 * (V / A)
+                    <div class="equation-box" style="font-size: 1.2rem;">
+                        u = (p / ρc) [ 1 - j (λ / 2πr) ]
                     </div>
 
                     <div class="controls">
                         <div class="control-group">
-                            <label>Volume (V)</label>
-                            <input type="range" id="vol3" min="10" max="10000" step="10" value="1000">
-                            <div class="control-value"><span id="volVal3">1000</span> m³</div>
-                        </div>
-                        <div class="control-group">
-                            <label>Absorption (A)</label>
-                            <input type="range" id="abs3" min="1" max="1000" step="1" value="100">
-                            <div class="control-value"><span id="absVal3">100</span> m² Sabins</div>
+                            <label>Distance from source (r) [meters]</label>
+                            <input type="range" id="distSphere" min="0.01" max="2" step="0.01" value="0.1">
+                            <div class="control-value"><span id="distSphereVal">0.10</span> m</div>
                         </div>
                     </div>
                     
                     <div class="graph-wrapper">
-                        <canvas id="chartRT60"></canvas>
+                        <canvas id="chartSphericalWave"></canvas>
                     </div>
+                    <p class="description" style="text-align: center; font-size: 0.8rem; margin-top: 5px;">Notice the phase shift between P and U near the source.</p>
 
                     <div class="page-number">3</div>
                 </div>
             </div>
 
-            <!-- PAGE 5: EQ 4 ACOUSTIC POWER -->
+            <!-- PAGE 5: CHAPTER 2 COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>CHAPTER 2</h1>
+                    <h2>RADIATING SYSTEMS</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">Directivity and Acoustic Patterns</p>
+                </div>
+            </div>
+
+            <!-- PAGE 6: 2.2 POINT SOURCE -->
             <div class="page">
                 <div class="page-content">
-                    <div class="page-header">4. Acoustic Power (Spherical)</div>
-                    <p class="description">The acoustic power radiated by a spherical source expands outwards, with intensity decreasing according to the inverse square law.</p>
+                    <button class="history-btn" onclick="openHistory(50, 'Olson 2.2: Simple Point Source (Page 50)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.2 Point Source</div>
+                    <p class="description">
+                        A point source is a radiator whose dimensions are small compared to the wavelength. It radiates sound equally in all directions, yielding a spherical directional pattern.
+                    </p>
                     
-                    <div class="equation-box">
-                        W = I · 4πr²
+                    <div class="equation-box" style="font-size: 1.5rem;">
+                        p = (j ρ c k Q / 4πr) e⁻ʲᵏʳ
                     </div>
 
                     <div class="controls">
                         <div class="control-group">
-                            <label>Intensity (I)</label>
-                            <input type="range" id="int4" min="0.01" max="1" step="0.01" value="0.1">
-                            <div class="control-value"><span id="intVal4">0.1</span> W/m²</div>
+                            <label>Frequency (k) [Hz]</label>
+                            <input type="range" id="freqPoint" min="20" max="20000" step="10" value="1000">
+                            <div class="control-value"><span id="freqPointVal">1000</span> Hz</div>
                         </div>
                     </div>
                     
-                    <div class="graph-wrapper">
-                        <canvas id="chartPower"></canvas>
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartPointSource"></canvas>
                     </div>
 
                     <div class="page-number">4</div>
-                    <div class="hint" onclick="pageFlip.flipPrev()">← PREV PAGE</div>
                 </div>
             </div>
 
+            <!-- PAGE 7: 2.3 DOUBLE SOURCE -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(52, 'Olson 2.3: Double Source (Page 52)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.3 Double Source</div>
+                    <p class="description">
+                        A dipole consists of two point sources separated by a distance d, vibrating in opposite phase. It exhibits a bidirectional directivity pattern.
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.4rem;">
+                        R(θ) = | sin((πd/λ)cosθ) / sin(πd/λ) |
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Source Separation (d/λ)</label>
+                            <input type="range" id="distDipole" min="0.01" max="0.5" step="0.01" value="0.1">
+                            <div class="control-value"><span id="distDipoleVal">0.10</span> λ</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartDoubleSource"></canvas>
+                    </div>
+
+                    <div class="page-number">7</div>
+                </div>
+            </div>
+
+            <!-- PAGE 8: 2.4 LINE SOURCE -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(57, 'Olson 2.5: Straight Line Source (Page 57)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.5 Straight Line Source</div>
+                    <p class="description">
+                        A continuous line source of length L produces a highly directional pattern perpendicular to its axis. It is the foundation of line array theory.
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.1rem;">
+                        R(α) = | sin((πL/λ) sin α) / ((πL/λ) sin α) |
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Source Length (L/λ)</label>
+                            <input type="range" id="lenLine" min="0.5" max="10" step="0.5" value="2">
+                            <div class="control-value"><span id="lenLineVal">2.0</span> λ</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartLineSource"></canvas>
+                    </div>
+
+                    <div class="page-number">8</div>
+                </div>
+            </div>
+
+            <!-- PAGE 9: 2.6 BEAM TILTING -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(57, 'Olson 2.6: Beam Tilting by Phase Shifting (Page 57)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.6 Beam Tilting</div>
+                    <p class="description">
+                        By applying a progressive phase shift (δ) along the length of a line source, the main radiation lobe can be electronically "steered" without physically moving the array.
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.1rem;">
+                        R(α) = | sin((πL/λ)(sin α - δ)) / ((πL/λ)(sin α - δ)) |
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Phase Delay (δ) [Steering Angle]</label>
+                            <input type="range" id="steerAngle" min="-0.8" max="0.8" step="0.05" value="0.3">
+                            <div class="control-value"><span id="steerAngleVal">0.30</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartBeamTilting"></canvas>
+                    </div>
+
+                    <div class="page-number">9</div>
+                    <div class="hint" onclick="pageFlip.flipNext()">CLICK TO TURN →</div>
+                </div>
+            </div>
+
+            <!-- PAGE 10: 2.13 CIRCULAR PISTON -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(64, 'Olson 2.13: Plane Circular-Piston Source (Page 64)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.13 Plane Circular-Piston Source</div>
+                    <p class="description">
+                        A circular baffled piston of radius R approximates a typical loudspeaker cone. Its directivity depends on the Bessel function of the first kind ($J_1$).
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.2rem;">
+                        R(α) = | 2 J₁( (2πR/λ) sin α ) / ( (2πR/λ) sin α ) |
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Piston Diameter (D/λ)</label>
+                            <input type="range" id="diaPiston" min="0.2" max="10" step="0.2" value="2.0">
+                            <div class="control-value"><span id="diaPistonVal">2.0</span> λ</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartPistonSource"></canvas>
+                    </div>
+
+                    <div class="page-number">10</div>
+                    <div class="hint" onclick="pageFlip.flipNext()">CLICK TO TURN →</div>
+                </div>
+            </div>
+
+                        <!-- PAGE 11: CHAPTER 3 COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>CHAPTER 3</h1>
+                    <h2>MECHANICAL<br>VIBRATING<br>SYSTEMS</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">Strings, Bars, and Membranes</p>
+                </div>
+            </div>
+
+            <!-- PAGE 12: 3.2 STRINGS -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(72, 'Olson 3.2: Strings (Page 56)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">3.2 Strings</div>
+                    <p class="description">
+                        The fundamental frequency of a stretched string depends on its length (l), tension (T), and mass per unit length (m). It is the basis of all stringed instruments.
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.2rem;">
+                        f = (1 / 2l) √(T / m)
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Tension (T) [Newtons]</label>
+                            <input type="range" id="stringTension" min="10" max="500" step="10" value="100">
+                            <div class="control-value"><span id="stringTensionVal">100</span> N</div>
+                        </div>
+                        <div class="control-group" style="margin-top: 5px;">
+                            <label>Length (l) [Meters]</label>
+                            <input type="range" id="stringLength" min="0.3" max="2.0" step="0.1" value="1.0">
+                            <div class="control-value"><span id="stringLengthVal">1.0</span> m</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 180px;">
+                        <canvas id="chartString"></canvas>
+                    </div>
+                    <p class="description" style="text-align: center; font-size: 0.9rem; color:var(--cyan); margin-top: 5px;">Fundamental Frequency: <span id="stringFreqDisp">15.8</span> Hz</p>
+
+                    <div class="page-number">11</div>
+                </div>
+            </div>
+
+            <!-- PAGE 13: 3.3 BARS -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(73, 'Olson 3.3: Transverse Vibration of Bars (Page 57)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">3.3 Transverse Bars</div>
+                    <p class="description">
+                        A bar clamped at one end (cantilever) vibrates transversely. The restoring force is due to stiffness, governed by Young's modulus (Q) and the radius of gyration (K).
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.1rem;">
+                        f = (0.5596 / l²) √(Q K² / ρ)
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Length (l) [Meters]</label>
+                            <input type="range" id="barLength" min="0.1" max="1.0" step="0.05" value="0.5">
+                            <div class="control-value"><span id="barLengthVal">0.5</span> m</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 180px;">
+                        <canvas id="chartBar"></canvas>
+                    </div>
+                    <p class="description" style="text-align: center; font-size: 0.8rem; margin-top: 5px;">Animation showing transverse cantilever vibration.</p>
+
+                    <div class="page-number">12</div>
+                    <div class="hint" onclick="pageFlip.flipNext()">CLICK TO TURN →</div>
+                </div>
+            </div>
+
+            <!-- PAGE 14: 3.4 MEMBRANES -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(77, 'Olson 3.4: Stretched Membranes (Page 61)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">3.4 Membranes</div>
+                    <p class="description">
+                        A stretched membrane (like a drumhead or condenser microphone diaphragm) vibrates in 2D modes. Its restoring force is tension. <br>
+                        <span style="color:var(--cyan); font-weight:bold;">Tap the membrane below to strike it!</span>
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.1rem;">
+                        f₀₁ = (0.382 / R) √(T / m)
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Tension (T) [N/m]</label>
+                            <input type="range" id="membraneTension" min="10" max="1000" step="10" value="200">
+                            <div class="control-value"><span id="membraneTensionVal">200</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 200px; display:flex; justify-content:center; align-items:center; background: #000; border-radius: 5px; overflow: hidden; position: relative;">
+                        <canvas id="membraneCanvas" width="100" height="100" style="width: 100%; height: 100%; cursor: crosshair; image-rendering: pixelated;"></canvas>
+                        <div style="position:absolute; top:5px; right:5px; font-size:0.7rem; color:var(--cyan);">f₀₁: <span id="memFreq">0</span> Hz</div>
+                    </div>
+
+                    <div class="page-number">13</div>
+                    <div class="hint" onclick="pageFlip.flipNext()">CLICK TO TURN →</div>
+                </div>
+            </div>
+
+            <!-- PAGE 15: CHAPTER 4 COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>CHAPTER 4</h1>
+                    <h2>DYNAMICAL<br>ANALOGIES</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">Electrical, Mechanical & Acoustical Isomorphisms</p>
+                </div>
+            </div>
+
+            <!-- PAGE 16: 4.7 ANALOGIES -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(99, 'Olson 4.7: Representation of Elements (Page 83)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">4.7 Dynamical Analogies</div>
+                    <p class="description">
+                        Olson's masterpiece: unifying physics. A series resonant circuit behaves identically across domains. Toggle the domain below to see how terms change while the math remains exactly the same!
+                    </p>
+                    
+                    <div class="controls" style="display:flex; justify-content:center; gap:10px; margin-bottom:10px;">
+                        <button class="menu-btn" style="padding:5px 10px;" onclick="setAnalogy('electrical')">Electrical</button>
+                        <button class="menu-btn" style="padding:5px 10px;" onclick="setAnalogy('mechanical')">Mechanical</button>
+                        <button class="menu-btn" style="padding:5px 10px;" onclick="setAnalogy('acoustical')">Acoustical</button>
+                    </div>
+
+                    <div class="equation-box" id="analogyEq" style="font-size: 1.1rem; padding: 10px;">
+                        Z_E = R_E + j(ωL - 1/ωC)
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label id="lblR">Resistance (R) [Ohms]</label>
+                            <input type="range" id="valR" min="1" max="100" step="1" value="20">
+                            <div class="control-value"><span id="dispR">20</span></div>
+                        </div>
+                        <div class="control-group" style="margin-top: 5px;">
+                            <label id="lblL">Inductance (L) [Henrys]</label>
+                            <input type="range" id="valL" min="0.01" max="0.5" step="0.01" value="0.1">
+                            <div class="control-value"><span id="dispL">0.1</span></div>
+                        </div>
+                        <div class="control-group" style="margin-top: 5px;">
+                            <label id="lblC">Capacitance (C) [Farads]</label>
+                            <input type="range" id="valC" min="0.001" max="0.05" step="0.001" value="0.01">
+                            <div class="control-value"><span id="dispC">0.01</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 180px;">
+                        <canvas id="chartAnalogy"></canvas>
+                    </div>
+
+                    <div class="page-number">15</div>
+                    <div class="hint" onclick="pageFlip.flipNext()">CLICK TO TURN →</div>
+                </div>
+            </div>
+
+            <!-- PAGE 17: CHAPTER 5 COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>CHAPTER 5</h1>
+                    <h2>ACOUSTICAL<br>ELEMENTS</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">Acoustic Impedance & Horns</p>
+                </div>
+            </div>
+
+            <!-- PAGE 18: 5.21 CONICAL HORN -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(118, 'Olson 5.21: Infinite Conical Horn (Page 102)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">5.21 Infinite Conical Horn</div>
+                    <p class="description">
+                        The conical horn is the simplest expanding waveguide. Its acoustic impedance behaves similarly to a pulsating sphere, exhibiting poor low-frequency resistance compared to exponential profiles.
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.1rem;">
+                        Z_A = (ρc/S)[ (k²r²) / (1+k²r²) + j(kr) / (1+k²r²) ]
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Distance to Apex (r) [Meters]</label>
+                            <input type="range" id="distApex" min="0.1" max="2.0" step="0.1" value="0.5">
+                            <div class="control-value"><span id="distApexVal">0.5</span> m</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 200px;">
+                        <canvas id="chartConicalHorn"></canvas>
+                    </div>
+                    <p class="description" style="text-align: center; font-size: 0.8rem; color:var(--cyan); margin-top: 5px;">Acoustic Resistance (R) & Reactance (X)</p>
+
+                    <div class="page-number">17</div>
+                    <div class="hint" onclick="pageFlip.flipNext()">CLICK TO TURN →</div>
+                </div>
+            </div>
+
+            <!-- PAGE 19: 5.22 EXPONENTIAL HORN -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(119, 'Olson 5.22: Infinite Exponential Horn (Page 103)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">5.22 Infinite Exponential Horn</div>
+                    <p class="description">
+                        The exponential horn is characterized by a "cutoff frequency" (f_c). Below f_c, the throat resistance is zero (pure reactance). Above f_c, it acts as a highly efficient acoustic transformer.
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.1rem;">
+                        f_c = (m * c) / (4 * π)
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Cutoff Frequency (f_c) [Hz]</label>
+                            <input type="range" id="cutoffFreq" min="50" max="500" step="10" value="150">
+                            <div class="control-value"><span id="cutoffFreqVal">150</span> Hz</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 200px;">
+                        <canvas id="chartExponentialHorn"></canvas>
+                    </div>
+                    <p class="description" style="text-align: center; font-size: 0.8rem; color:var(--cyan); margin-top: 5px;">Notice the high-pass filter behavior at f_c.</p>
+
+                    <div class="page-number">18</div>
+                    <div class="hint" onclick="pageFlip.flipNext()">CLICK TO TURN →</div>
+                </div>
+            </div>
+
+
+            <!-- PAGE 20: 5.27 FINITE EXPONENTIAL HORN -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(124, 'Olson 5.27: Finite Exponential Horn (Page 108)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">5.27 Finite Horn</div>
+                    <p class="description">
+                        Unlike the infinite horn, a finite horn has acoustic reflections at the mouth. This creates standing waves (ripples in throat impedance) which cause uneven frequency response.
+                    </p>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Horn Length (Meters)</label>
+                            <input type="range" id="finiteLength" min="0.5" max="3.0" step="0.1" value="1.0">
+                            <div class="control-value"><span id="finiteLengthVal">1.0</span> m</div>
+                        </div>
+                    </div>
+                    <div class="graph-wrapper" style="height: 220px;">
+                        <canvas id="chartFiniteHorn"></canvas>
+                    </div>
+                    <div class="page-number">19</div>
+                </div>
+            </div>
+
+            <!-- PAGE 21: CHAPTER 6 COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>CHAPTER 6</h1>
+                    <h2>DIRECT RADIATOR<br>LOUDSPEAKERS</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">Cones, Baffles and Enclosures</p>
+                </div>
+            </div>
+
+            <!-- PAGE 22: CHAPTER 7 COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>CHAPTER 7</h1>
+                    <h2>HORN<br>LOUDSPEAKERS</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">High Efficiency Systems</p>
+                </div>
+            </div>
+
+            <!-- PAGE 23: 6.8 BAFFLES -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(165, 'Olson 6.8: Loudspeaker Baffles (Page 149)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">6.8 Baffles</div>
+                    <p class="description">
+                        Without a baffle, the rear wave cancels the front wave at low frequencies (acoustic short circuit). A finite baffle pushes this cancellation to lower frequencies.
+                    </p>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Baffle Size (Meters)</label>
+                            <input type="range" id="baffleSize" min="0.2" max="3.0" step="0.1" value="1.0">
+                            <div class="control-value"><span id="baffleSizeVal">1.0</span> m</div>
+                        </div>
+                    </div>
+                    <div class="graph-wrapper" style="height: 220px;">
+                        <canvas id="chartBaffle"></canvas>
+                    </div>
+                    <div class="page-number">22</div>
+                </div>
+            </div>
+
+            <!-- PAGE 24: CHAPTER 8 COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>CHAPTER 8</h1>
+                    <h2>MICROPHONES</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">Pressure, Velocity & Gradients</p>
+                </div>
+            </div>
+
+            <!-- PAGE 25: 8.3 VELOCITY MICS -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(291, 'Olson 8.3: Velocity Microphones (Page 275)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">8.3 Velocity Mics</div>
+                    <p class="description">
+                        A ribbon microphone operates on pressure gradient, giving it a natural Figure-8 (bidirectional) polar pattern, following cos(θ).
+                    </p>
+                    <div class="equation-box">R(θ) = cos(θ)</div>
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartMic"></canvas>
+                    </div>
+                    <div class="page-number">24</div>
+                </div>
+            </div>
+
+            <!-- PAGE 26 TO 30: COVERS 9-10 -->
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 9</h1><h2>MISC<br>TRANSDUCERS</h2></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 10</h1><h2>MEASUREMENTS</h2></div></div>
+            
+            <!-- PAGE 30: CHAPTER 11 COVER -->
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 11</h1><h2>ARCHITECTURAL<br>ACOUSTICS</h2><p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">Collection & Dispersion</p></div></div>
+
+            <!-- PAGE 31: 11.2 REVERBERATION -->
+            <div class="page">
+                <div class="page-content">
+                    <div class="page-header">11.2 Reverberation</div>
+                    <p class="description">Sabine's equation for T60 is the cornerstone of architectural acoustics.</p>
+                    <div class="equation-box">T60 = 0.161 * V / A</div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Volume V (m³)</label>
+                            <input type="range" id="roomVol" min="100" max="10000" step="100" value="1000">
+                            <div class="control-value"><span id="roomVolVal">1000</span> m³</div>
+                        </div>
+                    </div>
+                    <div class="graph-wrapper" style="height: 220px;">
+                        <canvas id="chartReverb"></canvas>
+                    </div>
+                    <div class="page-number">30</div>
+                </div>
+            </div>
+
+            <!-- PAGE 32: CHAPTER 12 COVER -->
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 12</h1><h2>SPEECH, MUSIC<br>& HEARING</h2></div></div>
+
+            <!-- PAGE 33: 12.6 HEARING -->
+            <div class="page">
+                <div class="page-content">
+                    <div class="page-header">12.6 Hearing Contours</div>
+                    <p class="description">Fletcher-Munson equal-loudness contours show the non-linear frequency response of human hearing.</p>
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartHearing"></canvas>
+                    </div>
+                    <div class="page-number">32</div>
+                </div>
+            </div>
+
+            <!-- PAGES 34-37: COVERS 13-16 -->
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 13</h1><h2>COMPLETE<br>SYSTEMS</h2></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 14</h1><h2>COMMUNICATION</h2></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 15</h1><h2>ULTRASONICS</h2></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 16</h1><h2>UNDERWATER<br>SOUND</h2></div></div>
+
+            <!-- PAGE 42: BACK COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>THE END</h1>
+                    <h2>ELEMENTS OF<br>ACOUSTICAL ENGINEERING</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4);">A Tribute to Harry F. Olson (1957)</p>
+                    <div class="hint" onclick="pageFlip.flipPrev()">← PREV PAGE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="history-modal" onclick="closeHistory()">
+        <div class="history-content" onclick="event.stopPropagation()">
+            <button class="history-close" onclick="closeHistory()">×</button>
+            <canvas id="historyCanvas" style="max-width: 100%; max-height: 70vh; border-radius: 5px; box-shadow: 0 0 20px rgba(0,0,0,0.8); background: #fff;"></canvas>
+            <div id="historyCaption" class="history-caption"></div>
+            <div id="pdfLoading" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:#00e5ff; font-family:'Rajdhani', sans-serif; display:none;">Loading PDF...</div>
         </div>
     </div>
 
     <script>
+        // HISTORY MODAL LOGIC (PDF.js Rendering)
+        let pdfDoc = null;
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+            pdfjsLib.getDocument('Olson.pdf').promise.then(function(pdfDoc_) {
+                pdfDoc = pdfDoc_;
+            }).catch(function(err) {
+                console.error('Error loading PDF: ', err);
+            });
+        }
+
+        function openHistory(pageNum, caption) {
+            document.getElementById('historyCaption').innerText = caption;
+            document.getElementById('historyModal').classList.add('active');
+            
+            const canvas = document.getElementById('historyCanvas');
+            const loading = document.getElementById('pdfLoading');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = 'none';
+            loading.style.display = 'block';
+
+            if (!pdfDoc) {
+                loading.innerText = "Error: Olson.pdf not found or blocked by CORS.";
+                return;
+            }
+
+            pdfDoc.getPage(pageNum).then(function(page) {
+                const viewport = page.getViewport({scale: 1.5});
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                page.render(renderContext).promise.then(function() {
+                    loading.style.display = 'none';
+                    canvas.style.display = 'block';
+                });
+            });
+        }
+
+        function closeHistory() {
+            document.getElementById('historyModal').classList.remove('active');
+        }
+
         // BACKGROUND ANIMATION
         const canvas = document.getElementById('three-bg');
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
@@ -431,7 +1247,7 @@
                 size: "stretch",
                 minWidth: 315,
                 maxWidth: 1000,
-                minHeight: 420,
+                minHeight: 250,
                 maxHeight: 1350,
                 maxShadowOpacity: 0.5,
                 showCover: true,
@@ -441,12 +1257,12 @@
 
             pageFlip.loadFromHTML(document.querySelectorAll('.page'));
 
-            // Prevent page-flip from stealing slider events
-            document.querySelectorAll('.controls').forEach(ctrl => {
+            // Prevent page-flip from stealing slider and chart drag events
+            document.querySelectorAll('.controls, .graph-wrapper').forEach(elem => {
                 const stopEvent = (e) => e.stopPropagation();
-                ctrl.addEventListener('mousedown', stopEvent);
-                ctrl.addEventListener('touchstart', stopEvent, { passive: false });
-                ctrl.addEventListener('pointerdown', stopEvent);
+                elem.addEventListener('mousedown', stopEvent);
+                elem.addEventListener('touchstart', stopEvent, { passive: false });
+                elem.addEventListener('pointerdown', stopEvent);
             });
 
             // CHART CONFIGS (Cyberpunk / Old School blend)
@@ -458,140 +1274,763 @@
                 maintainAspectRatio: false,
                 animation: { duration: 200 },
                 scales: {
-                    x: { grid: { color: 'rgba(0, 229, 255, 0.1)' } },
-                    y: { grid: { color: 'rgba(0, 229, 255, 0.1)' }, beginAtZero: true }
+                    x: { 
+                        grid: { color: 'rgba(0, 229, 255, 0.15)' },
+                        ticks: { display: false }
+                    },
+                    y: { 
+                        grid: { color: 'rgba(0, 229, 255, 0.15)' }, 
+                        ticks: { color: 'rgba(200, 218, 240, 0.6)' }
+                    }
                 },
-                plugins: { legend: { display: false } }
+                plugins: { 
+                    legend: { 
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#c8daf0',
+                            font: { family: "'Orbitron', sans-serif", size: 11 },
+                            boxWidth: 20
+                        }
+                    },
+                    zoom: {
+                        zoom: {
+                            wheel: { enabled: true },
+                            pinch: { enabled: true },
+                            mode: 'xy'
+                        },
+                        pan: {
+                            enabled: true,
+                            mode: 'xy'
+                        }
+                    }
+                }
             };
 
-            // CHART 1: WAVELENGTH
-            const ctx1 = document.getElementById('chartWavelength').getContext('2d');
-            let chart1 = new Chart(ctx1, {
+            // ANIMATION LOOP FOR CHARTS
+            let time = 0;
+
+            // CHART 1.2: WAVE EQUATION (Visual representation of propagation)
+            const ctx1 = document.getElementById('chartWave3D').getContext('2d');
+            let chartWave3D = new Chart(ctx1, {
                 type: 'line',
                 data: {
-                    labels: [100, 500, 1000, 1500, 2000],
+                    labels: Array.from({length: 50}, (_, i) => i),
                     datasets: [{
-                        label: 'Wavelength (λ) in meters',
-                        data: [3.43, 0.686, 0.343, 0.228, 0.171],
+                        label: 'Pressure p(x,t)',
+                        data: Array(50).fill(0),
+                        borderColor: '#00e5ff',
+                        backgroundColor: 'rgba(0, 229, 255, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: { 
+                    ...chartOptions, 
+                    animation: false,
+                    scales: { 
+                        x: chartOptions.scales.x,
+                        y: { ...chartOptions.scales.y, min: -1.5, max: 1.5 } 
+                    } 
+                }
+            });
+
+            // CHART 1.4: PLANE WAVES (p and u in phase)
+            const ctxPlane = document.getElementById('chartPlaneWave').getContext('2d');
+            let chartPlane = new Chart(ctxPlane, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 50}, (_, i) => i),
+                    datasets: [
+                        {
+                            label: 'Pressure (p)',
+                            data: Array(50).fill(0),
+                            borderColor: '#00e5ff',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Velocity (u)',
+                            data: Array(50).fill(0),
+                            borderColor: '#f0c040',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: { 
+                    ...chartOptions, 
+                    animation: false,
+                    scales: { 
+                        x: chartOptions.scales.x,
+                        y: { ...chartOptions.scales.y, min: -3, max: 3 } 
+                    } 
+                }
+            });
+
+            // CHART 1.5: SPHERICAL WAVES (Phase shift dependent on distance)
+            const ctxSphere = document.getElementById('chartSphericalWave').getContext('2d');
+            let chartSphere = new Chart(ctxSphere, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 50}, (_, i) => i),
+                    datasets: [
+                        {
+                            label: 'Pressure (p)',
+                            data: Array(50).fill(0),
+                            borderColor: '#00e5ff',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Velocity (u)',
+                            data: Array(50).fill(0),
+                            borderColor: '#b388ff',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: { 
+                    ...chartOptions, 
+                    animation: false,
+                    scales: { 
+                        x: chartOptions.scales.x,
+                        y: { ...chartOptions.scales.y, min: -3, max: 3 } 
+                    } 
+                }
+            });
+
+            const polarConfig = {
+                type: 'radar',
+                options: {
+                    animation: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: chartOptions.plugins.legend,
+                        tooltip: { enabled: false },
+                        zoom: chartOptions.plugins.zoom
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,229,255,0.2)' },
+                            grid: { color: 'rgba(0,229,255,0.2)' },
+                            pointLabels: { display: false },
+                            ticks: { display: true, min: 0, stepSize: 0.2, color: 'rgba(0,229,255,0.4)', backdropColor: 'transparent', font: { size: 9, family: "'Rajdhani', sans-serif" } }
+                        }
+                    },
+                    elements: {
+                        line: { tension: 0.4, borderWidth: 2 },
+                        point: { radius: 0 }
+                    }
+                }
+            };
+
+            const labelsAngles = Array.from({length: 72}, (_, i) => i * 5);
+
+            const ctxPoint = document.getElementById('chartPointSource').getContext('2d');
+            const chartPoint = new Chart(ctxPoint, {
+                ...polarConfig,
+                data: {
+                    labels: labelsAngles,
+                    datasets: [{
+                        label: 'Point Source Directivity R(θ)',
+                        data: Array(72).fill(1),
                         borderColor: '#00e5ff',
                         backgroundColor: 'rgba(0, 229, 255, 0.2)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
                     }]
-                },
-                options: { ...chartOptions, scales: { x: { title: {display:true, text:'Frequency (Hz)'} }, y: { title: {display:true, text:'Wavelength (m)'} } } }
+                }
             });
 
-            function updateChart1() {
-                const f = parseFloat(document.getElementById('freq1').value);
-                const c = parseFloat(document.getElementById('speed1').value);
-                document.getElementById('freqVal1').innerText = f;
-                document.getElementById('speedVal1').innerText = c;
-                
-                const freqs = [f*0.1, f*0.5, f, f*1.5, f*2];
-                chart1.data.labels = freqs.map(x => x.toFixed(0));
-                chart1.data.datasets[0].data = freqs.map(x => (c/x).toFixed(3));
-                chart1.update();
-            }
-            document.getElementById('freq1').addEventListener('input', updateChart1);
-            document.getElementById('speed1').addEventListener('input', updateChart1);
-
-            // CHART 2: SPL
-            const ctx2 = document.getElementById('chartSPL').getContext('2d');
-            let chart2 = new Chart(ctx2, {
-                type: 'line',
+            const ctxDouble = document.getElementById('chartDoubleSource').getContext('2d');
+            const chartDouble = new Chart(ctxDouble, {
+                ...polarConfig,
                 data: {
-                    labels: [0.001, 0.01, 0.1, 1, 10],
+                    labels: labelsAngles,
                     datasets: [{
-                        label: 'SPL (dB)',
-                        data: [34, 54, 74, 94, 114],
+                        label: 'Dipole Directivity R(θ)',
+                        data: labelsAngles.map(a => Math.abs(Math.cos(a * Math.PI / 180))),
                         borderColor: '#f0c040',
                         backgroundColor: 'rgba(240, 192, 64, 0.2)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.2
                     }]
-                },
-                options: { ...chartOptions, scales: { x: { title: {display:true, text:'Pressure (Pa)'} }, y: { title: {display:true, text:'SPL (dB)'} } } }
+                }
             });
 
-            function updateChart2() {
-                const p = parseFloat(document.getElementById('pres2').value);
-                document.getElementById('presVal2').innerText = p.toFixed(2);
-                
-                const pressures = [p*0.1, p*0.5, p, p*2, p*5];
-                chart2.data.labels = pressures.map(x => x.toFixed(3));
-                chart2.data.datasets[0].data = pressures.map(x => (20 * Math.log10(x / 0.00002)).toFixed(1));
-                chart2.update();
-            }
-            document.getElementById('pres2').addEventListener('input', updateChart2);
-
-            // CHART 3: RT60
-            const ctx3 = document.getElementById('chartRT60').getContext('2d');
-            let chart3 = new Chart(ctx3, {
-                type: 'bar',
+            const ctxLine = document.getElementById('chartLineSource').getContext('2d');
+            const chartLine = new Chart(ctxLine, {
+                ...polarConfig,
                 data: {
-                    labels: ['500', '1000', '2000', '4000', '8000'],
+                    labels: labelsAngles,
                     datasets: [{
-                        label: 'RT60 (s)',
-                        data: [1.6, 1.6, 1.6, 1.6, 1.6],
-                        backgroundColor: '#b388ff',
-                        borderRadius: 4
+                        label: 'Line Array Directivity R(θ)',
+                        data: Array(72).fill(0),
+                        borderColor: '#ff0055',
+                        backgroundColor: 'rgba(255, 0, 85, 0.2)',
                     }]
-                },
-                options: { ...chartOptions, scales: { x: { title: {display:true, text:'Volume (m³)'} }, y: { title: {display:true, text:'RT60 (s)'} } } }
+                }
             });
 
-            function updateChart3() {
-                const v = parseFloat(document.getElementById('vol3').value);
-                const a = parseFloat(document.getElementById('abs3').value);
-                document.getElementById('volVal3').innerText = v;
-                document.getElementById('absVal3').innerText = a;
-                
-                const vols = [v*0.5, v*0.75, v, v*1.25, v*1.5];
-                chart3.data.labels = vols.map(x => x.toFixed(0));
-                chart3.data.datasets[0].data = vols.map(x => (0.161 * x / a).toFixed(2));
-                chart3.update();
-            }
-            document.getElementById('vol3').addEventListener('input', updateChart3);
-            document.getElementById('abs3').addEventListener('input', updateChart3);
+            const ctxPiston = document.getElementById('chartPistonSource').getContext('2d');
+            const chartPiston = new Chart(ctxPiston, {
+                ...polarConfig,
+                data: {
+                    labels: labelsAngles,
+                    datasets: [{
+                        label: 'Circular Piston Directivity R(θ)',
+                        data: Array(72).fill(0),
+                        borderColor: '#a300ff',
+                        backgroundColor: 'rgba(163, 0, 255, 0.2)',
+                    }]
+                }
+            });
 
-            // CHART 4: ACOUSTIC POWER
-            const ctx4 = document.getElementById('chartPower').getContext('2d');
-            let chart4 = new Chart(ctx4, {
+
+            // 2.6 Beam Tilting Chart
+            const ctxBeam = document.getElementById('chartBeamTilting').getContext('2d');
+            let chartBeam = new Chart(ctxBeam, {
+                type: 'radar',
+                data: {
+                    labels: labelsAngles,
+                    datasets: [{
+                        label: 'Beam Tilting R(θ)',
+                        data: Array(72).fill(0),
+                        backgroundColor: 'rgba(240, 192, 64, 0.2)',
+                        borderColor: '#f0c040',
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }]
+                },
+                options: { ...polarConfig, animation: false }
+            });
+
+            // 2.13 Circular Piston
+
+            // 3.2 String Chart
+            const ctxString = document.getElementById('chartString').getContext('2d');
+            let chartString = new Chart(ctxString, {
                 type: 'line',
                 data: {
-                    labels: [1, 2, 4, 8, 16],
+                    labels: Array.from({length: 50}, (_, i) => i / 49),
                     datasets: [{
-                        label: 'Power (W)',
-                        data: [1.25, 5.02, 20.1, 80.4, 321],
+                        label: 'String Displacement',
+                        data: Array(50).fill(0),
                         borderColor: '#00e5ff',
-                        borderDash: [5, 5],
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        tension: 0.4
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 0
                     }]
                 },
-                options: { ...chartOptions, scales: { x: { title: {display:true, text:'Radius (m)'} }, y: { title: {display:true, text:'Power (W)'} } } }
+                options: { ...chartOptions, animation: false, scales: { x: { display: false }, y: { min: -1, max: 1, display: false } } }
             });
 
-            function updateChart4() {
-                const int = parseFloat(document.getElementById('int4').value);
-                document.getElementById('intVal4').innerText = int.toFixed(2);
-                
-                const radii = [1, 2, 4, 8, 16];
-                chart4.data.labels = radii;
-                chart4.data.datasets[0].data = radii.map(r => (int * 4 * Math.PI * r * r).toFixed(1));
-                chart4.update();
-            }
-            document.getElementById('int4').addEventListener('input', updateChart4);
+            // 3.3 Bar Chart
+            const ctxBar = document.getElementById('chartBar').getContext('2d');
+            let chartBar = new Chart(ctxBar, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 50}, (_, i) => i / 49),
+                    datasets: [{
+                        label: 'Bar Displacement',
+                        data: Array(50).fill(0),
+                        borderColor: '#f0c040',
+                        borderWidth: 5,
+                        tension: 0.2,
+                        pointRadius: 0
+                    }]
+                },
+                options: { ...chartOptions, animation: false, scales: { x: { display: false }, y: { min: -2, max: 2, display: false } } }
+            });
+
+            // 3.4 Membrane Simulation
+            const memCanvas = document.getElementById('membraneCanvas');
+            const memCtx = memCanvas.getContext('2d');
+            const memSize = 100;
+            let memU = new Float32Array(memSize * memSize);
+            let memV = new Float32Array(memSize * memSize);
+            const memImgData = memCtx.createImageData(memSize, memSize);
             
-            // Initialization run
-            updateChart1();
-            updateChart2();
-            updateChart3();
-            updateChart4();
+            // Strike the membrane on click/touch
+            function strikeMembrane(e) {
+                const rect = memCanvas.getBoundingClientRect();
+                // Get click position relative to canvas
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const x = Math.floor((clientX - rect.left) / rect.width * memSize);
+                const y = Math.floor((clientY - rect.top) / rect.height * memSize);
+                
+                // Add a gaussian disturbance
+                const radius = 4;
+                for(let dy = -radius; dy <= radius; dy++) {
+                    for(let dx = -radius; dx <= radius; dx++) {
+                        const nx = x + dx;
+                        const ny = y + dy;
+                        if(nx > 0 && nx < memSize-1 && ny > 0 && ny < memSize-1) {
+                            const dist = Math.sqrt(dx*dx + dy*dy);
+                            if(dist < radius) {
+                                const idx = ny * memSize + nx;
+                                memU[idx] -= (radius - dist) * 2.0; // Negative for downward strike
+                            }
+                        }
+                    }
+                }
+            }
+            
+            memCanvas.addEventListener('mousedown', strikeMembrane);
+            memCanvas.addEventListener('touchstart', strikeMembrane, {passive: true});
+
+            // Prevent page turn when interacting with membrane
+            memCanvas.addEventListener('mousedown', e => e.stopPropagation());
+            memCanvas.addEventListener('touchstart', e => e.stopPropagation());
+
+            // 4.7 Analogy Chart
+            const ctxAnalogy = document.getElementById('chartAnalogy').getContext('2d');
+            let chartAnalogy = new Chart(ctxAnalogy, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 100}, (_, i) => 1 + i), // Frequency 1 to 100
+                    datasets: [
+                        { label: 'Impedance Magnitude |Z|', data: [], borderColor: '#00e5ff', borderWidth: 2, tension: 0.4, pointRadius: 0 },
+                        { label: 'Admittance |Y| (Response)', data: [], borderColor: '#f0c040', borderWidth: 2, tension: 0.4, pointRadius: 0 }
+                    ]
+                },
+                options: { ...chartOptions, animation: false, scales: { x: { display: true, title: { display: true, text: 'Frequency (ω)', color: '#c8daf0' }, ticks: {color: '#c8daf0'} }, y: { min: 0, max: 200, ticks: {color: '#c8daf0'} } } }
+            });
+
+            // Domain switching logic
+            let currentDomain = 'electrical';
+            const domainConfig = {
+                'electrical': {
+                    eq: "Z_E = R_E + j(ωL - 1/ωC)",
+                    lblR: "Resistance (R_E) [Ohms]",
+                    lblL: "Inductance (L) [Henrys]",
+                    lblC: "Capacitance (C) [Farads]"
+                },
+                'mechanical': {
+                    eq: "Z_M = R_M + j(ωm - 1/ωC_M)",
+                    lblR: "Mech. Resistance (R_M) [Mech. Ohms]",
+                    lblL: "Mass (m) [Grams]",
+                    lblC: "Compliance (C_M) [cm/Dyne]"
+                },
+                'acoustical': {
+                    eq: "Z_A = R_A + j(ωM - 1/ωC_A)",
+                    lblR: "Acoustic Resistance (R_A) [Acoustic Ohms]",
+                    lblL: "Inertance (M) [g/cm^4]",
+                    lblC: "Acoustic Capacitance (C_A) [cm^5/Dyne]"
+                }
+            };
+
+            window.setAnalogy = function(domain) {
+                currentDomain = domain;
+                document.getElementById('analogyEq').innerText = domainConfig[domain].eq;
+                document.getElementById('lblR').innerText = domainConfig[domain].lblR;
+                document.getElementById('lblL').innerText = domainConfig[domain].lblL;
+                document.getElementById('lblC').innerText = domainConfig[domain].lblC;
+            };
+
+            // 5.21 Conical Horn Chart
+            const ctxConical = document.getElementById('chartConicalHorn').getContext('2d');
+            let chartConical = new Chart(ctxConical, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 100}, (_, i) => 20 + i * (1000/100)), // Frequency 20 to 1000
+                    datasets: [
+                        { label: 'Resistance (R)', data: [], borderColor: '#00e5ff', borderWidth: 2, tension: 0.4, pointRadius: 0 },
+                        { label: 'Reactance (X)', data: [], borderColor: '#f0c040', borderDash: [5, 5], borderWidth: 2, tension: 0.4, pointRadius: 0 }
+                    ]
+                },
+                options: { ...chartOptions, animation: false, scales: { x: { display: true, title: { display: true, text: 'Frequency (Hz)', color: '#c8daf0' }, ticks: {color: '#c8daf0'} }, y: { min: 0, max: 1.5, ticks: {color: '#c8daf0'} } } }
+            });
+
+            // 5.22 Exponential Horn Chart
+            const ctxExp = document.getElementById('chartExponentialHorn').getContext('2d');
+            let chartExp = new Chart(ctxExp, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 100}, (_, i) => 20 + i * (1000/100)),
+                    datasets: [
+                        { label: 'Resistance (R)', data: [], borderColor: '#00e5ff', borderWidth: 2, tension: 0.4, pointRadius: 0 },
+                        { label: 'Reactance (X)', data: [], borderColor: '#f0c040', borderDash: [5, 5], borderWidth: 2, tension: 0.4, pointRadius: 0 }
+                    ]
+                },
+                options: { ...chartOptions, animation: false, scales: { x: { display: true, title: { display: true, text: 'Frequency (Hz)', color: '#c8daf0' }, ticks: {color: '#c8daf0'} }, y: { min: 0, max: 1.5, ticks: {color: '#c8daf0'} } } }
+            });
+
+            // 5.27 Finite Horn Chart
+            const ctxFinite = document.getElementById('chartFiniteHorn').getContext('2d');
+            let chartFinite = new Chart(ctxFinite, {
+                type: 'line',
+                data: { labels: Array.from({length: 100}, (_, i) => 20 + i * 8), datasets: [{ label: 'Throat Resistance', data: [], borderColor: '#00e5ff', borderWidth: 2, pointRadius: 0 }] },
+                options: { ...chartOptions, animation: false, scales: { x: { display: true }, y: { min: 0, max: 2 } } }
+            });
+
+            // 6.8 Baffle Chart
+            const ctxBaffle = document.getElementById('chartBaffle').getContext('2d');
+            let chartBaffle = new Chart(ctxBaffle, {
+                type: 'line',
+                data: { labels: Array.from({length: 100}, (_, i) => 20 + i * 5), datasets: [{ label: 'Response (dB)', data: [], borderColor: '#f0c040', borderWidth: 2, pointRadius: 0 }] },
+                options: { ...chartOptions, animation: false, scales: { x: { display: true }, y: { min: -20, max: 5 } } }
+            });
+
+            // 8.3 Mic Polar
+            const ctxMic = document.getElementById('chartMic').getContext('2d');
+            let chartMic = new Chart(ctxMic, {
+                type: 'radar',
+                data: { labels: labelsAngles, datasets: [{ label: 'Figure-8 Pattern', data: labelsAngles.map(a => Math.abs(Math.cos(a * Math.PI/180))), backgroundColor: 'rgba(0, 229, 255, 0.2)', borderColor: '#00e5ff', borderWidth: 2, pointRadius: 0 }] },
+                options: { ...polarConfig, animation: false }
+            });
+
+            // 11.2 Reverb Chart
+            const ctxReverb = document.getElementById('chartReverb').getContext('2d');
+            let chartReverb = new Chart(ctxReverb, {
+                type: 'line',
+                data: { labels: Array.from({length: 50}, (_, i) => i/49 * 2.0), datasets: [{ label: 'Decay Curve', data: [], borderColor: '#a300ff', borderWidth: 2, fill: true, backgroundColor: 'rgba(163,0,255,0.1)', pointRadius: 0 }] },
+                options: { ...chartOptions, animation: false, scales: { x: { title: {display:true, text:'Time (s)', color:'#fff'} }, y: { title:{display:true, text:'Level (dB)'}, min: -60, max: 0 } } }
+            });
+
+            // 12.6 Hearing Contours (Static approximations)
+            const ctxHearing = document.getElementById('chartHearing').getContext('2d');
+            let chartHearing = new Chart(ctxHearing, {
+                type: 'line',
+                data: { 
+                    labels: [20, 50, 100, 200, 500, 1000, 2000, 4000, 8000, 16000], 
+                    datasets: [
+                        { label: '40 Phon', data: [70, 50, 40, 40, 40, 40, 38, 35, 45, 55], borderColor: '#00e5ff', tension: 0.4 },
+                        { label: '80 Phon', data: [90, 85, 82, 80, 80, 80, 78, 75, 85, 90], borderColor: '#f0c040', tension: 0.4 }
+                    ] 
+                },
+                options: { ...chartOptions, animation: false, scales: { x: { type: 'category' }, y: { min: 20, max: 120 } } }
+            });
+
+            // Bessel function J1 approximation
+            function besselJ1(x) {
+                if (x === 0) return 0;
+                let sum = 0;
+                let term = x / 2;
+                let m = 0;
+                while (Math.abs(term) > 1e-6 && m < 30) {
+                    sum += term;
+                    m++;
+                    term = -term * (x * x) / (4 * m * (m + 1));
+                }
+                return sum;
+            }
+
+            function renderCharts() {
+                time += 0.1;
+                
+                // 1.2 Wave Equation Update
+                const waveData = Array.from({length: 50}, (_, i) => Math.sin(i * 0.2 - time));
+                chartWave3D.data.datasets[0].data = waveData;
+                chartWave3D.update();
+
+                // 1.4 Plane Wave Update
+                const u0 = parseFloat(document.getElementById('velPlane').value);
+                document.getElementById('velPlaneVal').innerText = u0.toFixed(1);
+                
+                // For plane waves, p and u are in phase. p = rho * c * u.
+                // We normalize for visual purposes.
+                const pPlaneData = Array.from({length: 50}, (_, i) => u0 * Math.sin(i * 0.2 - time));
+                const uPlaneData = Array.from({length: 50}, (_, i) => u0 * 0.8 * Math.sin(i * 0.2 - time)); // slightly scaled down for visual separation
+                
+                chartPlane.data.datasets[0].data = pPlaneData;
+                chartPlane.data.datasets[1].data = uPlaneData;
+                chartPlane.update();
+
+                // 1.5 Spherical Wave Update
+                const r = parseFloat(document.getElementById('distSphere').value);
+                document.getElementById('distSphereVal').innerText = r.toFixed(2);
+                
+                // Phase angle theta for velocity. tan(theta) = lambda / (2 * pi * r)
+                // Let's assume a fixed frequency where lambda/(2pi) = 0.1 for visual effect.
+                const lambda_over_2pi = 0.1; 
+                const phaseShift = Math.atan(lambda_over_2pi / r); // Approaches pi/2 as r->0, 0 as r->infinity
+                
+                // Magnitude of u increases as r gets very small
+                const uMag = Math.sqrt(1 + Math.pow(lambda_over_2pi / r, 2));
+
+                const pSphereData = Array.from({length: 50}, (_, i) => 1.5 * Math.sin(i * 0.2 - time));
+                // Velocity u leads pressure p by phaseShift
+                const uSphereData = Array.from({length: 50}, (_, i) => 1.5 * uMag * Math.sin(i * 0.2 - time + phaseShift));
+
+                // Dynamically adjust Y scale to contain extreme velocity near r=0, ONLY if not manually zoomed
+                if (chartSphere.isZoomedOrPanned && !chartSphere.isZoomedOrPanned()) {
+                    chartSphere.options.scales.y.min = -2 * Math.max(1.5, uMag);
+                    chartSphere.options.scales.y.max = 2 * Math.max(1.5, uMag);
+                }
+
+                chartSphere.data.datasets[0].data = pSphereData;
+                chartSphere.data.datasets[1].data = uSphereData;
+                chartSphere.update();
+                // 2.2 Point Source Update
+                const fPoint = parseFloat(document.getElementById('freqPoint').value);
+                document.getElementById('freqPointVal').innerText = fPoint;
+                const pointPulse = 0.9 + 0.1 * Math.sin(time * fPoint / 500);
+                chartPoint.data.datasets[0].data = Array(72).fill(pointPulse);
+                chartPoint.update();
+
+                // 2.3 Double Source Update
+                const d_lambda = parseFloat(document.getElementById('distDipole').value);
+                document.getElementById('distDipoleVal').innerText = d_lambda.toFixed(2);
+                
+                const doubleData = labelsAngles.map(a => {
+                    const theta = a * Math.PI / 180;
+                    const val = Math.sin(Math.PI * d_lambda * Math.cos(theta));
+                    const maxVal = Math.sin(Math.PI * d_lambda);
+                    return Math.abs(val / (maxVal === 0 ? 1 : maxVal)); // avoid div by 0
+                });
+                chartDouble.data.datasets[0].data = doubleData;
+                chartDouble.update();
+
+                // 2.4 Line Source Update
+                const lenLine = parseFloat(document.getElementById('lenLine').value);
+                document.getElementById('lenLineVal').innerText = lenLine.toFixed(1);
+                
+                const lineData = labelsAngles.map(a => {
+                    const alpha = a * Math.PI / 180;
+                    const u = Math.PI * lenLine * Math.sin(alpha);
+                    if (u === 0) return 1;
+                    return Math.abs(Math.sin(u) / u);
+                });
+                chartLine.data.datasets[0].data = lineData;
+                chartLine.update();
+
+                // 2.5 Circular Piston Update
+                const diaPiston = parseFloat(document.getElementById('diaPiston').value);
+                document.getElementById('diaPistonVal').innerText = diaPiston.toFixed(1);
+                const radPiston = diaPiston / 2;
+                
+                const pistonData = labelsAngles.map(a => {
+                    const alpha = a * Math.PI / 180;
+                    const u = 2 * Math.PI * radPiston * Math.sin(alpha);
+                    if (u === 0) return 1;
+                    return Math.abs(2 * besselJ1(u) / u);
+                });
+                chartPiston.data.datasets[0].data = pistonData;
+                chartPiston.update();
+
+
+                // 2.6 Beam Tilting Update
+                const delta = parseFloat(document.getElementById('steerAngle').value);
+                document.getElementById('steerAngleVal').innerText = delta.toFixed(2);
+                
+                const beamData = labelsAngles.map(a => {
+                    const theta = a * Math.PI / 180;
+                    // L/lambda fixed to 2.0 for clear visualization
+                    const arg = Math.PI * 2.0 * (Math.sin(theta) - delta);
+                    if (Math.abs(arg) < 0.001) return 1.0;
+                    return Math.abs(Math.sin(arg) / arg);
+                });
+                chartBeam.data.datasets[0].data = beamData;
+                chartBeam.update();
+
+                // 3.2 Strings Update
+                const T = parseFloat(document.getElementById('stringTension').value);
+                const L = parseFloat(document.getElementById('stringLength').value);
+                document.getElementById('stringTensionVal').innerText = T;
+                document.getElementById('stringLengthVal').innerText = L.toFixed(1);
+                
+                const m = 0.01; // 10 grams per meter
+                const freq = (1 / (2 * L)) * Math.sqrt(T / m);
+                document.getElementById('stringFreqDisp').innerText = freq.toFixed(1);
+                
+                // Animate fundamental standing wave
+                const stringData = chartString.data.labels.map(x => {
+                    return Math.sin(x * Math.PI) * Math.sin(time * freq * 0.1);
+                });
+                chartString.data.datasets[0].data = stringData;
+                chartString.update();
+
+                // 3.3 Bars Update
+                const barL = parseFloat(document.getElementById('barLength').value);
+                document.getElementById('barLengthVal').innerText = barL.toFixed(2);
+                
+                // Cantilever mode shape approximation: y(x) = (cosh(k*x) - cos(k*x)) - 0.734*(sinh(k*x) - sin(k*x))
+                const barFreq = 50 / (barL * barL); // Normalized for visual
+                const barData = chartBar.data.labels.map(x => {
+                    // x goes from 0 to 1
+                    const val = x * x; // Simplified visual cantilever shape
+                    return val * Math.sin(time * barFreq * 0.1);
+                });
+                chartBar.data.datasets[0].data = barData;
+                chartBar.update();
+
+                // 3.4 Membrane Update
+                const tension = parseFloat(document.getElementById('membraneTension').value);
+                document.getElementById('membraneTensionVal').innerText = tension;
+                
+                const memFreq = (0.382 / 0.1) * Math.sqrt(tension / 0.05); // Simulated params
+                document.getElementById('memFreq').innerText = memFreq.toFixed(1);
+
+                // Wave simulation physics
+                const damping = 0.985; // Air friction / internal friction
+                // Wave speed c relates to tension. For stability c must be < 0.5
+                const c = Math.min(0.45, 0.1 + (tension / 1000) * 0.35); 
+                
+                let newU = new Float32Array(memSize * memSize);
+                for(let y=1; y<memSize-1; y++) {
+                    for(let x=1; x<memSize-1; x++) {
+                        const i = y * memSize + x;
+                        // Enforce circular boundary
+                        const dx = x - memSize/2;
+                        const dy = y - memSize/2;
+                        if (dx*dx + dy*dy > (memSize/2)*(memSize/2)) {
+                            newU[i] = 0;
+                            continue;
+                        }
+                        
+                        const laplacian = memU[i-1] + memU[i+1] + memU[i-memSize] + memU[i+memSize] - 4 * memU[i];
+                        memV[i] += c * laplacian;
+                        memV[i] *= damping;
+                        newU[i] = memU[i] + memV[i];
+                    }
+                }
+                memU = newU;
+
+                // Render to imageData
+                for(let i=0; i<memU.length; i++) {
+                    const val = memU[i];
+                    const pixelIdx = i * 4;
+                    // Map val (-2 to 2) to color
+                    // Base color dark blue #030a10 -> RGB(3, 10, 16)
+                    // High amplitude cyan #00e5ff -> RGB(0, 229, 255)
+                    // Negative amplitude gold #f0c040 -> RGB(240, 192, 64)
+                    
+                    if (val > 0) {
+                        const intensity = Math.min(1, val * 0.5);
+                        memImgData.data[pixelIdx] = 3 + intensity * 237;     // R
+                        memImgData.data[pixelIdx+1] = 10 + intensity * 182;  // G
+                        memImgData.data[pixelIdx+2] = 16 + intensity * 48;   // B (Mapped towards gold)
+                    } else {
+                        const intensity = Math.min(1, -val * 0.5);
+                        memImgData.data[pixelIdx] = 3;                       // R
+                        memImgData.data[pixelIdx+1] = 10 + intensity * 219;  // G
+                        memImgData.data[pixelIdx+2] = 16 + intensity * 239;  // B (Mapped towards cyan)
+                    }
+                    
+                    // Draw circular border
+                    const x = i % memSize;
+                    const y = Math.floor(i / memSize);
+                    const dx = x - memSize/2;
+                    const dy = y - memSize/2;
+                    const rSq = dx*dx + dy*dy;
+                    const maxRSq = (memSize/2)*(memSize/2);
+                    if (rSq > maxRSq) {
+                        memImgData.data[pixelIdx] = 0;
+                        memImgData.data[pixelIdx+1] = 0;
+                        memImgData.data[pixelIdx+2] = 0;
+                        memImgData.data[pixelIdx+3] = 0; // Transparent outside circle
+                    } else if (rSq > maxRSq - memSize) {
+                        memImgData.data[pixelIdx] = 200; // Ring
+                        memImgData.data[pixelIdx+1] = 218;
+                        memImgData.data[pixelIdx+2] = 240;
+                        memImgData.data[pixelIdx+3] = 255;
+                    } else {
+                        memImgData.data[pixelIdx+3] = 255; // Alpha
+                    }
+                }
+                memCtx.putImageData(memImgData, 0, 0);
+
+                // 4.7 Analogy Update
+                const valR = parseFloat(document.getElementById('valR').value);
+                const valL = parseFloat(document.getElementById('valL').value);
+                const valC = parseFloat(document.getElementById('valC').value);
+                
+                document.getElementById('dispR').innerText = valR;
+                document.getElementById('dispL').innerText = valL.toFixed(2);
+                document.getElementById('dispC').innerText = valC.toFixed(3);
+                
+                const zMags = chartAnalogy.data.labels.map(w => {
+                    const reactance = (w * valL) - (1 / (w * valC));
+                    return Math.sqrt(valR*valR + reactance*reactance);
+                });
+                const admMags = zMags.map(z => 1000 / z); // Scaled for visual representation
+                
+                chartAnalogy.data.datasets[0].data = zMags;
+                chartAnalogy.data.datasets[1].data = admMags;
+                chartAnalogy.update();
+
+                // 5.21 Conical Horn Update
+                const distApex = parseFloat(document.getElementById('distApex').value);
+                document.getElementById('distApexVal').innerText = distApex.toFixed(1);
+                
+                const freqs = chartConical.data.labels;
+                const c_sound = 343;
+                const conicalR = freqs.map(f => {
+                    const k = 2 * Math.PI * f / c_sound;
+                    const kr = k * distApex;
+                    return (kr * kr) / (1 + kr * kr);
+                });
+                const conicalX = freqs.map(f => {
+                    const k = 2 * Math.PI * f / c_sound;
+                    const kr = k * distApex;
+                    return kr / (1 + kr * kr);
+                });
+                chartConical.data.datasets[0].data = conicalR;
+                chartConical.data.datasets[1].data = conicalX;
+                chartConical.update();
+
+                // 5.22 Exponential Horn Update
+                const fc = parseFloat(document.getElementById('cutoffFreq').value);
+                document.getElementById('cutoffFreqVal').innerText = fc;
+                
+                const expR = freqs.map(f => {
+                    if (f < fc) return 0;
+                    return Math.sqrt(1 - Math.pow(fc/f, 2));
+                });
+                const expX = freqs.map(f => {
+                    if (f < fc) return fc/f; // Pure mass reactance below cutoff
+                    return fc/f;
+                });
+                chartExp.data.datasets[0].data = expR;
+                chartExp.data.datasets[1].data = expX;
+                chartExp.update();
+
+                // 5.27 Finite Update
+                const L_fin = parseFloat(document.getElementById('finiteLength').value);
+                document.getElementById('finiteLengthVal').innerText = L_fin.toFixed(1);
+                chartFinite.data.datasets[0].data = chartFinite.data.labels.map(f => {
+                    const c = 343;
+                    const wavelength = c/f;
+                    // Standing wave ripples: 1 + 0.5 * sin(4pi L / lambda) (Simplified physics)
+                    if (f < 150) return 0.1;
+                    return 1 + 0.6 * Math.sin(4 * Math.PI * L_fin / wavelength) * (150/f);
+                });
+                chartFinite.update();
+
+                // 6.8 Baffle Update
+                const bSize = parseFloat(document.getElementById('baffleSize').value);
+                document.getElementById('baffleSizeVal').innerText = bSize.toFixed(1);
+                chartBaffle.data.datasets[0].data = chartBaffle.data.labels.map(f => {
+                    const lambda = 343/f;
+                    const ratio = bSize / lambda;
+                    // Baffle roll-off simplified: 6dB per octave below where ratio = 0.5
+                    if (ratio >= 0.5) return 0;
+                    return Math.max(-20, 20 * Math.log10(ratio / 0.5));
+                });
+                chartBaffle.update();
+
+                // 11.2 Reverb Update
+                const vol = parseFloat(document.getElementById('roomVol').value);
+                document.getElementById('roomVolVal').innerText = vol;
+                const A = Math.pow(vol, 0.66) * 0.1; // Assumed absorption
+                const t60 = 0.161 * vol / A;
+                chartReverb.data.datasets[0].data = chartReverb.data.labels.map(t => {
+                    return Math.max(-60, -60 * (t / t60));
+                });
+                chartReverb.update();
+
+                requestAnimationFrame(renderCharts);
+            }
+            renderCharts();
 
             // Resize handling
             window.addEventListener('resize', () => {
