@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Calculator - Tom Danley Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+
+        :root {
+            --cyan: #00e5ff;
+            --cyan-dim: rgba(0, 229, 255, 0.2);
+            --dark-bg: #030a10;
+            --panel-bg: rgba(3, 10, 16, 0.6);
+            --panel-border: rgba(0, 229, 255, 0.3);
+            --gold: #f0c040;
+            --gold-dim: rgba(240, 192, 64, 0.2);
+            --purple: #b388ff;
+            --purple-dim: rgba(179, 136, 255, 0.2);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--cyan);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            padding: 10px 20px;
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: var(--cyan-dim);
+            box-shadow: 0 0 15px var(--cyan-dim);
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            padding: 80px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--purple);
+            text-shadow: 0 0 20px var(--purple-dim);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .calculator-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px var(--purple-dim);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--purple-dim);
+            padding-bottom: 10px;
+            color: var(--purple);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
+            font-size: 1.1rem;
+            color: #c8daf0;
+            font-weight: 500;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--purple-dim);
+            border-radius: 6px;
+            padding: 10px 15px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 10px var(--purple-dim);
+        }
+
+        .unit {
+            color: var(--purple);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            width: 30px;
+        }
+
+        .btn-calc {
+            background: rgba(179, 136, 255, 0.1);
+            color: var(--purple);
+            border: 1px solid var(--purple);
+            padding: 12px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-calc:hover {
+            background: var(--purple);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--purple-dim);
+        }
+
+        .btn-clear {
+            background: transparent;
+            color: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .btn-clear:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .graph-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .instructions {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.6);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 800px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="three-bg"></canvas>
+    
+    <a href="index.html" class="back-btn">← BACK</a>
+
+    <div class="main-container">
+        <h1 class="title">POWER CALCULATOR</h1>
+        <div class="subtitle">Power • Voltage • Current • Impedance</div>
+        
+        <div class="calculator-grid">
+            <div class="calculator-panel">
+                <div class="panel-header">Calculate</div>
+                <p class="instructions">Enter any TWO values to calculate the remaining.</p>
+                
+                <div class="input-group">
+                    <label>Power (P)</label>
+                    <div class="input-row">
+                        <input type="number" id="power" placeholder="e.g. 1000" step="any">
+                        <span class="unit">W</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Voltage (V)</label>
+                    <div class="input-row">
+                        <input type="number" id="voltage" placeholder="e.g. 120" step="any">
+                        <span class="unit">V</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Current (I)</label>
+                    <div class="input-row">
+                        <input type="number" id="current" placeholder="e.g. 8.33" step="any">
+                        <span class="unit">A</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Impedance (Z)</label>
+                    <div class="input-row">
+                        <input type="number" id="impedance" placeholder="e.g. 8" step="any">
+                        <span class="unit">Ω</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn-calc" onclick="calculatePower()">CALCULATE</button>
+                    <button class="btn-clear" onclick="clearFields()">Clear</button>
+                </div>
+            </div>
+
+            <div class="calculator-panel">
+                <div class="panel-header">Interactive Graph</div>
+                <p class="instructions">Power vs. Voltage for the calculated Impedance.</p>
+                <div class="graph-container">
+                    <canvas id="powerChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Background Animation (Purple/Cyan Theme)
+        const canvas = document.getElementById('three-bg');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+
+        const geo = new THREE.IcosahedronGeometry(3, 1);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xb388ff, wireframe: true, transparent: true, opacity: 0.1 });
+        const meshes = [];
+        
+        for (let i = 0; i < 15; i++) {
+            const m = new THREE.Mesh(geo, mat.clone());
+            m.position.set((Math.random()-0.5)*60, (Math.random()-0.5)*35, (Math.random()-0.5)*20-10);
+            m.scale.setScalar(0.4 + Math.random()*1.8);
+            m.userData = { 
+                rx: (Math.random()-0.5)*0.005, 
+                ry: (Math.random()-0.5)*0.005,
+                floatSpeed: Math.random() * 0.02
+            };
+            scene.add(m);
+            meshes.push(m);
+        }
+
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+            
+            meshes.forEach((m, i) => {
+                m.rotation.x += m.userData.rx;
+                m.rotation.y += m.userData.ry;
+                m.position.y += Math.sin(time + i) * m.userData.floatSpeed;
+            });
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Calculator Logic & Chart
+        let chartInstance = null;
+
+        function initChart() {
+            const ctx = document.getElementById('powerChart').getContext('2d');
+            
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [0, 20, 40, 60, 80, 100],
+                    datasets: [{
+                        label: 'Power (W)',
+                        data: [0, 0, 0, 0, 0, 0],
+                        borderColor: '#b388ff',
+                        backgroundColor: 'rgba(179, 136, 255, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4, // smooth curve for P = V^2/R
+                        pointBackgroundColor: '#030a10',
+                        pointBorderColor: '#b388ff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Voltage (V)', color: 'rgba(255,255,255,0.7)', font: {family: 'Rajdhani', size: 14} },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: 'rgba(255,255,255,0.7)' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Power (W)', color: 'rgba(255,255,255,0.7)', font: {family: 'Rajdhani', size: 14} },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: 'rgba(255,255,255,0.7)' },
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#fff', font: {family: 'Rajdhani', size: 14} }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(3, 10, 16, 0.9)',
+                            titleFont: {family: 'Orbitron'},
+                            bodyFont: {family: 'Rajdhani', size: 14},
+                            borderColor: '#b388ff',
+                            borderWidth: 1
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart(impedance, maxVoltage) {
+            if (!chartInstance) return;
+
+            const labels = [];
+            const data = [];
+            const step = maxVoltage > 0 ? maxVoltage / 10 : 10;
+            const maxV = maxVoltage > 0 ? maxVoltage * 1.5 : 100;
+
+            for (let v = 0; v <= maxV; v += step) {
+                labels.push(v.toFixed(0));
+                // P = V^2 / R
+                const p = impedance > 0 ? (v * v) / impedance : 0;
+                data.push(p.toFixed(1));
+            }
+
+            chartInstance.data.labels = labels;
+            chartInstance.data.datasets[0].data = data;
+            chartInstance.data.datasets[0].label = `Power (W) at Z = ${impedance.toFixed(2)} Ω`;
+            chartInstance.update();
+        }
+
+        function calculatePower() {
+            const pInput = document.getElementById('power');
+            const vInput = document.getElementById('voltage');
+            const iInput = document.getElementById('current');
+            const zInput = document.getElementById('impedance');
+
+            let p = parseFloat(pInput.value);
+            let v = parseFloat(vInput.value);
+            let i = parseFloat(iInput.value);
+            let z = parseFloat(zInput.value);
+
+            let filledCount = (!isNaN(p) ? 1 : 0) + (!isNaN(v) ? 1 : 0) + (!isNaN(i) ? 1 : 0) + (!isNaN(z) ? 1 : 0);
+
+            if (filledCount < 2) {
+                alert("Please enter at least TWO values.");
+                return;
+            }
+
+            // We need 2 knowns to find the others. Let's do a simple mapping.
+            // If we have P and V:
+            if (!isNaN(p) && !isNaN(v) && isNaN(i) && isNaN(z)) {
+                i = p / v;
+                z = (v * v) / p;
+            }
+            // If P and I:
+            else if (!isNaN(p) && !isNaN(i) && isNaN(v) && isNaN(z)) {
+                v = p / i;
+                z = p / (i * i);
+            }
+            // If P and Z:
+            else if (!isNaN(p) && !isNaN(z) && isNaN(v) && isNaN(i)) {
+                v = Math.sqrt(p * z);
+                i = Math.sqrt(p / z);
+            }
+            // If V and I:
+            else if (!isNaN(v) && !isNaN(i) && isNaN(p) && isNaN(z)) {
+                p = v * i;
+                z = v / i;
+            }
+            // If V and Z:
+            else if (!isNaN(v) && !isNaN(z) && isNaN(p) && isNaN(i)) {
+                p = (v * v) / z;
+                i = v / z;
+            }
+            // If I and Z:
+            else if (!isNaN(i) && !isNaN(z) && isNaN(p) && isNaN(v)) {
+                p = i * i * z;
+                v = i * z;
+            } else if (filledCount > 2) {
+                 // Recalculate everything based on the first two found (for simplicity, let's use V and Z if present, or V and I)
+                 if (!isNaN(v) && !isNaN(z)) {
+                     p = (v * v) / z;
+                     i = v / z;
+                 } else if (!isNaN(v) && !isNaN(i)) {
+                     p = v * i;
+                     z = v / i;
+                 } else if (!isNaN(i) && !isNaN(z)) {
+                     p = i * i * z;
+                     v = i * z;
+                 }
+            }
+
+            const highlight = (input, val) => {
+                if (input.value !== val.toFixed(2)) {
+                    input.value = val.toFixed(2);
+                    input.style.borderColor = '#f0c040';
+                    setTimeout(() => input.style.borderColor = '', 1500);
+                }
+            };
+
+            highlight(pInput, p);
+            highlight(vInput, v);
+            highlight(iInput, i);
+            highlight(zInput, z);
+
+            updateChart(z, v);
+        }
+
+        function clearFields() {
+            document.getElementById('power').value = '';
+            document.getElementById('voltage').value = '';
+            document.getElementById('current').value = '';
+            document.getElementById('impedance').value = '';
+            if (chartInstance) {
+                chartInstance.data.labels = [0, 20, 40, 60, 80, 100];
+                chartInstance.data.datasets[0].data = [0, 0, 0, 0, 0, 0];
+                chartInstance.data.datasets[0].label = 'Power (W)';
+                chartInstance.update();
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+        });
+    </script>
+</body>
+</html>

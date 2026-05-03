@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Olson - The 3D Acoustic Bible</title>
+    <!-- PageFlip JS for 3D Book -->
+    <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
+    <!-- Chart.js for interactive graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Three.js for background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Special+Elite&display=swap');
+
+        :root {
+            --cyan: #00e5ff;
+            --gold: #f0c040;
+            --dark-bg: #030a10;
+            --paper-dark: #121820;
+            --paper-light: #1e2733;
+            --ink: #c8daf0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--ink);
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--cyan);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .back-btn:hover {
+            background: rgba(0, 229, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        }
+
+        /* 3D BOOK CONTAINER */
+        .book-wrapper {
+            position: relative;
+            width: 90vw;
+            max-width: 1200px;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            perspective: 2000px;
+            filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
+        }
+
+        .flip-book {
+            box-shadow: 0 0 20px rgba(0,229,255,0.1);
+        }
+
+        /* PAGE STYLING: Old School meets Cyberpunk */
+        .page {
+            background: linear-gradient(135deg, var(--paper-dark) 0%, var(--paper-light) 100%);
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+            border-right: 2px solid rgba(0,0,0,0.5); /* page depth */
+        }
+        .page.--left {
+            border-right: 1px solid rgba(255,255,255,0.05);
+            border-left: 2px solid rgba(0,0,0,0.5);
+            box-shadow: inset -20px 0 50px rgba(0,0,0,0.5);
+        }
+        .page.--right {
+            box-shadow: inset 20px 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* Paper noise texture */
+        .page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-content {
+            position: absolute;
+            inset: 30px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+
+        /* Cover styling */
+        .cover .page-content {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 2px solid var(--gold);
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+        }
+        .cover h1 {
+            font-family: 'Special Elite', cursive; /* Old typewriter font */
+            font-size: 3.5rem;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(240, 192, 64, 0.3);
+            margin: 0 0 20px 0;
+            line-height: 1.1;
+        }
+        .cover h2 {
+            font-family: 'Orbitron', monospace;
+            color: var(--cyan);
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+        }
+
+        /* Content Pages */
+        .page-header {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.8rem;
+            color: var(--gold);
+            border-bottom: 1px solid rgba(240, 192, 64, 0.3);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .equation-box {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2rem;
+            color: var(--cyan);
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: rgba(200, 218, 240, 0.8);
+            text-align: justify;
+        }
+
+        /* Interactive controls */
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .control-group label {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85rem;
+            color: var(--cyan);
+            margin-bottom: 5px;
+        }
+        .control-group input[type="range"] {
+            width: 100%;
+            accent-color: var(--cyan);
+            cursor: pointer;
+        }
+        .control-value {
+            text-align: right;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* Graph container */
+        .graph-wrapper {
+            flex: 1;
+            position: relative;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(0,229,255,0.1);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 15px;
+            font-family: 'Special Elite', cursive;
+            color: rgba(255,255,255,0.3);
+            font-size: 1rem;
+        }
+        .page.--left .page-number { left: 20px; }
+        .page.--right .page-number { right: 20px; }
+
+        /* Next/Prev hints */
+        .hint {
+            position: absolute;
+            bottom: 20px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            color: var(--cyan);
+            opacity: 0.5;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .hint:hover { opacity: 1; }
+        .page.--left .hint { right: 20px; }
+        .page.--right .hint { left: 20px; }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="three-bg"></canvas>
+    
+    <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+
+    <div class="book-wrapper">
+        <div class="flip-book" id="olsonBook">
+            
+            <!-- PAGE 0: COVER -->
+            <div class="page cover" data-density="hard">
+                <div class="page-content">
+                    <h1>ELEMENTS OF<br>ACOUSTICAL<br>ENGINEERING</h1>
+                    <h2>HARRY F. OLSON</h2>
+                    <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">1957 Edition Interactive Simulation</p>
+                </div>
+            </div>
+
+            <!-- PAGE 1: PREFACE -->
+            <div class="page">
+                <div class="page-content">
+                    <div class="page-header">Preface</div>
+                    <p class="description" style="font-size:1.2rem; line-height: 1.8;">
+                        <span style="font-size:3rem; float:left; color:var(--cyan); font-family:'Special Elite'; margin-right:10px; line-height:0.8;">A</span>coustics is the science of sound, including its production, transmission, and effects.<br><br>
+                        This interactive tome represents the collaborative effort of an entire swarm of specialized agents. We have orchestrated experts in mathematics, user interface design, and acoustical engineering to bring you the equations that govern the universe of sound.<br><br>
+                        Turn the page to begin the journey into the fundamental equations.
+                    </p>
+                    <div class="page-number">i</div>
+                    <div class="hint" onclick="pageFlip.flipNext()">CLICK TO TURN →</div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: EQ 1 WAVELENGTH -->
+            <div class="page">
+                <div class="page-content">
+                    <div class="page-header">1. Wavelength & Frequency</div>
+                    <p class="description">The wavelength of a sound wave is inversely proportional to its frequency, governed by the speed of sound in the medium.</p>
+                    
+                    <div class="equation-box">
+                        λ = c / f
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Frequency (f)</label>
+                            <input type="range" id="freq1" min="20" max="2000" value="1000">
+                            <div class="control-value"><span id="freqVal1">1000</span> Hz</div>
+                        </div>
+                        <div class="control-group">
+                            <label>Speed of Sound (c)</label>
+                            <input type="range" id="speed1" min="300" max="1500" value="343">
+                            <div class="control-value"><span id="speedVal1">343</span> m/s</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper">
+                        <canvas id="chartWavelength"></canvas>
+                    </div>
+
+                    <div class="page-number">1</div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: EQ 2 SOUND PRESSURE LEVEL -->
+            <div class="page">
+                <div class="page-content">
+                    <div class="page-header">2. Sound Pressure Level</div>
+                    <p class="description">Sound Pressure Level (SPL) is a logarithmic measure of the effective pressure of a sound relative to a reference value (20 μPa).</p>
+                    
+                    <div class="equation-box">
+                        L_p = 20 log₁₀(p / p₀)
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Pressure (p) in Pascals</label>
+                            <input type="range" id="pres2" min="0.00002" max="20" step="0.01" value="2.0">
+                            <div class="control-value"><span id="presVal2">2.0</span> Pa</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper">
+                        <canvas id="chartSPL"></canvas>
+                    </div>
+
+                    <div class="page-number">2</div>
+                </div>
+            </div>
+
+            <!-- PAGE 4: EQ 3 REVERBERATION TIME (SABINE) -->
+            <div class="page">
+                <div class="page-content">
+                    <div class="page-header">3. Sabine Reverberation</div>
+                    <p class="description">The time required for sound to decay by 60 dB in an enclosed space depends on the room volume and total acoustic absorption.</p>
+                    
+                    <div class="equation-box">
+                        T₆₀ = 0.161 * (V / A)
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Volume (V)</label>
+                            <input type="range" id="vol3" min="10" max="10000" step="10" value="1000">
+                            <div class="control-value"><span id="volVal3">1000</span> m³</div>
+                        </div>
+                        <div class="control-group">
+                            <label>Absorption (A)</label>
+                            <input type="range" id="abs3" min="1" max="1000" step="1" value="100">
+                            <div class="control-value"><span id="absVal3">100</span> m² Sabins</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper">
+                        <canvas id="chartRT60"></canvas>
+                    </div>
+
+                    <div class="page-number">3</div>
+                </div>
+            </div>
+
+            <!-- PAGE 5: EQ 4 ACOUSTIC POWER -->
+            <div class="page">
+                <div class="page-content">
+                    <div class="page-header">4. Acoustic Power (Spherical)</div>
+                    <p class="description">The acoustic power radiated by a spherical source expands outwards, with intensity decreasing according to the inverse square law.</p>
+                    
+                    <div class="equation-box">
+                        W = I · 4πr²
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Intensity (I)</label>
+                            <input type="range" id="int4" min="0.01" max="1" step="0.01" value="0.1">
+                            <div class="control-value"><span id="intVal4">0.1</span> W/m²</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper">
+                        <canvas id="chartPower"></canvas>
+                    </div>
+
+                    <div class="page-number">4</div>
+                    <div class="hint" onclick="pageFlip.flipPrev()">← PREV PAGE</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // BACKGROUND ANIMATION
+        const canvas = document.getElementById('three-bg');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+
+        const pGeo = new THREE.BufferGeometry();
+        const pPos = new Float32Array(2000 * 3);
+        for (let i = 0; i < 6000; i++) pPos[i] = (Math.random()-0.5)*100;
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        const pMat = new THREE.PointsMaterial({ color: 0xf0c040, size: 0.1, transparent: true, opacity: 0.3 });
+        const pts = new THREE.Points(pGeo, pMat);
+        scene.add(pts);
+
+        function animateBg() {
+            requestAnimationFrame(animateBg);
+            pts.rotation.y += 0.0003;
+            pts.rotation.x += 0.0001;
+            renderer.render(scene, camera);
+        }
+        animateBg();
+
+        // GLOBALS
+        let pageFlip;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // INIT 3D BOOK
+            const pageFlipElem = document.getElementById('olsonBook');
+            pageFlip = new St.PageFlip(pageFlipElem, {
+                width: 500, // base page width
+                height: 700, // base page height
+                size: "stretch",
+                minWidth: 315,
+                maxWidth: 1000,
+                minHeight: 420,
+                maxHeight: 1350,
+                maxShadowOpacity: 0.5,
+                showCover: true,
+                mobileScrollSupport: false,
+                flippingTime: 1200 // Slow, majestic flip
+            });
+
+            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+            // Prevent page-flip from stealing slider events
+            document.querySelectorAll('.controls').forEach(ctrl => {
+                const stopEvent = (e) => e.stopPropagation();
+                ctrl.addEventListener('mousedown', stopEvent);
+                ctrl.addEventListener('touchstart', stopEvent, { passive: false });
+                ctrl.addEventListener('pointerdown', stopEvent);
+            });
+
+            // CHART CONFIGS (Cyberpunk / Old School blend)
+            Chart.defaults.color = 'rgba(200, 218, 240, 0.7)';
+            Chart.defaults.font.family = "'Rajdhani', sans-serif";
+            
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 200 },
+                scales: {
+                    x: { grid: { color: 'rgba(0, 229, 255, 0.1)' } },
+                    y: { grid: { color: 'rgba(0, 229, 255, 0.1)' }, beginAtZero: true }
+                },
+                plugins: { legend: { display: false } }
+            };
+
+            // CHART 1: WAVELENGTH
+            const ctx1 = document.getElementById('chartWavelength').getContext('2d');
+            let chart1 = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: [100, 500, 1000, 1500, 2000],
+                    datasets: [{
+                        label: 'Wavelength (λ) in meters',
+                        data: [3.43, 0.686, 0.343, 0.228, 0.171],
+                        borderColor: '#00e5ff',
+                        backgroundColor: 'rgba(0, 229, 255, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { ...chartOptions, scales: { x: { title: {display:true, text:'Frequency (Hz)'} }, y: { title: {display:true, text:'Wavelength (m)'} } } }
+            });
+
+            function updateChart1() {
+                const f = parseFloat(document.getElementById('freq1').value);
+                const c = parseFloat(document.getElementById('speed1').value);
+                document.getElementById('freqVal1').innerText = f;
+                document.getElementById('speedVal1').innerText = c;
+                
+                const freqs = [f*0.1, f*0.5, f, f*1.5, f*2];
+                chart1.data.labels = freqs.map(x => x.toFixed(0));
+                chart1.data.datasets[0].data = freqs.map(x => (c/x).toFixed(3));
+                chart1.update();
+            }
+            document.getElementById('freq1').addEventListener('input', updateChart1);
+            document.getElementById('speed1').addEventListener('input', updateChart1);
+
+            // CHART 2: SPL
+            const ctx2 = document.getElementById('chartSPL').getContext('2d');
+            let chart2 = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: [0.001, 0.01, 0.1, 1, 10],
+                    datasets: [{
+                        label: 'SPL (dB)',
+                        data: [34, 54, 74, 94, 114],
+                        borderColor: '#f0c040',
+                        backgroundColor: 'rgba(240, 192, 64, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.2
+                    }]
+                },
+                options: { ...chartOptions, scales: { x: { title: {display:true, text:'Pressure (Pa)'} }, y: { title: {display:true, text:'SPL (dB)'} } } }
+            });
+
+            function updateChart2() {
+                const p = parseFloat(document.getElementById('pres2').value);
+                document.getElementById('presVal2').innerText = p.toFixed(2);
+                
+                const pressures = [p*0.1, p*0.5, p, p*2, p*5];
+                chart2.data.labels = pressures.map(x => x.toFixed(3));
+                chart2.data.datasets[0].data = pressures.map(x => (20 * Math.log10(x / 0.00002)).toFixed(1));
+                chart2.update();
+            }
+            document.getElementById('pres2').addEventListener('input', updateChart2);
+
+            // CHART 3: RT60
+            const ctx3 = document.getElementById('chartRT60').getContext('2d');
+            let chart3 = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['500', '1000', '2000', '4000', '8000'],
+                    datasets: [{
+                        label: 'RT60 (s)',
+                        data: [1.6, 1.6, 1.6, 1.6, 1.6],
+                        backgroundColor: '#b388ff',
+                        borderRadius: 4
+                    }]
+                },
+                options: { ...chartOptions, scales: { x: { title: {display:true, text:'Volume (m³)'} }, y: { title: {display:true, text:'RT60 (s)'} } } }
+            });
+
+            function updateChart3() {
+                const v = parseFloat(document.getElementById('vol3').value);
+                const a = parseFloat(document.getElementById('abs3').value);
+                document.getElementById('volVal3').innerText = v;
+                document.getElementById('absVal3').innerText = a;
+                
+                const vols = [v*0.5, v*0.75, v, v*1.25, v*1.5];
+                chart3.data.labels = vols.map(x => x.toFixed(0));
+                chart3.data.datasets[0].data = vols.map(x => (0.161 * x / a).toFixed(2));
+                chart3.update();
+            }
+            document.getElementById('vol3').addEventListener('input', updateChart3);
+            document.getElementById('abs3').addEventListener('input', updateChart3);
+
+            // CHART 4: ACOUSTIC POWER
+            const ctx4 = document.getElementById('chartPower').getContext('2d');
+            let chart4 = new Chart(ctx4, {
+                type: 'line',
+                data: {
+                    labels: [1, 2, 4, 8, 16],
+                    datasets: [{
+                        label: 'Power (W)',
+                        data: [1.25, 5.02, 20.1, 80.4, 321],
+                        borderColor: '#00e5ff',
+                        borderDash: [5, 5],
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        tension: 0.4
+                    }]
+                },
+                options: { ...chartOptions, scales: { x: { title: {display:true, text:'Radius (m)'} }, y: { title: {display:true, text:'Power (W)'} } } }
+            });
+
+            function updateChart4() {
+                const int = parseFloat(document.getElementById('int4').value);
+                document.getElementById('intVal4').innerText = int.toFixed(2);
+                
+                const radii = [1, 2, 4, 8, 16];
+                chart4.data.labels = radii;
+                chart4.data.datasets[0].data = radii.map(r => (int * 4 * Math.PI * r * r).toFixed(1));
+                chart4.update();
+            }
+            document.getElementById('int4').addEventListener('input', updateChart4);
+            
+            // Initialization run
+            updateChart1();
+            updateChart2();
+            updateChart3();
+            updateChart4();
+
+            // Resize handling
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                // pageFlip handles its own resize stretch
+            });
+        });
+    </script>
+</body>
+</html>
