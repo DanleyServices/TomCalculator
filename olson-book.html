@@ -87,31 +87,71 @@
         /* TOP MENU */
         #top-menu {
             position: relative;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(10, 16, 24, 0.92);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 229, 255, 0.15);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 8px;
+            z-index: 200;
+            min-width: 320px;
+            max-width: 90vw;
+        }
+        #top-menu.open { display: flex; }
+        .menu-chapter-label {
+            color: rgba(240, 192, 64, 0.7);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 4px 0 2px 4px;
+            border-top: 1px solid rgba(0, 229, 255, 0.1);
+            margin-top: 4px;
+        }
+        .menu-chapter-label:first-child { border-top: none; margin-top: 0; }
+        .menu-row {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            background: rgba(18, 24, 32, 0.7);
+            gap: 4px;
+        }
+        .menu-toggle {
+            background: rgba(18, 24, 32, 0.8);
             border: 1px solid rgba(0, 229, 255, 0.3);
-            border-radius: 30px;
-            padding: 10px 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
-            width: max-content;
-            max-width: 60vw;
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .menu-toggle:hover {
+            background: rgba(0, 229, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
         }
 
         .menu-btn {
             background: transparent;
             border: none;
             color: var(--cyan);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 8px 15px;
-            border-radius: 8px;
+            transition: all 0.2s ease;
+            padding: 4px 10px;
+            border-radius: 6px;
         }
 
         .menu-btn:hover {
@@ -438,31 +478,57 @@
 
     <canvas id="three-bg"></canvas>
     
-    <div class="top-bar">
+    <div class="top-bar" style="position:relative;">
         <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+        <button class="menu-toggle" onclick="document.getElementById('top-menu').classList.toggle('open')">☰ INDEX</button>
         <nav id="top-menu">
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(0)">Cover</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(1)">Preface</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(2)">1.3 Wave Eq</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(3)">1.4 Plane</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(4)">1.5 Sphere</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(6)">2.2 Point</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(7)">2.3 Dipole</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(8)">2.5 Line</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(9)">2.6 Tilting</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(10)">2.13 Piston</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(12)">3.2 Strings</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(13)">3.3 Bars</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(14)">3.4 Membranes</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(16)">4.7 Analogies</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(18)">5.21 Conical</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(19)">5.22 Exp</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(20)">5.27 Finite</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(23)">6.8 Baffles</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(25)">8.3 Mics</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(31)">11.2 Reverb</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(33)">12.6 Hearing</button>
-            <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(42)">End</button>
+            <div class="menu-chapter-label">BOOK</div>
+            <div class="menu-row">
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(0); document.getElementById('top-menu').classList.remove('open')">Cover</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(1); document.getElementById('top-menu').classList.remove('open')">Preface</button>
+            </div>
+            <div class="menu-chapter-label">CH 1 — SOUND WAVES</div>
+            <div class="menu-row">
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(2); document.getElementById('top-menu').classList.remove('open')">1.3 Wave Eq</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(3); document.getElementById('top-menu').classList.remove('open')">1.4 Plane</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(4); document.getElementById('top-menu').classList.remove('open')">1.5 Sphere</button>
+            </div>
+            <div class="menu-chapter-label">CH 2 — RADIATING SYSTEMS</div>
+            <div class="menu-row">
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(6); document.getElementById('top-menu').classList.remove('open')">2.2 Point</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(7); document.getElementById('top-menu').classList.remove('open')">2.3 Dipole</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(8); document.getElementById('top-menu').classList.remove('open')">2.5 Line</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(9); document.getElementById('top-menu').classList.remove('open')">2.6 Tilt</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(10); document.getElementById('top-menu').classList.remove('open')">2.7 Tapered</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(11); document.getElementById('top-menu').classList.remove('open')">2.11 Curved</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(12); document.getElementById('top-menu').classList.remove('open')">2.12 Ring</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(13); document.getElementById('top-menu').classList.remove('open')">2.13 Piston</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(14); document.getElementById('top-menu').classList.remove('open')">2.19 Horn</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(15); document.getElementById('top-menu').classList.remove('open')">2.21 Cone</button>
+            </div>
+            <div class="menu-chapter-label">CH 3 — VIBRATING SYSTEMS</div>
+            <div class="menu-row">
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(17); document.getElementById('top-menu').classList.remove('open')">3.2 Strings</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(18); document.getElementById('top-menu').classList.remove('open')">3.3 Bars</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(19); document.getElementById('top-menu').classList.remove('open')">3.4 Membranes</button>
+            </div>
+            <div class="menu-chapter-label">CH 4-5 — ANALOGIES & ELEMENTS</div>
+            <div class="menu-row">
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(21); document.getElementById('top-menu').classList.remove('open')">4.7 Analogies</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(23); document.getElementById('top-menu').classList.remove('open')">5.21 Conical</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(24); document.getElementById('top-menu').classList.remove('open')">5.22 Exp</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(25); document.getElementById('top-menu').classList.remove('open')">5.27 Finite</button>
+            </div>
+            <div class="menu-chapter-label">CH 6-12 — TRANSDUCERS & ACOUSTICS</div>
+            <div class="menu-row">
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(28); document.getElementById('top-menu').classList.remove('open')">6.8 Baffles</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(30); document.getElementById('top-menu').classList.remove('open')">8.3 Mics</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(36); document.getElementById('top-menu').classList.remove('open')">11.2 Reverb</button>
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(38); document.getElementById('top-menu').classList.remove('open')">12.6 Hearing</button>
+            </div>
+            <div class="menu-row" style="justify-content:center; margin-top:4px;">
+                <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(47); document.getElementById('top-menu').classList.remove('open')" style="color:var(--gold);">⬛ End</button>
+            </div>
         </nav>
     </div>
 
@@ -721,7 +787,102 @@
                 </div>
             </div>
 
-            <!-- PAGE 10: 2.13 CIRCULAR PISTON -->
+            <!-- PAGE 10: 2.7 TAPERED STRAIGHT LINE SOURCE -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(58, 'Olson 2.7: Tapered Straight Line Source (Page 37)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.7 Tapered Line Source</div>
+                    <p class="description">
+                        A tapered (apodized) line source applies a weighting function across its length, reducing side lobes at the expense of a wider main lobe. This is the foundation of modern line array shading.
+                    </p>
+                    
+                    <div class="equation-box" style="font-size: 1.0rem;">
+                        R(α) = ∫ W(x) · e^(jkx sinα) dx
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Source Length (L/λ)</label>
+                            <input type="range" id="lenTapered" min="0.5" max="10" step="0.5" value="3">
+                            <div class="control-value"><span id="lenTaperedVal">3.0</span> λ</div>
+                        </div>
+                        <div class="control-group">
+                            <label>Taper: <span id="taperTypeDisp">Cosine</span></label>
+                            <input type="range" id="taperType" min="0" max="2" step="1" value="1">
+                            <div class="control-value" style="font-size:0.75rem;">0=Uniform 1=Cosine 2=Hanning</div>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartTaperedLine"></canvas>
+                    </div>
+
+                    <div class="page-number">10</div>
+                </div>
+            </div>
+
+            <!-- PAGE 11: 2.11 CURVED LINE SOURCE -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(61, 'Olson 2.11: Curved Line Source (Page 40)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.11 Curved Line Source</div>
+                    <p class="description">
+                        An arc source distributes elements along a circular arc of radius R subtending angle 2φ. This is the theoretical basis of J-shaped and curved line arrays.
+                    </p>
+                    <div class="equation-box" style="font-size: 1.0rem;">
+                        R(θ) = |Σ e^(jkR[cos(θ-φn) - cosφn])|
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Arc Radius (R/λ)</label>
+                            <input type="range" id="arcRadius" min="0.5" max="8" step="0.5" value="3">
+                            <div class="control-value"><span id="arcRadiusVal">3.0</span> λ</div>
+                        </div>
+                        <div class="control-group">
+                            <label>Arc Angle (2φ) [°]</label>
+                            <input type="range" id="arcAngle" min="10" max="180" step="5" value="60">
+                            <div class="control-value"><span id="arcAngleVal">60</span>°</div>
+                        </div>
+                    </div>
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartCurvedLine"></canvas>
+                    </div>
+                    <div class="page-number">11</div>
+                </div>
+            </div>
+
+            <!-- PAGE 12: 2.12 CIRCULAR RING SOURCE -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(64, 'Olson 2.12: Circular Ring Source (Page 43)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.12 Circular Ring Source</div>
+                    <p class="description">
+                        A circular ring of sources of radius a produces a directivity pattern governed by the Bessel function J₀. This is the basis for ring-radiator transducers.
+                    </p>
+                    <div class="equation-box" style="font-size: 1.2rem;">
+                        R(α) = J₀( (2πa/λ) sin α )
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Ring Radius (a/λ)</label>
+                            <input type="range" id="ringRadius" min="0.2" max="5" step="0.2" value="1.5">
+                            <div class="control-value"><span id="ringRadiusVal">1.5</span> λ</div>
+                        </div>
+                    </div>
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartRingSource"></canvas>
+                    </div>
+                    <div class="page-number">12</div>
+                </div>
+            </div>
+
+            <!-- PAGE 13: 2.13 CIRCULAR PISTON -->
             <div class="page">
                 <div class="page-content">
                     <button class="history-btn" onclick="openHistory(64, 'Olson 2.13: Plane Circular-Piston Source (Page 64)')" title="View Original Book Capture">
@@ -753,7 +914,66 @@
                 </div>
             </div>
 
-                        <!-- PAGE 11: CHAPTER 3 COVER -->
+            <!-- PAGE 14: 2.19 HORN SOURCE -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(68, 'Olson 2.19: Horn Source (Page 47)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.19 Horn Source</div>
+                    <p class="description">
+                        The directivity of a horn mouth depends on the ratio of its opening diameter to the wavelength. Larger mouths produce narrower beams at high frequencies.
+                    </p>
+                    <div class="equation-box" style="font-size: 1.1rem;">
+                        R(α) ≈ | 2J₁(ka sinα) / (ka sinα) |
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Mouth Diameter (D/λ)</label>
+                            <input type="range" id="hornMouth" min="0.5" max="8" step="0.5" value="2">
+                            <div class="control-value"><span id="hornMouthVal">2.0</span> λ</div>
+                        </div>
+                    </div>
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartHornSource"></canvas>
+                    </div>
+                    <div class="page-number">14</div>
+                </div>
+            </div>
+
+            <!-- PAGE 15: 2.21 CONE SURFACE SOURCE -->
+            <div class="page">
+                <div class="page-content">
+                    <button class="history-btn" onclick="openHistory(74, 'Olson 2.21: Cone Surface Source (Page 53)')" title="View Original Book Capture">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4L3 12l3-3V6h4L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <div class="page-header">2.21 Cone Surface Source</div>
+                    <p class="description">
+                        A cone radiator (like a real loudspeaker cone) has a half-angle β. Its directivity narrows as the cone becomes shallower and as frequency increases.
+                    </p>
+                    <div class="equation-box" style="font-size: 1.0rem;">
+                        R(α) = Weighted integration over cone surface
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Cone Half-Angle (β) [°]</label>
+                            <input type="range" id="coneAngle" min="10" max="85" step="5" value="45">
+                            <div class="control-value"><span id="coneAngleVal">45</span>°</div>
+                        </div>
+                        <div class="control-group">
+                            <label>Cone Diameter (D/λ)</label>
+                            <input type="range" id="coneDia" min="0.5" max="8" step="0.5" value="2">
+                            <div class="control-value"><span id="coneDiaVal">2.0</span> λ</div>
+                        </div>
+                    </div>
+                    <div class="graph-wrapper" style="height: 250px;">
+                        <canvas id="chartConeSource"></canvas>
+                    </div>
+                    <div class="page-number">15</div>
+                </div>
+            </div>
+
+                        <!-- CHAPTER 3 COVER -->
             <div class="page cover" data-density="hard">
                 <div class="page-content">
                     <h1>CHAPTER 3</h1>
@@ -1038,6 +1258,7 @@
                     <h1>CHAPTER 7</h1>
                     <h2>HORN<br>LOUDSPEAKERS</h2>
                     <p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">High Efficiency Systems</p>
+                    <p style="margin-top:20px; color:rgba(0,229,255,0.5); font-family:'Orbitron',sans-serif; font-size:0.85rem; letter-spacing:3px;">— COMING SOON —</p>
                 </div>
             </div>
 
@@ -1093,8 +1314,8 @@
             </div>
 
             <!-- PAGE 26 TO 30: COVERS 9-10 -->
-            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 9</h1><h2>MISC<br>TRANSDUCERS</h2></div></div>
-            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 10</h1><h2>MEASUREMENTS</h2></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 9</h1><h2>MISC<br>TRANSDUCERS</h2><p style="margin-top:20px; color:rgba(0,229,255,0.5); font-family:'Orbitron',sans-serif; font-size:0.85rem; letter-spacing:3px;">— COMING SOON —</p></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 10</h1><h2>MEASUREMENTS</h2><p style="margin-top:20px; color:rgba(0,229,255,0.5); font-family:'Orbitron',sans-serif; font-size:0.85rem; letter-spacing:3px;">— COMING SOON —</p></div></div>
             
             <!-- PAGE 30: CHAPTER 11 COVER -->
             <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 11</h1><h2>ARCHITECTURAL<br>ACOUSTICS</h2><p style="margin-top:40px; color:rgba(255,255,255,0.4); font-style:italic;">Collection & Dispersion</p></div></div>
@@ -1135,10 +1356,10 @@
             </div>
 
             <!-- PAGES 34-37: COVERS 13-16 -->
-            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 13</h1><h2>COMPLETE<br>SYSTEMS</h2></div></div>
-            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 14</h1><h2>COMMUNICATION</h2></div></div>
-            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 15</h1><h2>ULTRASONICS</h2></div></div>
-            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 16</h1><h2>UNDERWATER<br>SOUND</h2></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 13</h1><h2>COMPLETE<br>SYSTEMS</h2><p style="margin-top:20px; color:rgba(0,229,255,0.5); font-family:'Orbitron',sans-serif; font-size:0.85rem; letter-spacing:3px;">— COMING SOON —</p></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 14</h1><h2>COMMUNICATION</h2><p style="margin-top:20px; color:rgba(0,229,255,0.5); font-family:'Orbitron',sans-serif; font-size:0.85rem; letter-spacing:3px;">— COMING SOON —</p></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 15</h1><h2>ULTRASONICS</h2><p style="margin-top:20px; color:rgba(0,229,255,0.5); font-family:'Orbitron',sans-serif; font-size:0.85rem; letter-spacing:3px;">— COMING SOON —</p></div></div>
+            <div class="page cover" data-density="hard"><div class="page-content"><h1>CHAPTER 16</h1><h2>UNDERWATER<br>SOUND</h2><p style="margin-top:20px; color:rgba(0,229,255,0.5); font-family:'Orbitron',sans-serif; font-size:0.85rem; letter-spacing:3px;">— COMING SOON —</p></div></div>
 
             <!-- PAGE 42: BACK COVER -->
             <div class="page cover" data-density="hard">
@@ -1494,6 +1715,47 @@
             });
 
 
+            // 2.7 Tapered Line Source Chart
+            const ctxTapered = document.getElementById('chartTaperedLine').getContext('2d');
+            const chartTapered = new Chart(ctxTapered, {
+                ...polarConfig,
+                data: {
+                    labels: labelsAngles,
+                    datasets: [
+                        { label: 'Tapered Line R(θ)', data: Array(72).fill(0), borderColor: '#ff6e40', backgroundColor: 'rgba(255, 110, 64, 0.2)' },
+                        { label: 'Uniform (ref)', data: Array(72).fill(0), borderColor: 'rgba(0,229,255,0.3)', borderDash: [3,3], backgroundColor: 'transparent' }
+                    ]
+                }
+            });
+
+            // 2.11 Curved Line Source Chart
+            const ctxCurved = document.getElementById('chartCurvedLine').getContext('2d');
+            const chartCurved = new Chart(ctxCurved, {
+                ...polarConfig,
+                data: { labels: labelsAngles, datasets: [{ label: 'Curved Line R(θ)', data: Array(72).fill(0), borderColor: '#e040fb', backgroundColor: 'rgba(224, 64, 251, 0.2)' }] }
+            });
+
+            // 2.12 Circular Ring Source Chart
+            const ctxRing = document.getElementById('chartRingSource').getContext('2d');
+            const chartRing = new Chart(ctxRing, {
+                ...polarConfig,
+                data: { labels: labelsAngles, datasets: [{ label: 'Ring Source J₀ R(θ)', data: Array(72).fill(0), borderColor: '#76ff03', backgroundColor: 'rgba(118, 255, 3, 0.2)' }] }
+            });
+
+            // 2.19 Horn Source Chart
+            const ctxHornSrc = document.getElementById('chartHornSource').getContext('2d');
+            const chartHornSrc = new Chart(ctxHornSrc, {
+                ...polarConfig,
+                data: { labels: labelsAngles, datasets: [{ label: 'Horn Mouth R(θ)', data: Array(72).fill(0), borderColor: '#ffd740', backgroundColor: 'rgba(255, 215, 64, 0.2)' }] }
+            });
+
+            // 2.21 Cone Surface Source Chart
+            const ctxCone = document.getElementById('chartConeSource').getContext('2d');
+            const chartCone = new Chart(ctxCone, {
+                ...polarConfig,
+                data: { labels: labelsAngles, datasets: [{ label: 'Cone Source R(θ)', data: Array(72).fill(0), borderColor: '#ff4081', backgroundColor: 'rgba(255, 64, 129, 0.2)' }] }
+            });
+
             // 2.6 Beam Tilting Chart
             const ctxBeam = document.getElementById('chartBeamTilting').getContext('2d');
             let chartBeam = new Chart(ctxBeam, {
@@ -1724,6 +1986,18 @@
                 return sum;
             }
 
+            // Bessel function J0 approximation
+            function besselJ0(x) {
+                if (Math.abs(x) < 1e-10) return 1;
+                let sum = 0, term = 1, m = 0;
+                while (Math.abs(term) > 1e-8 && m < 30) {
+                    sum += term;
+                    m++;
+                    term *= -(x * x) / (4 * m * m);
+                }
+                return sum;
+            }
+
             function renderCharts() {
                 time += 0.1;
                 
@@ -1817,6 +2091,104 @@
                 chartPiston.data.datasets[0].data = pistonData;
                 chartPiston.update();
 
+
+                // 2.7 Tapered Line Source Update
+                const lenTap = parseFloat(document.getElementById('lenTapered').value);
+                document.getElementById('lenTaperedVal').innerText = lenTap.toFixed(1);
+                const taperT = parseInt(document.getElementById('taperType').value);
+                const taperNames = ['Uniform','Cosine','Hanning'];
+                document.getElementById('taperTypeDisp').innerText = taperNames[taperT];
+                const nSamples = 64;
+                const taperedData = labelsAngles.map(a => {
+                    const alpha = a * Math.PI / 180;
+                    let sum = 0;
+                    for (let n = 0; n < nSamples; n++) {
+                        const xn = (n / (nSamples - 1) - 0.5);
+                        let w = 1.0;
+                        if (taperT === 1) w = Math.cos(Math.PI * xn);
+                        else if (taperT === 2) w = 0.5 + 0.5 * Math.cos(2 * Math.PI * xn);
+                        sum += w * Math.cos(2 * Math.PI * lenTap * xn * Math.sin(alpha));
+                    }
+                    return Math.abs(sum / nSamples);
+                });
+                const maxTap = Math.max(...taperedData, 0.001);
+                chartTapered.data.datasets[0].data = taperedData.map(v => v / maxTap);
+                const uniformRef = labelsAngles.map(a => {
+                    const u = Math.PI * lenTap * Math.sin(a * Math.PI / 180);
+                    return u === 0 ? 1 : Math.abs(Math.sin(u) / u);
+                });
+                chartTapered.data.datasets[1].data = uniformRef;
+                chartTapered.update();
+
+                // 2.11 Curved Line Source Update
+                const arcR = parseFloat(document.getElementById('arcRadius').value);
+                const arcA = parseFloat(document.getElementById('arcAngle').value);
+                document.getElementById('arcRadiusVal').innerText = arcR.toFixed(1);
+                document.getElementById('arcAngleVal').innerText = arcA;
+                const nArcElem = 32;
+                const halfArc = (arcA / 2) * Math.PI / 180;
+                const curvedData = labelsAngles.map(a => {
+                    const theta = a * Math.PI / 180;
+                    let re = 0, im = 0;
+                    for (let n = 0; n < nArcElem; n++) {
+                        const phi_n = -halfArc + (2 * halfArc * n / (nArcElem - 1));
+                        const phase = 2 * Math.PI * arcR * (Math.cos(theta - phi_n) - Math.cos(phi_n));
+                        re += Math.cos(phase);
+                        im += Math.sin(phase);
+                    }
+                    return Math.sqrt(re * re + im * im) / nArcElem;
+                });
+                const maxCurved = Math.max(...curvedData, 0.001);
+                chartCurved.data.datasets[0].data = curvedData.map(v => v / maxCurved);
+                chartCurved.update();
+
+                // 2.12 Circular Ring Source Update
+                const ringR = parseFloat(document.getElementById('ringRadius').value);
+                document.getElementById('ringRadiusVal').innerText = ringR.toFixed(1);
+                const ringData = labelsAngles.map(a => {
+                    const u = 2 * Math.PI * ringR * Math.sin(a * Math.PI / 180);
+                    return Math.abs(besselJ0(u));
+                });
+                const maxRing = Math.max(...ringData, 0.001);
+                chartRing.data.datasets[0].data = ringData.map(v => v / maxRing);
+                chartRing.update();
+
+                // 2.19 Horn Source Update
+                const hornD = parseFloat(document.getElementById('hornMouth').value);
+                document.getElementById('hornMouthVal').innerText = hornD.toFixed(1);
+                const hornA = hornD / 2;
+                const hornData = labelsAngles.map(a => {
+                    const u = 2 * Math.PI * hornA * Math.sin(a * Math.PI / 180);
+                    if (Math.abs(u) < 0.001) return 1;
+                    return Math.abs(2 * besselJ1(u) / u);
+                });
+                chartHornSrc.data.datasets[0].data = hornData;
+                chartHornSrc.update();
+
+                // 2.21 Cone Surface Source Update
+                const coneB = parseFloat(document.getElementById('coneAngle').value) * Math.PI / 180;
+                const coneD = parseFloat(document.getElementById('coneDia').value);
+                document.getElementById('coneAngleVal').innerText = parseInt(document.getElementById('coneAngle').value);
+                document.getElementById('coneDiaVal').innerText = coneD.toFixed(1);
+                const coneR = coneD / 2;
+                const nConeRings = 20;
+                const coneData = labelsAngles.map(a => {
+                    const alpha = a * Math.PI / 180;
+                    let re = 0, im = 0;
+                    for (let n = 0; n < nConeRings; n++) {
+                        const rn = coneR * (n + 1) / nConeRings;
+                        const zn = rn / Math.tan(coneB);
+                        const u = 2 * Math.PI * rn * Math.sin(alpha);
+                        const phaseZ = 2 * Math.PI * zn * Math.cos(alpha);
+                        const j0val = besselJ0(u);
+                        re += j0val * Math.cos(phaseZ) * rn;
+                        im += j0val * Math.sin(phaseZ) * rn;
+                    }
+                    return Math.sqrt(re * re + im * im);
+                });
+                const maxCone = Math.max(...coneData, 0.001);
+                chartCone.data.datasets[0].data = coneData.map(v => v / maxCone);
+                chartCone.update();
 
                 // 2.6 Beam Tilting Update
                 const delta = parseFloat(document.getElementById('steerAngle').value);
