@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electroacoustics — Tom Danley Calculator</title>
+<meta name="description" content="Transducer SPL propagation, inverse square law, and array gain calculator.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --accent: #00e676;
+    --accent-dim: rgba(0, 230, 118, 0.2);
+    --accent-glow: rgba(0, 230, 118, 0.4);
+    --blue-deep: #0a1628;
+    --gold: #f0c040;
+    --text: #c8daf0;
+    --bg-panel: rgba(10, 22, 40, 0.6);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--blue-deep);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  canvas#three-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .top-bar {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(3,10,16,0.9), transparent);
+  }
+  .back-btn {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    transition: all 0.3s;
+    background: var(--accent-dim);
+  }
+  .back-btn:hover {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--accent-glow);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 20px 0;
+    z-index: 10;
+    text-align: center;
+  }
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: rgba(200,218,240,0.5);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    z-index: 10;
+  }
+
+  .calculator-container {
+    position: relative;
+    z-index: 10;
+    width: 90%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 50px;
+  }
+
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--accent-dim);
+    border-radius: 16px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,230,118,0.05);
+  }
+
+  .panel h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--accent-dim);
+    padding-bottom: 10px;
+    letter-spacing: 2px;
+  }
+
+  .input-group {
+    margin-bottom: 25px;
+  }
+  .input-group label {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    background: rgba(0,0,0,0.5);
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--accent);
+  }
+
+  input[type=number] {
+    width: 90px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--accent);
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: right;
+    outline: none;
+  }
+  input[type=number]:focus {
+    box-shadow: 0 0 15px var(--accent-glow);
+  }
+
+  .unit {
+    font-family: 'Orbitron', monospace;
+    color: var(--gold);
+    font-size: 1.1rem;
+    min-width: 55px;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .result-box {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+  }
+  .result-box .label {
+    font-size: 0.9rem;
+    color: rgba(200,218,240,0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .result-box .value {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-top: 5px;
+  }
+  .result-box .value.gold { color: var(--gold); }
+
+  .formulas {
+    margin-top: 30px;
+    font-family: 'Rajdhani', serif;
+    font-size: 1.1rem;
+    color: rgba(0, 230, 118, 0.7);
+    line-height: 1.8;
+  }
+  .formulas span {
+    display: inline-block;
+    background: rgba(0,230,118,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 4px;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    height: 350px;
+  }
+
+  @media (max-width: 900px) {
+    .calculator-container { grid-template-columns: 1fr; }
+    h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="three-bg"></canvas>
+
+<div class="top-bar">
+    <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+</div>
+
+<h1>Electroacoustics</h1>
+<div class="page-subtitle">Transducer &amp; Array Simulation</div>
+
+<div class="calculator-container">
+    <!-- INPUTS PANEL -->
+    <div class="panel">
+        <h2>System Parameters</h2>
+
+        <div class="input-group">
+            <label>Sensitivity (1W/1m)</label>
+            <div class="control-row">
+                <input type="range" id="sensSlider" min="75" max="115" step="0.1" value="90">
+                <input type="number" id="sensNum" min="60" max="130" step="0.1" value="90">
+                <span class="unit">dB SPL</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Amplifier Power</label>
+            <div class="control-row">
+                <input type="range" id="powerSlider" min="1" max="5000" step="1" value="500">
+                <input type="number" id="powerNum" min="0.1" max="50000" step="1" value="500">
+                <span class="unit">W</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Distance</label>
+            <div class="control-row">
+                <input type="range" id="distSlider" min="1" max="200" step="0.5" value="10">
+                <input type="number" id="distNum" min="0.1" max="1000" step="0.5" value="10">
+                <span class="unit">m</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Number of Sources (coherent)</label>
+            <div class="control-row">
+                <input type="range" id="srcSlider" min="1" max="64" step="1" value="1">
+                <input type="number" id="srcNum" min="1" max="256" step="1" value="1">
+                <span class="unit">units</span>
+            </div>
+        </div>
+
+        <div class="formulas">
+            <strong>Key Formulas:</strong><br>
+            <span>SPL = Sens + 10·log₁₀(P)</span>
+            <span>−20·log₁₀(d)</span><br>
+            <span>Array = +10·log₁₀(N)</span>
+            <span>I = P / 4πr²</span>
+        </div>
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div class="panel">
+        <h2>Calculated Values</h2>
+        <div class="results-grid">
+            <div class="result-box">
+                <div class="label">SPL @ 1m (total)</div>
+                <div class="value"><span id="outSPL1m">117.0</span> <span style="font-size:1rem">dB</span></div>
+            </div>
+            <div class="result-box">
+                <div class="label">SPL @ Distance</div>
+                <div class="value gold"><span id="outSPLd">97.0</span> <span style="font-size:1rem">dB</span></div>
+            </div>
+            <div class="result-box">
+                <div class="label">Array Gain</div>
+                <div class="value"><span id="outArrayGain">0.0</span> <span style="font-size:1rem">dB</span></div>
+            </div>
+            <div class="result-box">
+                <div class="label">Acoustic Intensity</div>
+                <div class="value gold"><span id="outIntensity">0.40</span> <span style="font-size:1rem">W/m²</span></div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 30px;">SPL vs Distance</h2>
+        <div class="chart-container">
+            <canvas id="splChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+// THREE.JS BACKGROUND
+const canvasBg = document.getElementById('three-bg');
+const renderer = new THREE.WebGLRenderer({ canvas: canvasBg, alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 20;
+
+const pGeo = new THREE.BufferGeometry();
+const pPos = new Float32Array(300 * 3);
+for (let i = 0; i < 900; i++) pPos[i] = (Math.random()-0.5)*60;
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x00e676, size: 0.08, transparent: true, opacity: 0.2 }));
+scene.add(particles);
+
+// Add wireframe spheres for wave visualization
+const sphereGeo = new THREE.SphereGeometry(4, 16, 16);
+const sphereMat = new THREE.MeshBasicMaterial({ color: 0x00e676, wireframe: true, transparent: true, opacity: 0.04 });
+const spheres = [];
+for (let i = 0; i < 3; i++) {
+    const s = new THREE.Mesh(sphereGeo, sphereMat.clone());
+    s.position.set((Math.random()-0.5)*30, (Math.random()-0.5)*20, -15);
+    s.userData = { phase: i * 2, baseScale: 0.5 + i * 0.8 };
+    scene.add(s);
+    spheres.push(s);
+}
+
+function animateBg(t) {
+  requestAnimationFrame(animateBg);
+  const time = t * 0.001;
+  particles.rotation.y = t * 0.00005;
+  particles.rotation.x = t * 0.00002;
+  spheres.forEach(s => {
+      const sc = s.userData.baseScale + Math.sin(time + s.userData.phase) * 0.3;
+      s.scale.setScalar(sc);
+      s.material.opacity = 0.02 + Math.sin(time + s.userData.phase) * 0.02;
+  });
+  renderer.render(scene, camera);
+}
+animateBg(0);
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// CALCULATOR LOGIC
+const sensSlider = document.getElementById('sensSlider');
+const sensNum = document.getElementById('sensNum');
+const powerSlider = document.getElementById('powerSlider');
+const powerNum = document.getElementById('powerNum');
+const distSlider = document.getElementById('distSlider');
+const distNum = document.getElementById('distNum');
+const srcSlider = document.getElementById('srcSlider');
+const srcNum = document.getElementById('srcNum');
+
+const outSPL1m = document.getElementById('outSPL1m');
+const outSPLd = document.getElementById('outSPLd');
+const outArrayGain = document.getElementById('outArrayGain');
+const outIntensity = document.getElementById('outIntensity');
+
+function syncInput(source, target) {
+    let val = parseFloat(source.value);
+    if (isNaN(val)) return;
+    target.value = val;
+    calculate();
+}
+
+sensSlider.addEventListener('input', () => syncInput(sensSlider, sensNum));
+sensNum.addEventListener('input', () => syncInput(sensNum, sensSlider));
+powerSlider.addEventListener('input', () => syncInput(powerSlider, powerNum));
+powerNum.addEventListener('input', () => syncInput(powerNum, powerSlider));
+distSlider.addEventListener('input', () => syncInput(distSlider, distNum));
+distNum.addEventListener('input', () => syncInput(distNum, distSlider));
+srcSlider.addEventListener('input', () => syncInput(srcSlider, srcNum));
+srcNum.addEventListener('input', () => syncInput(srcNum, srcSlider));
+
+// Chart
+const ctx = document.getElementById('splChart').getContext('2d');
+Chart.defaults.color = '#c8daf0';
+Chart.defaults.font.family = 'Rajdhani';
+
+let splChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            {
+                label: 'SPL (dB)',
+                data: [],
+                borderColor: 'rgba(0, 230, 118, 0.8)',
+                backgroundColor: 'rgba(0, 230, 118, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                pointRadius: 0,
+                tension: 0.4
+            },
+            {
+                label: 'Current Position',
+                data: [],
+                backgroundColor: '#f0c040',
+                borderColor: '#f0c040',
+                borderWidth: 2,
+                pointRadius: 7,
+                pointHoverRadius: 9,
+                showLine: false
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 200 },
+        scales: {
+            x: {
+                type: 'linear',
+                title: { display: true, text: 'Distance (m)', color: '#00e676' },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+            },
+            y: {
+                title: { display: true, text: 'SPL (dB)', color: '#f0c040' },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+            }
+        },
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.raw.y.toFixed(1) + ' dB @ ' + context.raw.x.toFixed(1) + ' m';
+                    }
+                }
+            }
+        }
+    }
+});
+
+function calculate() {
+    const sens = parseFloat(sensNum.value);
+    const P = parseFloat(powerNum.value);
+    const d = parseFloat(distNum.value);
+    const N = parseInt(srcNum.value);
+
+    if (isNaN(sens) || isNaN(P) || isNaN(d) || isNaN(N) || P <= 0 || d <= 0 || N < 1) return;
+
+    const arrayGain = 10 * Math.log10(N);
+    const spl1m = sens + 10 * Math.log10(P) + arrayGain;
+    const splAtDist = spl1m - 20 * Math.log10(d);
+
+    // Acoustic intensity: I = P_acoustic / (4 * pi * r^2)
+    // Using reference: SPL = 10*log10(I/I0), I0 = 1e-12
+    const intensity = Math.pow(10, splAtDist / 10) * 1e-12;
+
+    outSPL1m.innerText = spl1m.toFixed(1);
+    outSPLd.innerText = splAtDist.toFixed(1);
+    outArrayGain.innerText = (arrayGain > 0 ? '+' : '') + arrayGain.toFixed(1);
+    outIntensity.innerText = intensity < 0.001 ? intensity.toExponential(2) : intensity.toFixed(4);
+
+    // Update Chart — SPL vs distance
+    const maxD = Math.max(50, d * 2.5);
+    let curveData = [];
+    for (let dd = 1; dd <= maxD; dd += maxD / 80) {
+        const splDD = spl1m - 20 * Math.log10(dd);
+        curveData.push({ x: dd, y: splDD });
+    }
+
+    splChart.data.datasets[0].data = curveData;
+    splChart.data.datasets[1].data = [{ x: d, y: splAtDist }];
+    splChart.options.scales.x.max = maxD;
+    splChart.update();
+}
+
+calculate();
+</script>
+</body>
+</html>
