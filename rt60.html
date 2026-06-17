@@ -1,115 +1,2211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Statistical RT60 — Tom Danley Calculator</title>
+<title>Consola Científica de Acústica de Salas — Tom Danley Calculator</title>
+<meta name="description" content="Dashboard de análisis acústico y diseño modal de salas basado en el estándar adversarial de ingeniería.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
-  :root { --accent:#ff9100; --accent-dim:rgba(255,145,0,0.2); --accent-glow:rgba(255,145,0,0.4); --blue-deep:#0a1628; --gold:#f0c040; --cyan:#00e5ff; --text:#c8daf0; --bg-panel:rgba(10,22,40,0.6); }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Rajdhani',sans-serif; background:var(--blue-deep); color:var(--text); overflow-x:hidden; min-height:100vh; display:flex; flex-direction:column; align-items:center; }
-  canvas#three-bg { position:fixed; inset:0; z-index:0; }
-  .top-bar { position:relative; z-index:10; width:100%; padding:20px 40px; display:flex; background:linear-gradient(to bottom,rgba(3,10,16,0.9),transparent); }
-  .back-btn { color:var(--accent); text-decoration:none; font-family:'Orbitron',monospace; font-weight:700; font-size:1rem; padding:10px 20px; border:1px solid var(--accent); border-radius:8px; transition:all 0.3s; background:var(--accent-dim); }
-  .back-btn:hover { background:var(--accent); color:#000; box-shadow:0 0 20px var(--accent); }
-  h1 { font-family:'Orbitron',monospace; font-size:2.5rem; color:var(--accent); text-shadow:0 0 20px var(--accent-glow); text-transform:uppercase; letter-spacing:4px; margin:20px 0; z-index:10; text-align:center; }
-  .page-subtitle { font-size:1.1rem; color:rgba(200,218,240,0.5); letter-spacing:3px; text-transform:uppercase; margin-bottom:30px; z-index:10; }
-  .calculator-container { position:relative; z-index:10; width:90%; max-width:1200px; display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:50px; }
-  .panel { background:var(--bg-panel); border:1px solid var(--accent-dim); border-radius:16px; padding:30px; backdrop-filter:blur(10px); box-shadow:0 15px 35px rgba(0,0,0,0.5),inset 0 0 20px rgba(255,145,0,0.05); }
-  .panel h2 { font-family:'Orbitron',monospace; font-size:1.2rem; color:#fff; margin-bottom:25px; border-bottom:1px solid var(--accent-dim); padding-bottom:10px; letter-spacing:2px; }
-  .input-group { margin-bottom:20px; }
-  .input-group label { display:block; font-size:1.1rem; color:var(--accent); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
-  .control-row { display:flex; align-items:center; gap:15px; }
-  input[type=range] { flex:1; -webkit-appearance:none; background:rgba(0,0,0,0.5); height:6px; border-radius:3px; outline:none; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:var(--accent); cursor:pointer; box-shadow:0 0 10px var(--accent); }
-  input[type=number] { width:90px; background:rgba(0,0,0,0.6); border:1px solid var(--accent); color:#fff; font-family:'Orbitron',monospace; font-size:1.2rem; padding:8px; border-radius:6px; text-align:right; outline:none; }
-  input[type=number]:focus { box-shadow:0 0 15px var(--accent-glow); }
-  .unit { font-family:'Orbitron',monospace; color:var(--gold); font-size:1.1rem; min-width:30px; }
-  .method-toggle { display:flex; gap:0; margin-bottom:25px; border-radius:8px; overflow:hidden; border:1px solid var(--accent-dim); }
-  .method-toggle button { flex:1; padding:12px; font-family:'Orbitron',monospace; font-size:0.9rem; background:rgba(0,0,0,0.4); color:rgba(200,218,240,0.6); border:none; cursor:pointer; transition:all 0.3s; letter-spacing:1px; }
-  .method-toggle button.active { background:var(--accent-dim); color:var(--accent); box-shadow:inset 0 0 15px rgba(255,145,0,0.1); }
-  .method-toggle button:hover:not(.active) { color:#fff; background:rgba(255,145,0,0.1); }
-  .results-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  .result-box { background:rgba(0,0,0,0.4); border:1px solid rgba(255,145,0,0.3); border-radius:10px; padding:15px; text-align:center; }
-  .result-box .label { font-size:0.9rem; color:rgba(200,218,240,0.6); text-transform:uppercase; letter-spacing:1px; }
-  .result-box .value { font-family:'Orbitron',monospace; font-size:1.8rem; color:var(--accent); margin-top:5px; }
-  .result-box .value.cyan { color:var(--cyan); }
-  .formulas { margin-top:25px; font-size:1.1rem; color:rgba(255,145,0,0.7); line-height:1.8; }
-  .formulas span { display:inline-block; background:rgba(255,145,0,0.1); padding:2px 8px; border-radius:4px; margin:2px 4px; }
-  .chart-container { position:relative; width:100%; height:320px; }
-  @media(max-width:900px) { .calculator-container{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg-dark: #060c13;
+    --bg-panel: #0b141f;
+    --bg-card: #101c2b;
+    --border-cyan: #00e5ff;
+    --border-cyan-dim: rgba(0, 229, 255, 0.2);
+    --border-gold: #f0c040;
+    --border-gold-dim: rgba(240, 192, 64, 0.25);
+    --text-primary: #e2efff;
+    --text-dim: #8ba0b8;
+    --font-mono: 'Fira Code', monospace;
+    --axial-color: #ff4444;
+    --tangential-color: #44ff44;
+    --oblique-color: #ab47bc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow-y: scroll;
+    min-height: 100vh;
+  }
+
+  .top-bar {
+    width: 100%;
+    padding: 12px 30px;
+    background: #02070c;
+    border-bottom: 1px solid var(--border-cyan-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 100;
+  }
+  .back-btn {
+    color: var(--border-cyan);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border: 1px solid var(--border-cyan);
+    border-radius: 4px;
+    background: rgba(0, 229, 255, 0.05);
+    transition: all 0.2s;
+  }
+  .back-btn:hover {
+    background: var(--border-cyan);
+    color: #000;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+  }
+  .brand-title {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--border-gold);
+    letter-spacing: 2px;
+  }
+
+  h1.main-title {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    color: #fff;
+    text-align: center;
+    margin: 20px 0 2px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    text-align: center;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+  }
+
+  .dashboard {
+    max-width: 1600px;
+    margin: 0 auto 50px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 20px;
+  }
+
+  /* INPUTS PANEL */
+  .inputs-panel {
+    background: var(--bg-panel);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: fit-content;
+  }
+  .inputs-panel h2 {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--border-cyan);
+    border-bottom: 1px solid var(--border-cyan-dim);
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .group-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--border-gold);
+    text-transform: uppercase;
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  .input-control {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .input-control label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .input-control label span.val {
+    font-family: var(--font-mono);
+    color: var(--border-cyan);
+    font-weight: 700;
+  }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  select {
+    width: 100%;
+    background: #02070c;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 6px;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus {
+    border-color: var(--border-cyan);
+  }
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    background: #02070c;
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--border-cyan);
+    cursor: pointer;
+  }
+  input[type=range].gold-range::-webkit-slider-thumb {
+    background: var(--border-gold);
+  }
+  input[type=number] {
+    width: 70px;
+    background: #02070c;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    padding: 4px;
+    border-radius: 4px;
+    text-align: right;
+    outline: none;
+  }
+  input[type=number]:focus {
+    border-color: var(--border-cyan);
+  }
+  .lbl-unit {
+    font-family: var(--font-mono);
+    color: var(--border-gold);
+    font-size: 0.8rem;
+    width: 32px;
+  }
+
+  /* CONTENT PANEL (TABS) */
+  .content-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .tabs-bar {
+    display: flex;
+    background: var(--bg-panel);
+    padding: 6px;
+    border-radius: 8px;
+    gap: 8px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tab-btn.active {
+    background: rgba(0, 229, 255, 0.08);
+    color: var(--border-cyan);
+    border: 1px solid var(--border-cyan-dim);
+  }
+  .tab-btn:hover:not(.active) {
+    color: #fff;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .tab-content {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .tab-content.active {
+    display: flex;
+  }
+
+  /* EQUATIONS GRID */
+  .eq-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  .eq-card {
+    background: var(--bg-panel);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .eq-card.span-3 {
+    grid-column: span 3;
+  }
+  .eq-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--border-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .eq-math {
+    background: #02070c;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 4px;
+    padding: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--border-cyan);
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+  .eq-res-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 5px;
+  }
+  .eq-res-lbl {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+  .eq-res-val {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .eq-res-multi {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+  .eq-sub-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.85rem;
+  }
+  .eq-sub-row span.sub-val {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--border-cyan);
+  }
+
+  /* CHARTS GRID */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .chart-card {
+    background: var(--bg-panel);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .chart-card.span-2 {
+    grid-column: span 2;
+  }
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    padding-bottom: 8px;
+  }
+  .chart-title {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  .chart-desc {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+  .canvas-container {
+    position: relative;
+    width: 100%;
+    height: 260px;
+  }
+  .canvas-container.large {
+    height: 380px;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* TABLES */
+  .modes-table-container {
+    background: var(--bg-panel);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 10px;
+  }
+  .table-header {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  table.modes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-align: left;
+  }
+  table.modes-table th, table.modes-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  table.modes-table th {
+    color: var(--border-gold);
+    font-weight: 500;
+  }
+  table.modes-table tr.active-row {
+    background: rgba(0, 229, 255, 0.05);
+  }
+  table.modes-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+  }
+  .badge {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .badge.axial { background: rgba(255,68,68,0.15); color: var(--axial-color); border: 1px solid rgba(255,68,68,0.3); }
+  .badge.tangential { background: rgba(68,255,68,0.15); color: var(--tangential-color); border: 1px solid rgba(68,255,68,0.3); }
+  .badge.oblique { background: rgba(171,71,188,0.15); color: var(--oblique-color); border: 1px solid rgba(171,71,188,0.3); }
+
+  /* Draggable elements instructions */
+  .interactive-hint {
+    font-size: 0.75rem;
+    color: var(--border-cyan);
+    font-style: italic;
+    background: rgba(0, 229, 255, 0.05);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+
+  /* Description panels */
+  .info-block {
+    background: rgba(240, 192, 64, 0.03);
+    border-left: 3px solid var(--border-gold);
+    padding: 15px;
+    border-radius: 0 6px 6px 0;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .info-block h3 {
+    font-family: var(--font-mono);
+    color: var(--border-gold);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .hidden { display: none !important; }
+
+  @media(max-width: 1250px) {
+    .dashboard { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .chart-card.span-2 { grid-column: span 1; }
+    .eq-grid { grid-template-columns: 1fr; }
+    .eq-card.span-3 { grid-column: span 1; }
+  }
 </style>
 </head>
 <body>
-<canvas id="three-bg"></canvas>
-<div class="top-bar"><a href="index.html" class="back-btn">← BACK TO CALCULATOR</a></div>
-<h1>Statistical RT60</h1>
-<div class="page-subtitle">Room Reverberation Time Estimates</div>
-<div class="calculator-container">
-  <div class="panel">
-    <h2>Room Parameters</h2>
-    <div class="method-toggle">
-      <button id="btnSabine" class="active" onclick="setMethod('sabine')">SABINE</button>
-      <button id="btnEyring" onclick="setMethod('eyring')">EYRING</button>
+
+<div class="top-bar">
+  <a href="index.html" class="back-btn">← MENU PRINCIPAL</a>
+  <div class="brand-title">STANDARDS OF ACOUSTICAL ENGINEERING</div>
+</div>
+
+<h1 class="main-title">Consola de Acústica de Salas</h1>
+<div class="subtitle">Tiempos de Reverberación RT60 y Modos Resonantes</div>
+
+<div class="dashboard">
+  
+  <!-- PANEL IZQUIERDO DE VARIABLES Y MATERIALES -->
+  <div class="inputs-panel">
+    <h2>Parámetros Físicos</h2>
+    
+    <div class="group-title">Dimensiones de la Sala</div>
+    
+    <div class="input-control">
+      <label>Largo (L) <span class="val" id="lVal">6.0 m</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="lS" min="2" max="30" step="0.1" value="6.0">
+        <input type="number" id="lN" min="1.5" max="100" step="0.05" value="6.0">
+        <span class="lbl-unit">m</span>
+      </div>
     </div>
-    <div class="input-group"><label>Length (L)</label><div class="control-row"><input type="range" id="lS" min="2" max="100" step="0.5" value="15"><input type="number" id="lN" min="1" max="500" step="0.5" value="15"><span class="unit">m</span></div></div>
-    <div class="input-group"><label>Width (W)</label><div class="control-row"><input type="range" id="wS" min="2" max="80" step="0.5" value="10"><input type="number" id="wN" min="1" max="300" step="0.5" value="10"><span class="unit">m</span></div></div>
-    <div class="input-group"><label>Height (H)</label><div class="control-row"><input type="range" id="hS" min="2" max="30" step="0.1" value="4"><input type="number" id="hN" min="1" max="100" step="0.1" value="4"><span class="unit">m</span></div></div>
-    <div class="input-group"><label>Avg. Absorption (ā)</label><div class="control-row"><input type="range" id="aS" min="0.01" max="0.99" step="0.01" value="0.20"><input type="number" id="aN" min="0.01" max="0.99" step="0.01" value="0.20"><span class="unit">α</span></div></div>
-    <div class="formulas"><strong>Equations:</strong><br><span>Sabine: RT60 = 0.161·V / A</span><br><span>Eyring: RT60 = 0.161·V / (−S·ln(1−ā))</span><br><span>Dc = 0.141·√(S·ā / π)</span></div>
+
+    <div class="input-control">
+      <label>Ancho (W) <span class="val" id="wVal">4.5 m</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="wS" min="2" max="25" step="0.1" value="4.5">
+        <input type="number" id="wN" min="1.5" max="100" step="0.05" value="4.5">
+        <span class="lbl-unit">m</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Alto (H) <span class="val" id="hVal">3.0 m</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="hS" min="2" max="15" step="0.1" value="3.0">
+        <input type="number" id="hN" min="1.0" max="50" step="0.05" value="3.0">
+        <span class="lbl-unit">m</span>
+      </div>
+    </div>
+
+    <div class="group-title">Variables Atmosféricas</div>
+
+    <div class="input-control">
+      <label>Temperatura Aire <span class="val" id="tempVal">20.0 °C</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="tempS" min="-10" max="40" step="0.5" value="20.0">
+        <input type="number" id="tempN" min="-50" max="60" step="0.5" value="20.0">
+        <span class="lbl-unit">°C</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Humedad Relativa <span class="val" id="humVal">50 %</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="humS" min="10" max="90" step="1" value="50">
+        <input type="number" id="humN" min="0" max="100" step="1" value="50">
+        <span class="lbl-unit">%</span>
+      </div>
+    </div>
+
+    <div class="group-title">Fuente y Distancia</div>
+
+    <div class="input-control">
+      <label>Directividad Fuente (Q) <span class="val" id="qVal">2.0</span></label>
+      <div class="ctrl-row">
+        <input type="range" class="gold-range" id="qS" min="1" max="24" step="0.1" value="2.0">
+        <input type="number" id="qN" min="1" max="50" step="0.1" value="2.0">
+        <span class="lbl-unit">factor</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Distancia Receptor <span class="val" id="recDistVal">3.0 m</span></label>
+      <div class="ctrl-row">
+        <input type="range" class="gold-range" id="recDistS" min="0.5" max="25" step="0.1" value="3.0">
+        <input type="number" id="recDistN" min="0.1" max="100" step="0.1" value="3.0">
+        <span class="lbl-unit">m</span>
+      </div>
+    </div>
+
+    <div class="group-title">Materiales por Superficie</div>
+    
+    <div class="input-control">
+      <label>Suelo (Floor)</label>
+      <select id="matFloor" onchange="calc()"></select>
+    </div>
+
+    <div class="input-control">
+      <label>Techo (Ceiling)</label>
+      <select id="matCeiling" onchange="calc()"></select>
+    </div>
+
+    <div class="input-control">
+      <label>Pared Izquierda (Left)</label>
+      <select id="matLeft" onchange="calc()"></select>
+    </div>
+
+    <div class="input-control">
+      <label>Pared Derecha (Right)</label>
+      <select id="matRight" onchange="calc()"></select>
+    </div>
+
+    <div class="input-control">
+      <label>Pared Frontal (Front)</label>
+      <select id="matFront" onchange="calc()"></select>
+    </div>
+
+    <div class="input-control">
+      <label>Pared Trasera (Back)</label>
+      <select id="matBack" onchange="calc()"></select>
+    </div>
+
+    <div class="group-title">Modo Activo para Visualizar 3D</div>
+    <div class="input-control">
+      <label>Índice p (Largo) <span class="val" id="modePVal">1</span></label>
+      <div class="ctrl-row">
+        <input type="range" class="gold-range" id="modePS" min="0" max="6" step="1" value="1">
+      </div>
+    </div>
+    <div class="input-control">
+      <label>Índice q (Ancho) <span class="val" id="modeQVal">0</span></label>
+      <div class="ctrl-row">
+        <input type="range" class="gold-range" id="modeQS" min="0" max="6" step="1" value="0">
+      </div>
+    </div>
+    <div class="input-control">
+      <label>Índice r (Alto) <span class="val" id="modeRVal">0</span></label>
+      <div class="ctrl-row">
+        <input type="range" class="gold-range" id="modeRS" min="0" max="6" step="1" value="0">
+      </div>
+    </div>
   </div>
-  <div class="panel">
-    <h2>Calculated Values</h2>
-    <div class="results-grid">
-      <div class="result-box"><div class="label">RT60</div><div class="value"><span id="outRT60">1.93</span> <span style="font-size:1rem">s</span></div></div>
-      <div class="result-box"><div class="label">Room Volume</div><div class="value cyan"><span id="outVol">600</span> <span style="font-size:1rem">m³</span></div></div>
-      <div class="result-box"><div class="label">Total Surface</div><div class="value"><span id="outSurf">500</span> <span style="font-size:1rem">m²</span></div></div>
-      <div class="result-box"><div class="label">Critical Distance</div><div class="value cyan"><span id="outDc">3.97</span> <span style="font-size:1rem">m</span></div></div>
-      <div class="result-box"><div class="label">Total Absorption</div><div class="value"><span id="outAbs">100</span> <span style="font-size:1rem">Sab</span></div></div>
-      <div class="result-box"><div class="label">Method</div><div class="value cyan" style="font-size:1.3rem"><span id="outMeth">SABINE</span></div></div>
+
+  <!-- PANEL DERECHO DE TABS -->
+  <div class="content-panel">
+    
+    <div class="tabs-bar">
+      <button id="tabBtnA" class="tab-btn active" onclick="setTab('A')">RT60 Multibanda</button>
+      <button id="tabBtnB" class="tab-btn" onclick="setTab('B')">Modos de Sala y Bolt</button>
+      <button id="tabBtnC" class="tab-btn" onclick="setTab('C')">Campo Difuso e ISO</button>
+      <button id="tabBtnD" class="tab-btn" onclick="setTab('D')">Trazado y Cascada</button>
     </div>
-    <h2 style="margin-top:30px;">RT60 vs Absorption</h2>
-    <div class="chart-container"><canvas id="rt60Chart"></canvas></div>
+
+    <!-- PESTAÑA A: RT60 MULTIBANDA -->
+    <div id="tabContentA" class="tab-content active">
+      
+      <!-- Fila de Ecuaciones (3) -->
+      <div class="eq-grid">
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 1: Velocidad del Sonido</div>
+          <div class="eq-math">$$c = 331.3 \sqrt{1 + \frac{T}{273.15}} + 0.6 \left(\frac{RH}{100}\right) 1.2$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Resultado (c):</span>
+            <span class="eq-res-val"><span id="eq1Val">344.0</span> <span style="font-size:0.75rem; font-weight:normal;">m/s</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 2: Volumen y Superficie</div>
+          <div class="eq-math">$$V = L \cdot W \cdot H \quad | \quad S = 2(LW + LH + WH)$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">V / S:</span>
+            <span class="eq-res-val"><span id="eq2ValV">81.0</span> <span style="font-size:0.75rem; font-weight:normal;">m³</span> / <span id="eq2ValS">117.0</span> <span style="font-size:0.75rem; font-weight:normal;">m²</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 3: Sabine Estándar (500 Hz)</div>
+          <div class="eq-math">$$RT60_{\text{Sabine}} = \frac{0.161 \cdot V}{S \cdot \bar{\alpha}}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Tiempo:</span>
+            <span class="eq-res-val"><span id="eq3Val">1.25</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de Ecuaciones 4, 5, 6 -->
+      <div class="eq-grid">
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 4: Sabine + Absorción del Aire</div>
+          <div class="eq-math">$$RT60_{\text{Sabine+Air}} = \frac{0.161 \cdot V}{S \cdot \bar{\alpha} + 4m \cdot V}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Con Aire:</span>
+            <span class="eq-res-val"><span id="eq4Val">1.22</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 5: Eyring Estándar (500 Hz)</div>
+          <div class="eq-math">$$RT60_{\text{Eyring}} = \frac{0.161 \cdot V}{-S \cdot \ln(1 - \bar{\alpha})}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Tiempo:</span>
+            <span class="eq-res-val"><span id="eq5Val">1.15</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 6: Eyring + Absorción del Aire</div>
+          <div class="eq-math">$$RT60_{\text{Eyring+Air}} = \frac{0.161 \cdot V}{-S \cdot \ln(1 - \bar{\alpha}) + 4m \cdot V}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Con Aire:</span>
+            <span class="eq-res-val"><span id="eq6Val">1.12</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de Ecuaciones 7, 8 -->
+      <div class="eq-grid">
+        <div class="eq-card" style="grid-column: span 1.5;">
+          <div class="eq-title">Ecuación 7: Modelo de Fitzroy (Direccional)</div>
+          <div class="eq-math">$$RT60_{\text{Fitzroy}} = \frac{0.161 \cdot V}{S^2} \left[ \frac{S_x}{\bar{\alpha}_x} + \frac{S_y}{\bar{\alpha}_y} + \frac{S_z}{\bar{\alpha}_z} \right]$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">RT60 Fitzroy (500 Hz):</span>
+            <span class="eq-res-val"><span id="eq7Val">1.35</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card" style="grid-column: span 1.5;">
+          <div class="eq-title">Ecuación 8: Modelo de Arau-Puchades (Exponencial Direccional)</div>
+          <div class="eq-math">$$RT60_{\text{Arau}} = \prod_{i=x,y,z} \left(\frac{0.161 \cdot V}{-S \cdot \ln(1 - \bar{\alpha}_i)}\right)^{\frac{S_i}{S}}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">RT60 Arau (500 Hz):</span>
+            <span class="eq-res-val"><span id="eq8Val">1.28</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos de RT60 -->
+      <div class="charts-grid">
+        <div class="chart-card span-2">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 1: Comparativa RT60 por Bandas de Octava</span>
+            <span class="chart-desc">Comparativa de Modelos Estocásticos y Direccionales (125 Hz - 4 kHz)</span>
+          </div>
+          <div class="canvas-container large">
+            <canvas id="rt60BandsChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 5: Coeficientes de Absorción de Materiales</span>
+            <span class="chart-desc">Curvas de los materiales seleccionados</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="materialsChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 10: Área de Absorción Equivalente (Sabines)</span>
+            <span class="chart-desc">Distribución por bandas de frecuencia</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="sabinesChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA B: MODOS DE SALA Y BOLT -->
+    <div id="tabContentB" class="tab-content">
+      
+      <!-- Ecuaciones 9, 10 -->
+      <div class="eq-grid">
+        <div class="eq-card" style="grid-column: span 1.5;">
+          <div class="eq-title">Ecuación 9: Frecuencias Propias (Modos 3D)</div>
+          <div class="eq-math">$$f_{p,q,r} = \frac{c}{2} \sqrt{\left(\frac{p}{L}\right)^2 + \left(\frac{q}{W}\right)^2 + \left(\frac{r}{H}\right)^2}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Modo Seleccionado $f_{<span id="eq9Mode">1,0,0</span>}$:</span>
+            <span class="eq-res-val"><span id="eq9Val">28.7</span> <span style="font-size:0.75rem; font-weight:normal;">Hz</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card" style="grid-column: span 1.5;">
+          <div class="eq-title">Ecuación 10: Frecuencia de Schroeder (Límite Modal)</div>
+          <div class="eq-math">$$f_s = 2000 \sqrt{\frac{RT60_{500}}{V}}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Frecuencia de Transición ($f_s$):</span>
+            <span class="eq-res-val"><span id="eq10Val">248.3</span> <span style="font-size:0.75rem; font-weight:normal;">Hz</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos Modales -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 2: Espectro de Frecuencias Modales (20 - 250 Hz)</span>
+            <span class="chart-desc">Rojo=Axial, Verde=Tangencial, Morado=Oblicuo. Haz clic para seleccionar modo.</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="modalSpectrumCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 3: Densidad Modal (Criterio de Bonello)</span>
+            <span class="chart-desc">Conteo en 1/3 Octava. Naranja indica caída de densidad (mala).</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="bonelloChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 4: Diagrama de Proporciones Bolt</span>
+            <span class="chart-desc">Relación L/H vs W/H. Región cian = distribución modal óptima.</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="boltCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 11: Planos de Presión Acústica 3D (WebGL)</span>
+            <span class="chart-desc">Antinodos (Rojo/Naranja) vs Nodos (Cian/Azul). Arrastra para rotar.</span>
+          </div>
+          <div class="canvas-container" id="canvas3dContainer">
+            <canvas id="room3dCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de Modos -->
+      <div class="modes-table-container">
+        <div class="table-header">Primeros 15 Modos Propios Ordenados por Frecuencia</div>
+        <table class="modes-table">
+          <thead>
+            <tr>
+              <th>Modo (p, q, r)</th>
+              <th>Frecuencia (Hz)</th>
+              <th>Tipo</th>
+              <th>Periodo (ms)</th>
+              <th>Longitud Onda (m)</th>
+            </tr>
+          </thead>
+          <tbody id="modesTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PESTAÑA C: CAMPO DIFUSO E ISO -->
+    <div id="tabContentC" class="tab-content">
+      
+      <!-- Ecuaciones 11, 12 -->
+      <div class="eq-grid">
+        <div class="eq-card" style="grid-column: span 1.5;">
+          <div class="eq-title">Ecuación 11: Distancia Crítica ($D_c$)</div>
+          <div class="eq-math">$$D_c = 0.141 \sqrt{Q \cdot S \cdot \bar{\alpha}_{500}}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Distancia Crítica ($D_c$):</span>
+            <span class="eq-res-val"><span id="eq11Val">1.84</span> <span style="font-size:0.75rem; font-weight:normal;">m</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card" style="grid-column: span 1.5;">
+          <div class="eq-title">Ecuación 12: Coeficiente de Absorción Promedio ($\bar{\alpha}$)</div>
+          <div class="eq-math">$$\bar{\alpha} = \frac{\sum_{i} S_i \alpha_i}{S}$$</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Ponderado (500 Hz):</span>
+            <span class="eq-res-val"><span id="eq12Val">0.18</span> <span style="font-size:0.75rem; font-weight:normal;">α</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos de Campo Difuso -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 6: SPL vs Distancia (Directo vs Difuso)</span>
+            <span class="chart-desc">Decaimiento de la fuente y punto de Distancia Crítica (campo total)</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="splFieldChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 7: Frecuencia de Schroeder vs RT60</span>
+            <span class="chart-desc">Evolución del límite modal barriendo el tiempo de reverberación</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="schroederSweepChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA D: TRAZADO Y CASCADA -->
+    <div id="tabContentD" class="tab-content">
+      
+      <!-- Gráficos de Simulación Física 2D -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 8: Simulador de Reflexiones Tempranas 2D</span>
+            <span class="chart-desc">Reflexiones de 1er Orden. Arrastra la Fuente (S) o Receptor (L)</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="reflectionsCanvas"></canvas>
+          </div>
+          <div class="interactive-hint">💡 Arrastra con el cursor el punto S o L para calcular reflexiones.</div>
+          <div class="info-block">
+            <h3>Tiempos de Vuelo y Delay</h3>
+            <div id="reflPathsList"></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 9: Cascada de Decaimiento Modal (Waterfall)</span>
+            <span class="chart-desc">Espectro de resonancia de sala en intervalos de 50ms</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="waterfallCanvas"></canvas>
+          </div>
+          <div class="info-block" style="background: rgba(0, 229, 255, 0.02); border-left-color: var(--border-cyan);">
+            <h3>Física del Decaimiento Espectral</h3>
+            <p style="font-size:0.8rem; color:var(--text-dim);">Cada curva representa el decaimiento modal a un tiempo $t$. Los picos corresponden a los modos propios calculados. La atenuación de cada modo depende de la absorción de los materiales en su banda y su amortiguamiento $e^{-6.91 t / RT60}$.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
+
 <script>
-const canvasBg=document.getElementById('three-bg');const renderer=new THREE.WebGLRenderer({canvas:canvasBg,alpha:true,antialias:true});renderer.setSize(window.innerWidth,window.innerHeight);const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,1000);camera.position.z=25;
-const roomGeo=new THREE.BoxGeometry(8,4,6);const roomMat=new THREE.MeshBasicMaterial({color:0xff9100,wireframe:true,transparent:true,opacity:0.06});const roomMesh=new THREE.Mesh(roomGeo,roomMat);roomMesh.position.set(0,0,-5);scene.add(roomMesh);
-const pG=new THREE.BufferGeometry();const pP=new Float32Array(400*3);for(let i=0;i<1200;i++)pP[i]=(Math.random()-0.5)*60;pG.setAttribute('position',new THREE.BufferAttribute(pP,3));scene.add(new THREE.Points(pG,new THREE.PointsMaterial({color:0xff9100,size:0.06,transparent:true,opacity:0.15})));
-function animBg(t){requestAnimationFrame(animBg);roomMesh.rotation.y=t*0.0002;roomMesh.rotation.x=Math.sin(t*0.0003)*0.15;renderer.render(scene,camera);}animBg(0);
-window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
+  // Paleta de materiales y coeficientes
+  const materials = {
+    brick: { name: "Ladrillo sin pintar", coeffs: [0.02, 0.02, 0.03, 0.03, 0.04, 0.05], color: '#f06292' },
+    concrete: { name: "Hormigón pulido", coeffs: [0.01, 0.01, 0.02, 0.02, 0.02, 0.02], color: '#90a4ae' },
+    carpet: { name: "Alfombra gruesa s/hormigón", coeffs: [0.02, 0.06, 0.14, 0.37, 0.60, 0.65], color: '#81c784' },
+    acoustic_tile: { name: "Placa acústica (Techo)", coeffs: [0.40, 0.60, 0.80, 0.90, 0.85, 0.80], color: '#4dd0e1' },
+    glass: { name: "Vidrio (Ventanas grandes)", coeffs: [0.18, 0.06, 0.04, 0.03, 0.02, 0.02], color: '#ba68c8' },
+    plywood: { name: "Madera contrachapada (12mm)", coeffs: [0.15, 0.18, 0.10, 0.07, 0.06, 0.07], color: '#ffb74d' },
+    curtains: { name: "Cortina pesada pliegues", coeffs: [0.07, 0.31, 0.49, 0.81, 0.66, 0.54], color: '#e57373' },
+    plaster: { name: "Yeso / Placa cartón-yeso", coeffs: [0.29, 0.10, 0.05, 0.04, 0.07, 0.09], color: '#a1887f' },
+    anechoic: { name: "Absorbente Perfecto (1.0)", coeffs: [1.00, 1.00, 1.00, 1.00, 1.00, 1.00], color: '#00e5ff' },
+    reflective: { name: "Reflector Perfecto (0.0)", coeffs: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00], color: '#ff5722' }
+  };
 
-let method='sabine';
-const ids=[['lS','lN'],['wS','wN'],['hS','hN'],['aS','aN']];
-ids.forEach(([s,n])=>{const se=document.getElementById(s),ne=document.getElementById(n);se.addEventListener('input',()=>{ne.value=se.value;calc();});ne.addEventListener('input',()=>{se.value=ne.value;calc();});});
-function setMethod(m){method=m;document.getElementById('btnSabine').classList.toggle('active',m==='sabine');document.getElementById('btnEyring').classList.toggle('active',m==='eyring');calc();}
+  // Coeficientes estándar de atenuación del aire a 20C y 50% HR por banda (m en nepers/m)
+  const airAbsorptionRef = [0.00002, 0.0001, 0.00035, 0.0012, 0.0038, 0.014]; // 125, 250, 500, 1k, 2k, 4k Hz
 
-const ctx=document.getElementById('rt60Chart').getContext('2d');Chart.defaults.color='#c8daf0';Chart.defaults.font.family='Rajdhani';
-let chart=new Chart(ctx,{type:'line',data:{datasets:[{label:'Sabine',data:[],borderColor:'rgba(255,145,0,0.8)',backgroundColor:'rgba(255,145,0,0.1)',borderWidth:2,fill:true,pointRadius:0,tension:0.4},{label:'Eyring',data:[],borderColor:'rgba(0,229,255,0.6)',borderWidth:2,borderDash:[6,3],fill:false,pointRadius:0,tension:0.4},{label:'Current',data:[],backgroundColor:'#f0c040',borderColor:'#f0c040',borderWidth:2,pointRadius:7,showLine:false}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:200},scales:{x:{type:'linear',title:{display:true,text:'Absorption (ā)',color:'#ff9100'},grid:{color:'rgba(255,255,255,0.05)'},min:0.01,max:1},y:{title:{display:true,text:'RT60 (s)',color:'#f0c040'},grid:{color:'rgba(255,255,255,0.05)'},min:0}},plugins:{legend:{display:true,labels:{usePointStyle:true,pointStyle:'line',boxWidth:30}},tooltip:{callbacks:{label:c=>c.raw.y.toFixed(2)+' s @ ā='+c.raw.x.toFixed(2)}}}}});
+  // Inicializar selectores
+  function initSelectors() {
+    const selects = ['matFloor', 'matCeiling', 'matLeft', 'matRight', 'matFront', 'matBack'];
+    const defaults = {
+      matFloor: 'carpet',
+      matCeiling: 'acoustic_tile',
+      matLeft: 'plaster',
+      matRight: 'plaster',
+      matFront: 'plaster',
+      matBack: 'plaster'
+    };
+    
+    selects.forEach(id => {
+      const select = document.getElementById(id);
+      select.innerHTML = '';
+      for (const [key, mat] of Object.entries(materials)) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.innerText = mat.name;
+        if (defaults[id] === key) opt.selected = true;
+        select.appendChild(opt);
+      }
+    });
+  }
 
-function calc(){
-  const L=parseFloat(document.getElementById('lN').value),W=parseFloat(document.getElementById('wN').value),H=parseFloat(document.getElementById('hN').value),a=parseFloat(document.getElementById('aN').value);
-  if(isNaN(L)||isNaN(W)||isNaN(H)||isNaN(a)||a<=0||a>=1)return;
-  const V=L*W*H,S=2*(L*W+L*H+W*H),A=S*a;
-  const rtSab=(0.161*V)/A,rtEyr=(0.161*V)/(-S*Math.log(1-a));
-  const rt=method==='sabine'?rtSab:rtEyr;
-  const Dc=0.141*Math.sqrt((S*a)/Math.PI);
-  const mx=Math.max(L,W,H);roomMesh.scale.set(L/mx,H/mx,W/mx);
-  document.getElementById('outRT60').innerText=rt.toFixed(2);
-  document.getElementById('outVol').innerText=V.toFixed(0);
-  document.getElementById('outSurf').innerText=S.toFixed(0);
-  document.getElementById('outDc').innerText=Dc.toFixed(2);
-  document.getElementById('outAbs').innerText=A.toFixed(1);
-  document.getElementById('outMeth').innerText=method.toUpperCase();
-  let sD=[],eD=[];
-  for(let aa=0.02;aa<=0.99;aa+=0.02){const As=S*aa;sD.push({x:aa,y:(0.161*V)/As});eD.push({x:aa,y:(0.161*V)/(-S*Math.log(1-aa))});}
-  chart.data.datasets[0].data=sD;chart.data.datasets[1].data=eD;chart.data.datasets[2].data=[{x:a,y:rt}];
-  chart.options.scales.y.max=Math.min(sD[0]?.y||10,20);chart.update();
-}
-calc();
+  // Pestañas
+  function setTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    
+    document.getElementById(`tabBtn${tab}`).classList.add('active');
+    document.getElementById(`tabContent${tab}`).classList.add('active');
+    
+    // Forzar actualización de gráficos/renderizado correspondientes a la pestaña activa
+    if (tab === 'A') {
+      rt60BandsChart.resize();
+      materialsChart.resize();
+      sabinesChart.resize();
+    } else if (tab === 'B') {
+      bonelloChart.resize();
+      drawModalSpectrum();
+      drawBolt();
+      resize3D();
+    } else if (tab === 'C') {
+      splFieldChart.resize();
+      schroederSweepChart.resize();
+    } else if (tab === 'D') {
+      drawReflections();
+      drawWaterfall();
+    }
+  }
+
+  // Controladores de Sliders acoplados a Inputs Numéricos
+  const sliders = [
+    ['lS', 'lN', 'lVal', ' m'],
+    ['wS', 'wN', 'wVal', ' m'],
+    ['hS', 'hN', 'hVal', ' m'],
+    ['tempS', 'tempN', 'tempVal', ' °C'],
+    ['humS', 'humN', 'humVal', ' %'],
+    ['qS', 'qN', 'qVal', ''],
+    ['recDistS', 'recDistN', 'recDistVal', ' m']
+  ];
+
+  sliders.forEach(([sId, nId, lblId, unit]) => {
+    const sEl = document.getElementById(sId);
+    const nEl = document.getElementById(nId);
+    const lblEl = document.getElementById(lblId);
+
+    sEl.addEventListener('input', () => {
+      nEl.value = sEl.value;
+      lblEl.innerText = parseFloat(sEl.value).toFixed(1) + unit;
+      calc();
+    });
+    nEl.addEventListener('input', () => {
+      sEl.value = nEl.value;
+      lblEl.innerText = parseFloat(nEl.value).toFixed(1) + unit;
+      calc();
+    });
+  });
+
+  // Sliders de modo activo en 3D
+  const modeSliders = ['modePS', 'modeQS', 'modeRS'];
+  modeSliders.forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      document.getElementById('modePVal').innerText = document.getElementById('modePS').value;
+      document.getElementById('modeQVal').innerText = document.getElementById('modeQS').value;
+      document.getElementById('modeRVal').innerText = document.getElementById('modeRS').value;
+      update3DModePressure();
+    });
+  });
+
+  // Datos globales calculados
+  let computedResults = {};
+
+  // Calcular Coeficiente de Atenuación de Aire Dinámico
+  function getAirAbsorption(fIndex, tempC, rhPct) {
+    const mRef = airAbsorptionRef[fIndex];
+    // Ajuste empírico razonable por humedad (la absorción aumenta a baja humedad)
+    const humFactor = 50 / Math.max(10, rhPct);
+    const tempFactor = (tempC + 273.15) / 293.15;
+    return mRef * humFactor * tempFactor;
+  }
+
+  // CÁLCULO PRINCIPAL
+  function calc() {
+    const L = parseFloat(document.getElementById('lN').value);
+    const W = parseFloat(document.getElementById('wN').value);
+    const H = parseFloat(document.getElementById('hN').value);
+    const T = parseFloat(document.getElementById('tempN').value);
+    const RH = parseFloat(document.getElementById('humN').value);
+    const Q = parseFloat(document.getElementById('qN').value);
+    const dRec = parseFloat(document.getElementById('recDistN').value);
+
+    // Ecuación 1: Velocidad del Sonido
+    const c = 331.3 * Math.sqrt(1 + T / 273.15) + 0.6 * (RH / 100) * 1.2;
+    document.getElementById('eq1Val').innerText = c.toFixed(1);
+
+    // Ecuación 2: Volumen y Superficies
+    const V = L * W * H;
+    const S = 2 * (L * W + L * H + W * H);
+    document.getElementById('eq2ValV').innerText = V.toFixed(1);
+    document.getElementById('eq2ValS').innerText = S.toFixed(1);
+
+    const Sx = 2 * W * H;
+    const Sy = 2 * L * H;
+    const Sz = 2 * L * W;
+
+    // Obtener materiales
+    const matFloorCoeffs = materials[document.getElementById('matFloor').value].coeffs;
+    const matCeilingCoeffs = materials[document.getElementById('matCeiling').value].coeffs;
+    const matLeftCoeffs = materials[document.getElementById('matLeft').value].coeffs;
+    const matRightCoeffs = materials[document.getElementById('matRight').value].coeffs;
+    const matFrontCoeffs = materials[document.getElementById('matFront').value].coeffs;
+    const matBackCoeffs = materials[document.getElementById('matBack').value].coeffs;
+
+    const octaveBands = [125, 250, 500, 1000, 2000, 4000];
+    
+    // Arrays para guardar datos por banda
+    const sabineRT = [];
+    const sabineAirRT = [];
+    const eyringRT = [];
+    const eyringAirRT = [];
+    const fitzroyRT = [];
+    const arauRT = [];
+    const avgAlphaBands = [];
+    const equivalentAbsArea = [];
+
+    for (let f = 0; f < 6; f++) {
+      // Coeficientes por pared
+      const aFloor = matFloorCoeffs[f];
+      const aCeiling = matCeilingCoeffs[f];
+      const aLeft = matLeftCoeffs[f];
+      const aRight = matRightCoeffs[f];
+      const aFront = matFrontCoeffs[f];
+      const aBack = matBackCoeffs[f];
+
+      // Ponderación de absorción direccional
+      const alphaX = Math.min(0.99, (aFront * (W * H) + aBack * (W * H)) / (W * H * 2));
+      const alphaY = Math.min(0.99, (aLeft * (L * H) + aRight * (L * H)) / (L * H * 2));
+      const alphaZ = Math.min(0.99, (aFloor * (L * W) + aCeiling * (L * W)) / (L * W * 2));
+
+      // Área de absorción equivalente total
+      const A = (aFloor + aCeiling) * (L * W) + (aLeft + aRight) * (L * H) + (aFront + aBack) * (W * H);
+      equivalentAbsArea.push(A);
+
+      // Coeficiente de absorción promedio
+      const alphaBar = A / S;
+      avgAlphaBands.push(alphaBar);
+
+      // Ecuación 3: Sabine Estándar
+      const rtSab = (0.161 * V) / Math.max(0.01, A);
+      sabineRT.push(rtSab);
+
+      // Ecuación 4: Sabine + Aire
+      const m = getAirAbsorption(f, T, RH);
+      const rtSabAir = (0.161 * V) / (A + 4 * m * V);
+      sabineAirRT.push(rtSabAir);
+
+      // Ecuación 5: Eyring Estándar
+      const alphaEyring = Math.min(0.99, alphaBar);
+      const rtEyr = (0.161 * V) / (-S * Math.log(1 - alphaEyring));
+      eyringRT.push(rtEyr);
+
+      // Ecuación 6: Eyring + Aire
+      const rtEyrAir = (0.161 * V) / (-S * Math.log(1 - alphaEyring) + 4 * m * V);
+      eyringAirRT.push(rtEyrAir);
+
+      // Ecuación 7: Fitzroy
+      const rtFitz = ((0.161 * V) / S) * (Sx / alphaX + Sy / alphaY + Sz / alphaZ) / S;
+      fitzroyRT.push(rtFitz);
+
+      // Ecuación 8: Arau-Puchades
+      const rtArau = Math.pow((0.161 * V) / (-S * Math.log(1 - alphaX)), Sx / S) *
+                     Math.pow((0.161 * V) / (-S * Math.log(1 - alphaY)), Sy / S) *
+                     Math.pow((0.161 * V) / (-S * Math.log(1 - alphaZ)), Sz / S);
+      arauRT.push(rtArau);
+    }
+
+    // Actualizar outputs de ecuaciones en interfaz (referencia a 500 Hz [index 2])
+    document.getElementById('eq3Val').innerText = sabineRT[2].toFixed(2);
+    document.getElementById('eq4Val').innerText = sabineAirRT[2].toFixed(2);
+    document.getElementById('eq5Val').innerText = eyringRT[2].toFixed(2);
+    document.getElementById('eq6Val').innerText = eyringAirRT[2].toFixed(2);
+    document.getElementById('eq7Val').innerText = fitzroyRT[2].toFixed(2);
+    document.getElementById('eq8Val').innerText = arauRT[2].toFixed(2);
+
+    // Ecuación 10: Frecuencia de Schroeder (basada en Sabine 500 Hz con Aire)
+    const rt500 = sabineAirRT[2];
+    const fs = 2000 * Math.sqrt(rt500 / V);
+    document.getElementById('eq10Val').innerText = fs.toFixed(1);
+
+    // Ecuación 12: Coeficiente de absorción promedio en 500 Hz
+    const alpha500 = avgAlphaBands[2];
+    document.getElementById('eq12Val').innerText = alpha500.toFixed(2);
+
+    // Ecuación 11: Distancia Crítica (500 Hz)
+    const Dc = 0.141 * Math.sqrt(Q * S * alpha500);
+    document.getElementById('eq11Val').innerText = Dc.toFixed(2);
+
+    // Guardar resultados para gráficos
+    computedResults = {
+      L, W, H, T, RH, Q, dRec, c, V, S,
+      octaveBands, sabineRT, sabineAirRT, eyringRT, eyringAirRT, fitzroyRT, arauRT,
+      avgAlphaBands, equivalentAbsArea, fs, Dc, alpha500
+    };
+
+    // Calcular modos propios
+    calcRoomModes();
+
+    // Actualizar todos los gráficos visuales activos
+    updateCharts();
+  }
+
+  // CÁLCULO DE MODOS DE SALA (20 - 250 Hz)
+  let roomModesList = [];
+  function calcRoomModes() {
+    const { L, W, H, c } = computedResults;
+    roomModesList = [];
+    
+    // Barrer combinaciones modales
+    for (let p = 0; p <= 8; p++) {
+      for (let q = 0; q <= 8; q++) {
+        for (let r = 0; r <= 8; r++) {
+          if (p === 0 && q === 0 && r === 0) continue;
+          
+          const freq = (c / 2) * Math.sqrt(Math.pow(p / L, 2) + Math.pow(q / W, 2) + Math.pow(r / H, 2));
+          
+          if (freq >= 20 && freq <= 250) {
+            let type = 'oblique';
+            const zeroes = (p === 0 ? 1 : 0) + (q === 0 ? 1 : 0) + (r === 0 ? 1 : 0);
+            if (zeroes === 2) type = 'axial';
+            else if (zeroes === 1) type = 'tangential';
+            
+            roomModesList.push({ p, q, r, freq, type });
+          }
+        }
+      }
+    }
+
+    // Ordenar por frecuencia
+    roomModesList.sort((a, b) => a.freq - b.freq);
+
+    // Llenar tabla HTML (primeros 15)
+    const tbody = document.getElementById('modesTableBody');
+    tbody.innerHTML = '';
+    
+    const activeP = parseInt(document.getElementById('modePS').value);
+    const activeQ = parseInt(document.getElementById('modeQS').value);
+    const activeR = parseInt(document.getElementById('modeRS').value);
+
+    roomModesList.slice(0, 15).forEach(m => {
+      const tr = document.createElement('tr');
+      const isActive = (m.p === activeP && m.q === activeQ && m.r === activeR);
+      if (isActive) {
+        tr.className = 'active-row';
+      }
+      
+      const period = (1000 / m.freq).toFixed(1);
+      const lambda = (computedResults.c / m.freq).toFixed(2);
+      
+      tr.innerHTML = `
+        <td><strong>(${m.p}, ${m.q}, ${m.r})</strong></td>
+        <td>${m.freq.toFixed(1)} Hz</td>
+        <td><span class="badge ${m.type}">${m.type}</span></td>
+        <td>${period} ms</td>
+        <td>${lambda} m</td>
+      `;
+
+      tr.addEventListener('click', () => {
+        document.getElementById('modePS').value = m.p;
+        document.getElementById('modeQS').value = m.q;
+        document.getElementById('modeRS').value = m.r;
+        document.getElementById('modePVal').innerText = m.p;
+        document.getElementById('modeQVal').innerText = m.q;
+        document.getElementById('modeRVal').innerText = m.r;
+        
+        // Actualizar visualizador 3D
+        update3DModePressure();
+        
+        // Re-pintar tabla para reflejar la fila activa
+        calcRoomModes();
+      });
+
+      tbody.appendChild(tr);
+    });
+
+    // Actualizar valor de ecuación modal 9
+    const fSel = (c / 2) * Math.sqrt(Math.pow(activeP / L, 2) + Math.pow(activeQ / W, 2) + Math.pow(activeR / H, 2));
+    document.getElementById('eq9Mode').innerText = `${activeP},${activeQ},${activeR}`;
+    document.getElementById('eq9Val').innerText = fSel.toFixed(1);
+  }
+
+  // INICIALIZACIÓN DE GRÁFICOS (CHART.JS Y CANVAS)
+  let rt60BandsChart, materialsChart, sabinesChart, bonelloChart, splFieldChart, schroederSweepChart;
+
+  function initCharts() {
+    Chart.defaults.color = '#8ba0b8';
+    Chart.defaults.font.family = 'Rajdhani';
+    Chart.defaults.font.size = 11;
+
+    // Gráfico 1: Comparación RT60 por octavas
+    const ctx1 = document.getElementById('rt60BandsChart').getContext('2d');
+    rt60BandsChart = new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: ['125 Hz', '250 Hz', '500 Hz', '1 kHz', '2 kHz', '4 kHz'],
+        datasets: [
+          { label: 'Sabine', data: [], borderColor: '#ff9100', borderWidth: 2, fill: false, tension: 0.3 },
+          { label: 'Sabine + Aire', data: [], borderColor: '#ffb74d', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.3 },
+          { label: 'Eyring', data: [], borderColor: '#00e5ff', borderWidth: 2, fill: false, tension: 0.3 },
+          { label: 'Eyring + Aire', data: [], borderColor: '#4dd0e1', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.3 },
+          { label: 'Fitzroy (Dir)', data: [], borderColor: '#ffea00', borderWidth: 2, fill: false, tension: 0.3 },
+          { label: 'Arau-Puchades (Dir)', data: [], borderColor: '#ab47bc', borderWidth: 2, fill: false, tension: 0.3 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { title: { display: true, text: 'Tiempo de Reverberación RT60 (s)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { grid: { color: 'rgba(255,255,255,0.05)' } }
+        },
+        plugins: { legend: { position: 'top', labels: { boxWidth: 15 } } }
+      }
+    });
+
+    // Gráfico 5: Coeficientes de absorción de materiales elegidos
+    const ctx5 = document.getElementById('materialsChart').getContext('2d');
+    materialsChart = new Chart(ctx5, {
+      type: 'line',
+      data: {
+        labels: ['125', '250', '500', '1k', '2k', '4k'],
+        datasets: []
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { min: 0, max: 1.1, title: { display: true, text: 'Coeficiente de Absorción (α)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { grid: { color: 'rgba(255,255,255,0.05)' } }
+        },
+        plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }
+      }
+    });
+
+    // Gráfico 10: Área de Absorción Equivalente por octavas (sabines)
+    const ctx10 = document.getElementById('sabinesChart').getContext('2d');
+    sabinesChart = new Chart(ctx10, {
+      type: 'bar',
+      data: {
+        labels: ['125 Hz', '250 Hz', '500 Hz', '1 kHz', '2 kHz', '4 kHz'],
+        datasets: [{ label: 'Sabines (m²)', data: [], backgroundColor: 'rgba(240, 192, 64, 0.4)', borderColor: '#f0c040', borderWidth: 1 }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { title: { display: true, text: 'Área Equivalente A (m²)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+
+    // Gráfico 3: Densidad de Modos (Criterio de Bonello)
+    const ctx3 = document.getElementById('bonelloChart').getContext('2d');
+    bonelloChart = new Chart(ctx3, {
+      type: 'bar',
+      data: {
+        labels: ['20', '25', '31.5', '40', '50', '63', '80', '100', '125', '160', '200', '250'],
+        datasets: [{ label: 'Conteo de Modos', data: [], backgroundColor: [] }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { ticks: { stepSize: 1 }, title: { display: true, text: 'Cantidad de Modos' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { title: { display: true, text: 'Frecuencia Central 1/3 Octava (Hz)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Gráfico 6: SPL vs Distancia (Directo, Difuso, Total)
+    const ctx6 = document.getElementById('splFieldChart').getContext('2d');
+    splFieldChart = new Chart(ctx6, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          { label: 'Campo Directo (-6dB/dupl)', data: [], borderColor: '#ff9100', borderWidth: 1.5, fill: false, pointRadius: 0 },
+          { label: 'Campo Difuso (Reverberante)', data: [], borderColor: '#00e5ff', borderWidth: 1.5, fill: false, pointRadius: 0 },
+          { label: 'Nivel Total SPL', data: [], borderColor: '#fff', borderWidth: 2, fill: false, pointRadius: 0 },
+          { label: 'Distancia Crítica (Dc)', data: [], borderColor: '#f0c040', borderWidth: 1.5, borderDash: [6, 3], pointRadius: 6, pointBackgroundColor: '#f0c040', showLine: true }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { title: { display: true, text: 'Nivel de Presión Sonora (dB SPL)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { type: 'linear', min: 0.5, max: 20, title: { display: true, text: 'Distancia a la fuente (m)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+
+    // Gráfico 7: Schroeder Transition Frequency vs RT60 sweep
+    const ctx7 = document.getElementById('schroederSweepChart').getContext('2d');
+    schroederSweepChart = new Chart(ctx7, {
+      type: 'line',
+      data: {
+        datasets: [
+          { label: 'Frecuencia Schroeder (fs)', data: [], borderColor: '#00e5ff', borderWidth: 2, pointRadius: 0, fill: false },
+          { label: 'Estado Actual', data: [], borderColor: '#f0c040', backgroundColor: '#f0c040', pointRadius: 8, showLine: false }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { title: { display: true, text: 'Frecuencia de Schroeder (Hz)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { type: 'linear', title: { display: true, text: 'Tiempo de Reverberación RT60 (s)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+  }
+
+  // ACTUALIZAR GRÁFICOS CON RESULTADOS COMPUTADOS
+  function updateCharts() {
+    if (!computedResults.sabineRT) return;
+
+    const {
+      octaveBands, sabineRT, sabineAirRT, eyringRT, eyringAirRT, fitzroyRT, arauRT,
+      equivalentAbsArea, fs, Dc, V, S, alpha500
+    } = computedResults;
+
+    // 1. RT60 Bands
+    rt60BandsChart.data.datasets[0].data = sabineRT;
+    rt60BandsChart.data.datasets[1].data = sabineAirRT;
+    rt60BandsChart.data.datasets[2].data = eyringRT;
+    rt60BandsChart.data.datasets[3].data = eyringAirRT;
+    rt60BandsChart.data.datasets[4].data = fitzroyRT;
+    rt60BandsChart.data.datasets[5].data = arauRT;
+    rt60BandsChart.update();
+
+    // 5. Materials Absorption
+    const selects = ['matFloor', 'matCeiling', 'matLeft', 'matRight', 'matFront', 'matBack'];
+    const names = ["Suelo", "Techo", "Pared Izq", "Pared Der", "Pared Frontal", "Pared Trasera"];
+    const datasets = [];
+    selects.forEach((id, idx) => {
+      const matKey = document.getElementById(id).value;
+      const mat = materials[matKey];
+      datasets.push({
+        label: names[idx] + ": " + mat.name.split(" ")[0],
+        data: mat.coeffs,
+        borderColor: mat.color,
+        borderWidth: 1.5,
+        fill: false,
+        pointRadius: 3
+      });
+    });
+    materialsChart.data.datasets = datasets;
+    materialsChart.update();
+
+    // 10. Sabines Bar Chart
+    sabinesChart.data.datasets[0].data = equivalentAbsArea;
+    sabinesChart.update();
+
+    // 3. Bonello Density Chart
+    const bonelloBands = [
+      { center: 20, min: 17.8, max: 22.4, count: 0 },
+      { center: 25, min: 22.4, max: 28.2, count: 0 },
+      { center: 31.5, min: 28.2, max: 35.5, count: 0 },
+      { center: 40, min: 35.5, max: 44.7, count: 0 },
+      { center: 50, min: 44.7, max: 56.2, count: 0 },
+      { center: 63, min: 56.2, max: 70.8, count: 0 },
+      { center: 80, min: 70.8, max: 89.1, count: 0 },
+      { center: 100, min: 89.1, max: 112.2, count: 0 },
+      { center: 125, min: 112.2, max: 141.3, count: 0 },
+      { center: 160, min: 141.3, max: 177.8, count: 0 },
+      { center: 200, min: 177.8, max: 223.9, count: 0 },
+      { center: 250, min: 223.9, max: 281.8, count: 0 }
+    ];
+
+    roomModesList.forEach(m => {
+      for (const b of bonelloBands) {
+        if (m.freq >= b.min && m.freq < b.max) {
+          b.count++;
+          break;
+        }
+      }
+    });
+
+    const counts = bonelloBands.map(b => b.count);
+    const colors = [];
+    for (let i = 0; i < bonelloBands.length; i++) {
+      if (i > 0 && counts[i] < counts[i - 1]) {
+        // Violación de Bonello: densidad decrece
+        colors.push('rgba(255, 68, 68, 0.7)'); // rojo
+      } else {
+        colors.push('rgba(0, 229, 255, 0.6)'); // cyan
+      }
+    }
+    bonelloChart.data.datasets[0].data = counts;
+    bonelloChart.data.datasets[0].backgroundColor = colors;
+    bonelloChart.update();
+
+    // 6. SPL Field vs Distance
+    const Lw = 100; // Nivel de potencia de referencia
+    const R = (S * alpha500) / Math.max(0.001, 1 - alpha500); // constante de sala
+    const splDirect = [];
+    const splDiffuse = [];
+    const splTotal = [];
+    const distData = [];
+    for (let d = 0.5; d <= 20; d += 0.2) {
+      distData.push(d);
+      const dir = Lw + 10 * Math.log10(computedResults.Q / (4 * Math.PI * d * d));
+      const diff = Lw + 10 * Math.log10(4 / R);
+      const tot = Lw + 10 * Math.log10(computedResults.Q / (4 * Math.PI * d * d) + 4 / R);
+      splDirect.push({ x: d, y: dir });
+      splDiffuse.push({ x: d, y: diff });
+      splTotal.push({ x: d, y: tot });
+    }
+    splFieldChart.data.datasets[0].data = splDirect;
+    splFieldChart.data.datasets[1].data = splDiffuse;
+    splFieldChart.data.datasets[2].data = splTotal;
+    // Poner marcador de Dc
+    const dcSPL = Lw + 10 * Math.log10(computedResults.Q / (4 * Math.PI * Dc * Dc) + 4 / R);
+    splFieldChart.data.datasets[3].data = [{ x: Dc, y: dcSPL }];
+    splFieldChart.update();
+
+    // 7. Schroeder vs RT60 Sweep
+    const sweepData = [];
+    for (let rVal = 0.1; rVal <= 3.0; rVal += 0.1) {
+      sweepData.push({ x: rVal, y: 2000 * Math.sqrt(rVal / V) });
+    }
+    schroederSweepChart.data.datasets[0].data = sweepData;
+    schroederSweepChart.data.datasets[1].data = [{ x: computedResults.sabineAirRT[2], y: fs }];
+    schroederSweepChart.update();
+
+    // Redibujar canvas 2D
+    drawModalSpectrum();
+    drawBolt();
+    drawReflections();
+    drawWaterfall();
+    update3DModePressure();
+  }
+
+  // GRAFICAR ESPECTRO MODAL 2D (CHART 2)
+  function drawModalSpectrum() {
+    const canvas = document.getElementById('modalSpectrumCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Configurar resoluciones lógicas vs físicas
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const w = rect.width;
+    const h = rect.height;
+
+    // Clear
+    ctx.fillStyle = '#02070c';
+    ctx.fillRect(0, 0, w, h);
+
+    // Dibujar cuadrícula y frecuencias indicadas
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#8ba0b8';
+    ctx.font = '10px Fira Code, monospace';
+
+    const fMin = 20;
+    const fMax = 250;
+
+    function fToX(f) {
+      return 40 + ((f - fMin) / (fMax - fMin)) * (w - 60);
+    }
+
+    // Dibujar frecuencias guía
+    const guides = [20, 50, 100, 150, 200, 250];
+    guides.forEach(f => {
+      const x = fToX(f);
+      ctx.beginPath();
+      ctx.moveTo(x, 10);
+      ctx.lineTo(x, h - 20);
+      ctx.stroke();
+      ctx.fillText(`${f}Hz`, x - 12, h - 6);
+    });
+
+    // Encontrar modos propios y dibujarlos como peines
+    const activeP = parseInt(document.getElementById('modePS').value);
+    const activeQ = parseInt(document.getElementById('modeQS').value);
+    const activeR = parseInt(document.getElementById('modeRS').value);
+
+    roomModesList.forEach(m => {
+      const x = fToX(m.freq);
+      let color = 'var(--oblique-color)';
+      let height = h - 60; // oblicuos más pequeños
+      
+      if (m.type === 'axial') {
+        color = 'var(--axial-color)';
+        height = h - 35; // axial más altos
+      } else if (m.type === 'tangential') {
+        color = 'var(--tangential-color)';
+        height = h - 45; // tangencial mediano
+      }
+
+      const isActive = (m.p === activeP && m.q === activeQ && m.r === activeR);
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = isActive ? 3 : 1;
+      
+      if (isActive) {
+        // Resaltar
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 8;
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(x, h - 20);
+      ctx.lineTo(x, h - 20 - height);
+      ctx.stroke();
+      
+      // Reset sombra
+      ctx.shadowBlur = 0;
+    });
+  }
+
+  // GRAFICAR DIAGRAMA DE BOLT (CHART 4)
+  function drawBolt() {
+    const canvas = document.getElementById('boltCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const w = rect.width;
+    const h = rect.height;
+
+    // Clear
+    ctx.fillStyle = '#02070c';
+    ctx.fillRect(0, 0, w, h);
+
+    // Rango de diagramas Bolt: Ancho/Alto (X) 1.0 a 3.0, Largo/Alto (Y) 1.0 a 3.0
+    const minVal = 1.0;
+    const maxVal = 3.0;
+
+    function valToXY(xVal, yVal) {
+      const px = 40 + ((xVal - minVal) / (maxVal - minVal)) * (w - 60);
+      // Eje Y invertido en pantalla
+      const py = (h - 30) - ((yVal - minVal) / (maxVal - minVal)) * (h - 50);
+      return [px, py];
+    }
+
+    // Dibujar cuadrícula
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#8ba0b8';
+    ctx.font = '10px Fira Code, monospace';
+
+    for (let v = 1.0; v <= 3.0; v += 0.5) {
+      // Líneas horizontales (Y = L/H)
+      const [, py] = valToXY(1.0, v);
+      ctx.beginPath();
+      ctx.moveTo(40, py);
+      ctx.lineTo(w - 20, py);
+      ctx.stroke();
+      ctx.fillText(v.toFixed(1), 12, py + 4);
+
+      // Líneas verticales (X = W/H)
+      const [px,] = valToXY(v, 1.0);
+      ctx.beginPath();
+      ctx.moveTo(px, 20);
+      ctx.lineTo(px, h - 30);
+      ctx.stroke();
+      ctx.fillText(v.toFixed(1), px - 8, h - 14);
+    }
+
+    // Textos ejes
+    ctx.fillText("W / H", w / 2, h - 2);
+    ctx.save();
+    ctx.translate(10, h / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.restore();
+
+    // Dibujar la zona óptima de Bolt
+    // Vértices del polígono de Bolt aproximados
+    const boltVertices = [
+      [1.2, 1.5], [1.4, 2.1], [1.6, 2.4], [1.9, 2.5],
+      [1.8, 1.9], [1.5, 1.45], [1.3, 1.3]
+    ];
+
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.12)';
+    ctx.strokeStyle = 'var(--border-cyan)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    
+    const [p0x, p0y] = valToXY(boltVertices[0][0], boltVertices[0][1]);
+    ctx.moveTo(p0x, p0y);
+    for (let i = 1; i < boltVertices.length; i++) {
+      const [px, py] = valToXY(boltVertices[i][0], boltVertices[i][1]);
+      ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Obtener relación actual de la sala
+    const L = computedResults.L;
+    const W = computedResults.W;
+    const H = computedResults.H;
+    const ratioW = W / H;
+    const ratioL = L / H;
+
+    // Verificar si el punto está dentro del polígono
+    function isInside(x, y, vs) {
+      let inside = false;
+      for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        const xi = vs[i][0], yi = vs[i][1];
+        const xj = vs[j][0], yj = vs[j][1];
+        const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+      }
+      return inside;
+    }
+
+    const compliant = isInside(ratioW, ratioL, boltVertices);
+    
+    // Graficar punto de la sala actual
+    const [cpx, cpy] = valToXY(ratioW, ratioL);
+    
+    // Halo brillante
+    ctx.beginPath();
+    ctx.arc(cpx, cpy, 10, 0, 2 * Math.PI);
+    ctx.fillStyle = compliant ? 'rgba(68, 255, 68, 0.25)' : 'rgba(255, 68, 68, 0.25)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cpx, cpy, 4, 0, 2 * Math.PI);
+    ctx.fillStyle = compliant ? 'var(--tangential-color)' : 'var(--axial-color)';
+    ctx.fill();
+
+    // Textos informativos en el gráfico
+    ctx.font = '11px Rajdhani, sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`Sala actual: ${ratioW.toFixed(2)} : ${ratioL.toFixed(2)} : 1`, 48, 30);
+    ctx.fillStyle = compliant ? 'var(--tangential-color)' : 'var(--axial-color)';
+    ctx.fillText(compliant ? "PROPORCIÓN ÓPTIMA (BOLT)" : "PROPORCIÓN FUERA DE RANGO", 48, 44);
+  }
+
+  // SIMULADOR INTERACTIVO DE REFLEXIONES TEMPRANAS 2D (CHART 8)
+  const refCanvas = document.getElementById('reflectionsCanvas');
+  let srcPos = { x: 0.25, y: 0.45 };  // fuente normalizada 0-1
+  let recPos = { x: 0.70, y: 0.55 };  // receptor normalizado 0-1
+  let draggingNode = null; // 'source' o 'receiver'
+
+  // Eventos de arrastre
+  refCanvas.addEventListener('mousedown', (e) => {
+    const rect = refCanvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    // Obtener variables de dibujo usadas en drawReflections
+    const L = computedResults.L || 6;
+    const W = computedResults.W || 4.5;
+    const padding = 20;
+    const drawW = rect.width - 2 * padding;
+    const drawH = rect.height - 2 * padding;
+    const roomAspect = L / W;
+    let boxW = drawW;
+    let boxH = drawH;
+    if (roomAspect > drawW / drawH) boxH = boxW / roomAspect;
+    else boxW = boxH * roomAspect;
+    const xOffset = padding + (drawW - boxW) / 2;
+    const yOffset = padding + (drawH - boxH) / 2;
+
+    const sx = xOffset + srcPos.x * boxW;
+    const sy = yOffset + srcPos.y * boxH;
+    const rx = xOffset + recPos.x * boxW;
+    const ry = yOffset + recPos.y * boxH;
+
+    const dSrc = Math.hypot(mx - sx, my - sy);
+    const dRec = Math.hypot(mx - rx, my - ry);
+
+    if (dSrc < 12) draggingNode = 'source';
+    else if (dRec < 12) draggingNode = 'receiver';
+  });
+
+  refCanvas.addEventListener('mousemove', (e) => {
+    if (!draggingNode) return;
+    const rect = refCanvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    const L = computedResults.L || 6;
+    const W = computedResults.W || 4.5;
+    const padding = 20;
+    const drawW = rect.width - 2 * padding;
+    const drawH = rect.height - 2 * padding;
+    const roomAspect = L / W;
+    let boxW = drawW;
+    let boxH = drawH;
+    if (roomAspect > drawW / drawH) boxH = boxW / roomAspect;
+    else boxW = boxH * roomAspect;
+    const xOffset = padding + (drawW - boxW) / 2;
+    const yOffset = padding + (drawH - boxH) / 2;
+
+    let nx = (mx - xOffset) / boxW;
+    let ny = (my - yOffset) / boxH;
+
+    // Mantener dentro de bordes con margen de seguridad
+    nx = Math.max(0.02, Math.min(0.98, nx));
+    ny = Math.max(0.02, Math.min(0.98, ny));
+
+    if (draggingNode === 'source') srcPos = { x: nx, y: ny };
+    else if (draggingNode === 'receiver') recPos = { x: nx, y: ny };
+
+    drawReflections();
+  });
+
+  window.addEventListener('mouseup', () => { draggingNode = null; });
+
+  function drawReflections() {
+    const canvas = document.getElementById('reflectionsCanvas');
+    const ctx = canvas.getContext('2d');
+    if (!computedResults.L) return;
+
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const w = rect.width;
+    const h = rect.height;
+
+    // Clear
+    ctx.fillStyle = '#02070c';
+    ctx.fillRect(0, 0, w, h);
+
+    const L = computedResults.L;
+    const W = computedResults.W;
+    const c = computedResults.c;
+
+    const padding = 25;
+    const drawW = w - 2 * padding;
+    const drawH = h - 2 * padding;
+    const roomAspect = L / W;
+    
+    let boxW = drawW;
+    let boxH = drawH;
+
+    if (roomAspect > drawW / drawH) boxH = boxW / roomAspect;
+    else boxW = boxH * roomAspect;
+
+    const xOffset = padding + (drawW - boxW) / 2;
+    const yOffset = padding + (drawH - boxH) / 2;
+
+    // Dibujar sala rectangular (muros)
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(xOffset, yOffset, boxW, boxH);
+
+    // Nodos en pixeles de pantalla
+    const sx = xOffset + srcPos.x * boxW;
+    const sy = yOffset + srcPos.y * boxH;
+    const rx = xOffset + recPos.x * boxW;
+    const ry = yOffset + recPos.y * boxH;
+
+    // Calcular caminos y reflexiones físicas
+    // Camino directo
+    const d0 = Math.hypot((recPos.x - srcPos.x) * L, (recPos.y - srcPos.y) * W);
+    const t0 = (d0 / c) * 1000;
+
+    // Dibujar rayo directo (Línea verde/cian)
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(rx, ry);
+    ctx.strokeStyle = '#00ffcc';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Listado de caminos reflejados de primer orden
+    // 1. Techo virtual / Pared Superior (y = 0)
+    const dTop = Math.hypot((recPos.x - srcPos.x) * L, (recPos.y + srcPos.y) * W);
+    const tTop = (dTop / c) * 1000;
+    const xTop = srcPos.x + (recPos.x - srcPos.x) * (srcPos.y / (srcPos.y + recPos.y));
+    const pxTop = xOffset + xTop * boxW;
+    const pyTop = yOffset;
+
+    // 2. Piso virtual / Pared Inferior (y = 1)
+    const dBot = Math.hypot((recPos.x - srcPos.x) * L, ((2 - recPos.y - srcPos.y) * W));
+    const tBot = (dBot / c) * 1000;
+    const xBot = srcPos.x + (recPos.x - srcPos.x) * ((1 - srcPos.y) / ((1 - srcPos.y) + (1 - recPos.y)));
+    const pxBot = xOffset + xBot * boxW;
+    const pyBot = yOffset + boxH;
+
+    // 3. Pared Virtual Izquierda (x = 0)
+    const dLeft = Math.hypot((recPos.x + srcPos.x) * L, (recPos.y - srcPos.y) * W);
+    const tLeft = (dLeft / c) * 1000;
+    const yLeft = srcPos.y + (recPos.y - srcPos.y) * (srcPos.x / (srcPos.x + recPos.x));
+    const pxLeft = xOffset;
+    const pyLeft = yOffset + yLeft * boxH;
+
+    // 4. Pared Virtual Derecha (x = 1)
+    const dRight = Math.hypot(((2 - recPos.x - srcPos.x) * L), (recPos.y - srcPos.y) * W);
+    const tRight = (dRight / c) * 1000;
+    const yRight = srcPos.y + (recPos.y - srcPos.y) * ((1 - srcPos.x) / ((1 - srcPos.x) + (1 - recPos.x)));
+    const pxRight = xOffset + boxW;
+    const pyRight = yOffset + yRight * boxH;
+
+    // Dibujar reflejos
+    const reflections = [
+      { px: pxTop, py: pyTop, color: '#f06292', lbl: 'Techo' },
+      { px: pxBot, py: pyBot, color: '#81c784', lbl: 'Suelo' },
+      { px: pxLeft, py: pyLeft, color: '#a1887f', lbl: 'Pared Izq' },
+      { px: pxRight, py: pyRight, color: '#ffb74d', lbl: 'Pared Der' }
+    ];
+
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+
+    reflections.forEach(refl => {
+      ctx.strokeStyle = refl.color;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(refl.px, refl.py);
+      ctx.lineTo(rx, ry);
+      ctx.stroke();
+    });
+
+    ctx.setLineDash([]); // reset
+
+    // Dibujar emisor (S)
+    ctx.beginPath();
+    ctx.arc(sx, sy, 7, 0, 2 * Math.PI);
+    ctx.fillStyle = '#ff9100';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 9px Fira Code';
+    ctx.fillText("S", sx - 3, sy + 3);
+
+    // Dibujar receptor (L)
+    ctx.beginPath();
+    ctx.arc(rx, ry, 7, 0, 2 * Math.PI);
+    ctx.fillStyle = '#00e5ff';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+    ctx.fillStyle = '#000';
+    ctx.fillText("L", rx - 3, ry + 3);
+
+    // Actualizar lista textual de delays en el DOM
+    document.getElementById('reflPathsList').innerHTML = `
+      <div class="eq-sub-row"><span>Rayo Directo (S → L):</span><span class="sub-val">${d0.toFixed(2)} m (${t0.toFixed(1)} ms) [Ref]</span></div>
+      <div class="eq-sub-row"><span>Reflexión Suelo (Piso):</span><span class="sub-val" style="color:#81c784">${dBot.toFixed(2)} m (${tBot.toFixed(1)} ms) [Δt: +${(tBot - t0).toFixed(1)} ms]</span></div>
+      <div class="eq-sub-row"><span>Reflexión Techo:</span><span class="sub-val" style="color:#4dd0e1">${dTop.toFixed(2)} m (${tTop.toFixed(1)} ms) [Δt: +${(tTop - t0).toFixed(1)} ms]</span></div>
+      <div class="eq-sub-row"><span>Reflexión Pared Izquierda:</span><span class="sub-val" style="color:#a1887f">${dLeft.toFixed(2)} m (${tLeft.toFixed(1)} ms) [Δt: +${(tLeft - t0).toFixed(1)} ms]</span></div>
+      <div class="eq-sub-row"><span>Reflexión Pared Derecha:</span><span class="sub-val" style="color:#ffb74d">${dRight.toFixed(2)} m (${tRight.toFixed(1)} ms) [Δt: +${(tRight - t0).toFixed(1)} ms]</span></div>
+    `;
+  }
+
+  // GRÁFICO CASCADA DE DECAIMIENTO ESPECTRAL MODAL (CHART 9)
+  function drawWaterfall() {
+    const canvas = document.getElementById('waterfallCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const w = rect.width;
+    const h = rect.height;
+
+    // Clear
+    ctx.fillStyle = '#02070c';
+    ctx.fillRect(0, 0, w, h);
+
+    const rtVal = computedResults.sabineAirRT ? computedResults.sabineAirRT[2] : 1.2;
+    const modes = roomModesList.slice(0, 15); // Utilizar primeros 15 modos
+
+    // Puntos del eje X de frecuencia de 20 Hz a 200 Hz
+    const steps = 120;
+    const fMin = 20;
+    const fMax = 200;
+
+    // Dibujar 6 rodajas de cascada (0 a 250ms, paso de 50ms)
+    for (let k = 5; k >= 0; k--) {
+      const tSec = (k * 50) / 1000;
+      
+      // Desplazamiento 3D isométrico simulado
+      const dx = (5 - k) * 12;
+      const dy = k * 14;
+
+      ctx.beginPath();
+
+      const points = [];
+
+      for (let j = 0; j < steps; j++) {
+        const f = fMin + (j / (steps - 1)) * (fMax - fMin);
+        
+        // Calcular la respuesta de presión acústica sintética sumando modos resonantes
+        let magnitude = 0.05; // piso de ruido
+        
+        modes.forEach(m => {
+          if (m.freq > 200) return;
+          // Amortiguamiento modal en función del tiempo y RT60 del modo
+          const decay = Math.pow(10, -3 * tSec / rtVal);
+          const Qmodal = 40; // Factor Q de resonancia modal
+          const resp = decay / Math.sqrt(1 + Math.pow(Qmodal * (f / m.freq - m.freq / f), 2));
+          magnitude += resp;
+        });
+
+        // Convertir a dB y escalar para graficar
+        const splVal = 20 * Math.log10(magnitude + 0.005); // agregar épsilon
+        const yPx = (h - 90) + dy - (splVal * 1.5);
+        const xPx = 40 + dx + (j / (steps - 1)) * (w - 110);
+        
+        points.push([xPx, yPx]);
+      }
+
+      // Relleno de fondo de la rebanada para ocultar las de atrás
+      ctx.fillStyle = '#0b141f'; // color del panel
+      ctx.beginPath();
+      ctx.moveTo(points[0][0], h - 10);
+      for (let i = 0; i < points.length; i++) {
+        ctx.lineTo(points[i][0], points[i][1]);
+      }
+      ctx.lineTo(points[points.length - 1][0], h - 10);
+      ctx.closePath();
+      ctx.fill();
+
+      // Dibujar la línea de la curva
+      ctx.strokeStyle = k === 0 ? '#ff9100' : `rgba(${255 - k*40}, ${145 + k*10}, 255, ${1 - k*0.12})`;
+      ctx.lineWidth = k === 0 ? 2 : 1;
+      ctx.beginPath();
+      ctx.moveTo(points[0][0], points[0][1]);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i][0], points[i][1]);
+      }
+      ctx.stroke();
+
+      // Etiqueta de tiempo
+      if (k % 2 === 0) {
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.font = '9px Fira Code';
+        ctx.fillText(`${k*50}ms`, points[points.length - 1][0] + 5, points[points.length - 1][1] + 4);
+      }
+    }
+
+    // Eje de frecuencias base
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(40, h - 35);
+    ctx.lineTo(w - 60, h - 35);
+    ctx.stroke();
+
+    ctx.fillStyle = '#8ba0b8';
+    ctx.font = '10px Fira Code';
+    const baseGuides = [20, 50, 100, 150, 200];
+    baseGuides.forEach(f => {
+      const x = 40 + ((f - fMin) / (fMax - fMin)) * (w - 110);
+      ctx.fillText(`${f}Hz`, x, h - 20);
+    });
+  }
+
+  // VISUALIZACIÓN DE SALA EN 3D (THREE.JS - CHART 11)
+  let scene3D, camera3D, renderer3D, points3D, roomOutline3D;
+  let rotX3D = -0.4, rotY3D = 0.5;
+  let isDragging3D = false;
+  let prevMouseX = 0, prevMouseY = 0;
+
+  function init3D() {
+    const container = document.getElementById('canvas3dContainer');
+    const canvas = document.getElementById('room3dCanvas');
+
+    renderer3D = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    
+    // Obtener dimensiones correctas del contenedor
+    const rect = container.getBoundingClientRect();
+    renderer3D.setSize(rect.width, rect.height);
+    
+    scene3D = new THREE.Scene();
+    
+    camera3D = new THREE.PerspectiveCamera(45, rect.width / rect.height, 0.1, 100);
+    camera3D.position.set(0, 0, 12);
+
+    // Grupo contenedor para rotación interactiva
+    const group = new THREE.Group();
+    group.name = "roomGroup";
+    scene3D.add(group);
+
+    // Contorno del Cuarto (Box Wireframe)
+    const boxGeom = new THREE.BoxGeometry(4, 3, 3);
+    const boxMat = new THREE.MeshBasicMaterial({ color: '#00e5ff', wireframe: true, transparent: true, opacity: 0.15 });
+    roomOutline3D = new THREE.Mesh(boxGeom, boxMat);
+    group.add(roomOutline3D);
+
+    // Cuadrícula de partículas de presión modal
+    const pGridSide = 10;
+    const numParticles = pGridSide * pGridSide * pGridSide;
+    const positions = new Float32Array(numParticles * 3);
+    const colors = new Float32Array(numParticles * 3);
+
+    // Configurar posiciones iniciales
+    let idx = 0;
+    for (let x = 0; x < pGridSide; x++) {
+      const u = x / (pGridSide - 1) - 0.5; // rango -0.5 a 0.5
+      for (let y = 0; y < pGridSide; y++) {
+        const v = y / (pGridSide - 1) - 0.5;
+        for (let z = 0; z < pGridSide; z++) {
+          const w = z / (pGridSide - 1) - 0.5;
+          positions[idx * 3] = u * 4;
+          positions[idx * 3 + 1] = v * 3;
+          positions[idx * 3 + 2] = w * 3;
+          idx++;
+        }
+      }
+    }
+
+    const pGeom = new THREE.BufferGeometry();
+    pGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    pGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const pMat = new THREE.PointsMaterial({ size: 0.18, vertexColors: true, transparent: true, opacity: 0.75 });
+    points3D = new THREE.Points(pGeom, pMat);
+    group.add(points3D);
+
+    // Eventos de arrastre 3D
+    container.addEventListener('mousedown', (e) => {
+      isDragging3D = true;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging3D) return;
+      const dx = e.clientX - prevMouseX;
+      const dy = e.clientY - prevMouseY;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+
+      rotY3D += dx * 0.008;
+      rotX3D += dy * 0.008;
+      rotX3D = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, rotX3D));
+    });
+
+    window.addEventListener('mouseup', () => { isDragging3D = false; });
+
+    // Loop de render
+    function animate() {
+      requestAnimationFrame(animate);
+      group.rotation.x = rotX3D;
+      group.rotation.y = rotY3D;
+      renderer3D.render(scene3D, camera3D);
+    }
+    animate();
+  }
+
+  // REDIMENSIONAR WEBGL AL ENTRAR EN LA PESTAÑA
+  function resize3D() {
+    const container = document.getElementById('canvas3dContainer');
+    const rect = container.getBoundingClientRect();
+    renderer3D.setSize(rect.width, rect.height);
+    camera3D.aspect = rect.width / rect.height;
+    camera3D.updateProjectionMatrix();
+  }
+
+  // ACTUALIZAR COLORES DE PLANOS DE PRESIÓN MODAL 3D
+  function update3DModePressure() {
+    if (!points3D) return;
+    
+    // Obtener las dimensiones actuales de la sala
+    const L = computedResults.L || 6;
+    const W = computedResults.W || 4.5;
+    const H = computedResults.H || 3;
+
+    // Escalar la caja del contorno según la escala real de la sala normalizada
+    const maxDim = Math.max(L, W, H);
+    roomOutline3D.scale.set(L / maxDim * 6, H / maxDim * 6, W / maxDim * 6);
+
+    const activeP = parseInt(document.getElementById('modePS').value);
+    const activeQ = parseInt(document.getElementById('modeQS').value);
+    const activeR = parseInt(document.getElementById('modeRS').value);
+
+    const geom = points3D.geometry;
+    const colorsAttr = geom.getAttribute('color');
+    const positionsAttr = geom.getAttribute('position');
+
+    const pGridSide = 10;
+    let idx = 0;
+
+    for (let x = 0; x < pGridSide; x++) {
+      const u = x / (pGridSide - 1);
+      const cosX = Math.cos(activeP * Math.PI * u);
+      for (let y = 0; y < pGridSide; y++) {
+        const v = y / (pGridSide - 1);
+        const cosY = Math.cos(activeQ * Math.PI * v);
+        for (let z = 0; z < pGridSide; z++) {
+          const w = z / (pGridSide - 1);
+          const cosZ = Math.cos(activeR * Math.PI * w);
+
+          // Ecuación de presión estacionaria modal
+          const pressure = cosX * cosY * cosZ;
+          const absPres = Math.abs(pressure);
+
+          // Actualizar posición de la partícula según las dimensiones del cuarto
+          positionsAttr.setXYZ(
+            idx,
+            (u - 0.5) * (L / maxDim * 6),
+            (v - 0.5) * (H / maxDim * 6),
+            (w - 0.5) * (W / maxDim * 6)
+          );
+
+          // Interpolación de color:
+          // Antinodo (Presión máxima, absPres -> 1.0) => Rojo/Naranja (#ff4400)
+          // Nodo (Presión cero, absPres -> 0.0) => Azul/Cian (#00d5ff)
+          colorsAttr.setXYZ(
+            idx,
+            absPres * 1.0 + (1 - absPres) * 0.0,
+            absPres * 0.25 + (1 - absPres) * 0.8,
+            absPres * 0.0 + (1 - absPres) * 1.0
+          );
+          
+          idx++;
+        }
+      }
+    }
+
+    positionsAttr.needsUpdate = true;
+    colorsAttr.needsUpdate = true;
+  }
+
+  // Al redimensionar la pantalla
+  window.addEventListener('resize', () => {
+    if (renderer3D) {
+      const tab = document.querySelector('.tab-btn.active').id;
+      if (tab === 'tabBtnB') resize3D();
+    }
+  });
+
+  // Al cargar
+  window.onload = () => {
+    initSelectors();
+    initCharts();
+    init3D();
+    calc(); // Primer disparo de cálculos
+  };
 </script>
 </body>
 </html>
