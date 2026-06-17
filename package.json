@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "dev": "npx -y http-server -p 8085"
+  },
   "dependencies": {
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^2.16.105"

@@ -1,498 +1,1633 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Electroacoustics — Tom Danley Calculator</title>
-<meta name="description" content="Transducer SPL propagation, inverse square law, and array gain calculator.">
+<title>Consola Científica de Electroacústica — Tom Danley Calculator</title>
+<meta name="description" content="Dashboard de análisis acústico y eléctrico de alta densidad basado en el estándar adversarial de ingeniería.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
   :root {
-    --accent: #00e676;
-    --accent-dim: rgba(0, 230, 118, 0.2);
-    --accent-glow: rgba(0, 230, 118, 0.4);
-    --blue-deep: #0a1628;
-    --gold: #f0c040;
-    --text: #c8daf0;
-    --bg-panel: rgba(10, 22, 40, 0.6);
+    --bg-dark: #060c13;
+    --bg-panel: #0b141f;
+    --bg-card: #101c2b;
+    --border-cyan: #00e5ff;
+    --border-cyan-dim: rgba(0, 229, 255, 0.2);
+    --border-gold: #f0c040;
+    --border-gold-dim: rgba(240, 192, 64, 0.25);
+    --text-primary: #e2efff;
+    --text-dim: #8ba0b8;
+    --font-mono: 'Fira Code', monospace;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Rajdhani', sans-serif;
-    background: var(--blue-deep);
-    color: var(--text);
-    overflow-x: hidden;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow-y: scroll;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  canvas#three-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
   }
 
   .top-bar {
-    position: relative;
-    z-index: 10;
     width: 100%;
-    padding: 20px 40px;
+    padding: 12px 30px;
+    background: #02070c;
+    border-bottom: 1px solid var(--border-cyan-dim);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(3,10,16,0.9), transparent);
+    position: relative;
+    z-index: 100;
   }
   .back-btn {
-    color: var(--accent);
+    color: var(--border-cyan);
     text-decoration: none;
-    font-family: 'Orbitron', monospace;
-    font-weight: 700;
-    font-size: 1rem;
-    padding: 10px 20px;
-    border: 1px solid var(--accent);
-    border-radius: 8px;
-    transition: all 0.3s;
-    background: var(--accent-dim);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border: 1px solid var(--border-cyan);
+    border-radius: 4px;
+    background: rgba(0, 229, 255, 0.05);
+    transition: all 0.2s;
   }
   .back-btn:hover {
-    background: var(--accent);
+    background: var(--border-cyan);
     color: #000;
-    box-shadow: 0 0 20px var(--accent);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
   }
-
-  h1 {
-    font-family: 'Orbitron', monospace;
-    font-size: 2.5rem;
-    color: var(--accent);
-    text-shadow: 0 0 20px var(--accent-glow);
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    margin: 20px 0;
-    z-index: 10;
-    text-align: center;
-  }
-  .page-subtitle {
-    font-size: 1.1rem;
-    color: rgba(200,218,240,0.5);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 30px;
-    z-index: 10;
-  }
-
-  .calculator-container {
-    position: relative;
-    z-index: 10;
-    width: 90%;
-    max-width: 1200px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 50px;
-  }
-
-  .panel {
-    background: var(--bg-panel);
-    border: 1px solid var(--accent-dim);
-    border-radius: 16px;
-    padding: 30px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,230,118,0.05);
-  }
-
-  .panel h2 {
-    font-family: 'Orbitron', monospace;
-    font-size: 1.2rem;
-    color: #fff;
-    margin-bottom: 25px;
-    border-bottom: 1px solid var(--accent-dim);
-    padding-bottom: 10px;
+  .brand-title {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--border-gold);
     letter-spacing: 2px;
   }
 
-  .input-group {
+  h1.main-title {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    color: #fff;
+    text-align: center;
+    margin: 20px 0 2px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    text-align: center;
+    letter-spacing: 4px;
+    text-transform: uppercase;
     margin-bottom: 25px;
   }
-  .input-group label {
-    display: block;
-    font-size: 1.1rem;
-    color: var(--accent);
-    margin-bottom: 8px;
+
+  .dashboard {
+    max-width: 1600px;
+    margin: 0 auto 50px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 20px;
+  }
+
+  /* PANEL DE ENTRADAS */
+  .inputs-panel {
+    background: var(--bg-panel);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    height: fit-content;
+  }
+  .inputs-panel h2 {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--border-cyan);
+    border-bottom: 1px solid var(--border-cyan-dim);
+    padding-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
-
-  .control-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  .group-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--border-gold);
+    text-transform: uppercase;
+    margin-top: 8px;
+    letter-spacing: 1px;
   }
 
+  .input-control {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .input-control label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .input-control label span.val {
+    font-family: var(--font-mono);
+    color: var(--border-cyan);
+    font-weight: 700;
+  }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
   input[type=range] {
     flex: 1;
     -webkit-appearance: none;
-    background: rgba(0,0,0,0.5);
-    height: 6px;
-    border-radius: 3px;
+    background: #02070c;
+    height: 4px;
+    border-radius: 2px;
     outline: none;
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--border-cyan);
     cursor: pointer;
-    box-shadow: 0 0 10px var(--accent);
   }
-
+  input[type=range].gold-range::-webkit-slider-thumb {
+    background: var(--border-gold);
+  }
   input[type=number] {
-    width: 90px;
-    background: rgba(0,0,0,0.6);
-    border: 1px solid var(--accent);
+    width: 70px;
+    background: #02070c;
+    border: 1px solid rgba(255,255,255,0.1);
     color: #fff;
-    font-family: 'Orbitron', monospace;
-    font-size: 1.2rem;
-    padding: 8px;
-    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    padding: 4px;
+    border-radius: 4px;
     text-align: right;
     outline: none;
   }
   input[type=number]:focus {
-    box-shadow: 0 0 15px var(--accent-glow);
+    border-color: var(--border-cyan);
+  }
+  .lbl-unit {
+    font-family: var(--font-mono);
+    color: var(--border-gold);
+    font-size: 0.8rem;
+    width: 32px;
   }
 
-  .unit {
-    font-family: 'Orbitron', monospace;
-    color: var(--gold);
-    font-size: 1.1rem;
-    min-width: 55px;
+  /* Toggle button styles */
+  .toggle-group {
+    display: flex;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 5px;
+  }
+  .toggle-btn {
+    flex: 1;
+    padding: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    background: rgba(0, 229, 255, 0.12) !important;
+    color: var(--border-cyan) !important;
+    border: 1px solid var(--border-cyan-dim) !important;
+  }
+  .toggle-btn:hover:not(.active) {
+    color: #fff;
+    background: rgba(255,255,255,0.02);
   }
 
-  .results-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  /* PANEL DE CONTENIDO (TABS) */
+  .content-panel {
+    display: flex;
+    flex-direction: column;
     gap: 20px;
   }
-  .result-box {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(0, 230, 118, 0.3);
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
+
+  .tabs-bar {
+    display: flex;
+    background: var(--bg-panel);
+    padding: 6px;
+    border-radius: 8px;
+    gap: 8px;
+    border: 1px solid rgba(255,255,255,0.04);
   }
-  .result-box .label {
-    font-size: 0.9rem;
-    color: rgba(200,218,240,0.6);
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tab-btn.active {
+    background: rgba(0, 229, 255, 0.08);
+    color: var(--border-cyan);
+    border: 1px solid var(--border-cyan-dim);
+  }
+  .tab-btn:hover:not(.active) {
+    color: #fff;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .tab-content {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .tab-content.active {
+    display: flex;
+  }
+
+  /* ECUACIONES CARD GRID */
+  .eq-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  .eq-card {
+    background: var(--bg-panel);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .eq-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--border-gold);
     text-transform: uppercase;
     letter-spacing: 1px;
   }
-  .result-box .value {
-    font-family: 'Orbitron', monospace;
-    font-size: 1.8rem;
-    color: var(--accent);
+  .eq-math {
+    background: #02070c;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 4px;
+    padding: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--border-cyan);
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+  .eq-res-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     margin-top: 5px;
   }
-  .result-box .value.gold { color: var(--gold); }
-
-  .formulas {
-    margin-top: 30px;
-    font-family: 'Rajdhani', serif;
-    font-size: 1.1rem;
-    color: rgba(0, 230, 118, 0.7);
-    line-height: 1.8;
+  .eq-res-lbl {
+    font-size: 0.85rem;
+    color: var(--text-dim);
   }
-  .formulas span {
-    display: inline-block;
-    background: rgba(0,230,118,0.1);
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin: 2px 4px;
+  .eq-res-val {
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
   }
 
-  .chart-container {
+  /* CHARTS GRID */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .chart-card {
+    background: var(--bg-panel);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .chart-card.span-2 {
+    grid-column: span 2;
+  }
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    padding-bottom: 8px;
+  }
+  .chart-title {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  .chart-desc {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+  .canvas-container {
     position: relative;
     width: 100%;
-    height: 350px;
+    height: 260px;
+  }
+  .canvas-container.large {
+    height: 380px;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
   }
 
-  @media (max-width: 900px) {
-    .calculator-container { grid-template-columns: 1fr; }
-    h1 { font-size: 1.6rem; }
+  /* Conditional CSS */
+  .hidden {
+    display: none !important;
+  }
+
+  @media(max-width: 1200px) {
+    .dashboard { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .chart-card.span-2 { grid-column: span 1; }
+    .eq-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<canvas id="three-bg"></canvas>
-
 <div class="top-bar">
-    <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+  <a href="index.html" class="back-btn">← MENU PRINCIPAL</a>
+  <div class="brand-title">STANDARDS OF ACCOUSTICAL ENGINEERING</div>
 </div>
 
-<h1>Electroacoustics</h1>
-<div class="page-subtitle">Transducer &amp; Array Simulation</div>
+<h1 class="main-title">Consola de Análisis de Sistemas</h1>
+<div class="subtitle">Ecuaciones Físicas y Modelos de Interferencia</div>
 
-<div class="calculator-container">
-    <!-- INPUTS PANEL -->
-    <div class="panel">
-        <h2>System Parameters</h2>
-
-        <div class="input-group">
-            <label>Sensitivity (1W/1m)</label>
-            <div class="control-row">
-                <input type="range" id="sensSlider" min="75" max="115" step="0.1" value="90">
-                <input type="number" id="sensNum" min="60" max="130" step="0.1" value="90">
-                <span class="unit">dB SPL</span>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label>Amplifier Power</label>
-            <div class="control-row">
-                <input type="range" id="powerSlider" min="1" max="5000" step="1" value="500">
-                <input type="number" id="powerNum" min="0.1" max="50000" step="1" value="500">
-                <span class="unit">W</span>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label>Distance</label>
-            <div class="control-row">
-                <input type="range" id="distSlider" min="1" max="200" step="0.5" value="10">
-                <input type="number" id="distNum" min="0.1" max="1000" step="0.5" value="10">
-                <span class="unit">m</span>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label>Number of Sources (coherent)</label>
-            <div class="control-row">
-                <input type="range" id="srcSlider" min="1" max="64" step="1" value="1">
-                <input type="number" id="srcNum" min="1" max="256" step="1" value="1">
-                <span class="unit">units</span>
-            </div>
-        </div>
-
-        <div class="formulas">
-            <strong>Key Formulas:</strong><br>
-            <span>SPL = Sens + 10·log₁₀(P)</span>
-            <span>−20·log₁₀(d)</span><br>
-            <span>Array = +10·log₁₀(N)</span>
-            <span>I = P / 4πr²</span>
-        </div>
+<div class="dashboard">
+  
+  <!-- PANEL IZQUIERDO DE ENTRADAS -->
+  <div class="inputs-panel">
+    <h2>Variables de Control</h2>
+    
+    <div class="group-title">Entorno de Propagación</div>
+    
+    <div class="input-control">
+      <label>Frecuencia de Test <span class="val" id="freqVal">1000 Hz</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="freqS" min="100" max="10000" step="50" value="1000">
+        <input type="number" id="freqN" min="20" max="20000" step="10" value="1000">
+        <span class="lbl-unit">Hz</span>
+      </div>
     </div>
 
-    <!-- RESULTS PANEL -->
-    <div class="panel">
-        <h2>Calculated Values</h2>
-        <div class="results-grid">
-            <div class="result-box">
-                <div class="label">SPL @ 1m (total)</div>
-                <div class="value"><span id="outSPL1m">117.0</span> <span style="font-size:1rem">dB</span></div>
-            </div>
-            <div class="result-box">
-                <div class="label">SPL @ Distance</div>
-                <div class="value gold"><span id="outSPLd">97.0</span> <span style="font-size:1rem">dB</span></div>
-            </div>
-            <div class="result-box">
-                <div class="label">Array Gain</div>
-                <div class="value"><span id="outArrayGain">0.0</span> <span style="font-size:1rem">dB</span></div>
-            </div>
-            <div class="result-box">
-                <div class="label">Acoustic Intensity</div>
-                <div class="value gold"><span id="outIntensity">0.40</span> <span style="font-size:1rem">W/m²</span></div>
-            </div>
+    <div class="input-control">
+      <label>Temperatura Aire <span class="val" id="tempVal">20.0 °C</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="tempS" min="-10" max="40" step="0.5" value="20.0">
+        <input type="number" id="tempN" min="-50" max="60" step="0.5" value="20.0">
+        <span class="lbl-unit">°C</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Humedad Relativa <span class="val" id="humVal">50 %</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="humS" min="0" max="100" step="1" value="50">
+        <input type="number" id="humN" min="0" max="100" step="1" value="50">
+        <span class="lbl-unit">%</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Presión Atmosférica <span class="val" id="presVal">101.3 kPa</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="presS" min="80" max="120" step="0.1" value="101.3">
+        <input type="number" id="presN" min="50" max="150" step="0.1" value="101.3">
+        <span class="lbl-unit">kPa</span>
+      </div>
+    </div>
+
+    <div class="group-title">Interferencia de Fase</div>
+    
+    <div class="input-control">
+      <label>Diferencia de Nivel <span class="val" id="levDiffVal">0.0 dB</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="levDiffS" min="0" max="24" step="0.1" value="0.0">
+        <input type="number" id="levDiffN" min="0" max="40" step="0.1" value="0.0">
+        <span class="lbl-unit">dB</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Diferencia de Tiempo <span class="val" id="timeDiffVal">1.00 ms</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="timeDiffS" min="0.05" max="20" step="0.05" value="1.00">
+        <input type="number" id="timeDiffN" min="0" max="100" step="0.01" value="1.00">
+        <span class="lbl-unit">ms</span>
+      </div>
+    </div>
+
+    <div class="group-title">Arreglos y Cobertura</div>
+
+    <div class="input-control">
+      <label>Tipo de Emisor</label>
+      <div class="toggle-group">
+        <button id="btnPoint" class="toggle-btn active" onclick="setSourceType('point')">Puntual</button>
+        <button id="btnLine" class="toggle-btn" onclick="setSourceType('line')">Lineal</button>
+      </div>
+    </div>
+
+    <div id="lineFields" class="conditional-field hidden">
+      <div class="input-control">
+        <label>Altura Line Array <span class="val" id="arrayHVal">2.0 m</span></label>
+        <div class="ctrl-row">
+          <input type="range" id="arrayHS" min="0.5" max="12" step="0.1" value="2.0">
+          <input type="number" id="arrayHN" min="0.1" max="40" step="0.1" value="2.0">
+          <span class="lbl-unit">m</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Ángulo Cobertura Altavoz <span class="val" id="covAngleVal">90°</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="covAngleS" min="10" max="160" step="5" value="90">
+        <input type="number" id="covAngleN" min="5" max="180" step="1" value="90">
+        <span class="lbl-unit">°</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Frecuencia Central Sub <span class="val" id="subFreqVal">80 Hz</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="subFreqS" min="30" max="150" step="1" value="80">
+        <input type="number" id="subFreqN" min="20" max="250" step="1" value="80">
+        <span class="lbl-unit">Hz</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Distancia de Análisis <span class="val" id="distVal">10.0 m</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="distS" min="1" max="150" step="0.5" value="10.0">
+        <input type="number" id="distN" min="0.5" max="500" step="0.1" value="10.0">
+        <span class="lbl-unit">m</span>
+      </div>
+    </div>
+
+    <div class="group-title">Transductor y Potencia</div>
+
+    <div class="input-control">
+      <label>Sensibilidad (1W / 1m) <span class="val" id="sensVal">95.0 dB</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="sensS" min="70" max="115" step="0.5" value="95.0">
+        <input type="number" id="sensN" min="50" max="130" step="0.1" value="95.0">
+        <span class="lbl-unit">dB</span>
+      </div>
+    </div>
+
+    <div class="input-control">
+      <label>Potencia RMS Aplicada <span class="val" id="pwrVal">250 W</span></label>
+      <div class="ctrl-row">
+        <input type="range" id="pwrS" min="1" max="2000" step="10" value="250">
+        <input type="number" id="pwrN" min="1" max="50000" step="1" value="250">
+        <span class="lbl-unit">W</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL DERECHO DE PESTAÑAS (DASHBOARD) -->
+  <div class="content-panel">
+    
+    <div class="tabs-bar">
+      <button id="tabBtnA" class="tab-btn active" onclick="setTab('A')">Propagación y Aire</button>
+      <button id="tabBtnB" class="tab-btn" onclick="setTab('B')">Interferencia y Peine</button>
+      <button id="tabBtnC" class="tab-btn" onclick="setTab('C')">Arreglos y Cobertura</button>
+      <button id="tabBtnD" class="tab-btn" onclick="setTab('D')">Electrónica y 3D</button>
+    </div>
+
+    <!-- PESTAÑA A: PROPAGACIÓN Y AIRE -->
+    <div id="tabContentA" class="tab-content active">
+      
+      <!-- Fila de Ecuaciones (3) -->
+      <div class="eq-grid">
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 1: Velocidad del Sonido</div>
+          <div class="eq-math">c = 331.3 * √(1 + T / 273.15) + (0.6 * H * 1.2)</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Resultado (c):</span>
+            <span class="eq-res-val"><span id="eq1Val">344.0</span> <span style="font-size:0.75rem; font-weight:normal;">m/s</span></span>
+          </div>
+        </div>
+        
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 2: Longitud de Onda y Periodo</div>
+          <div class="eq-math">λ = c / f  |  T = 1 / f</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Longitud (λ):</span>
+            <span class="eq-res-val"><span id="eq2ValL">0.34</span> <span style="font-size:0.75rem; font-weight:normal;">m</span></span>
+          </div>
         </div>
 
-        <h2 style="margin-top: 30px;">SPL vs Distance</h2>
-        <div class="chart-container">
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 3: Tiempo de Tránsito</div>
+          <div class="eq-math">t = d / c</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Tiempo de Vuelo:</span>
+            <span class="eq-res-val"><span id="eq3Val">29.1</span> <span style="font-size:0.75rem; font-weight:normal;">ms</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de Gráficos (3) -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 1: Caída de SPL vs Distancia</span>
+            <span class="chart-desc">Puntual vs. Line Array e ISO 9613-1</span>
+          </div>
+          <div class="canvas-container">
             <canvas id="splChart"></canvas>
+          </div>
         </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 5: Deriva de Retraso vs Temperatura</span>
+            <span class="chart-desc">Cambio de tiempo de arribo (ms)</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="delayTempChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card span-2">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 6: Atenuación del Aire vs Humedad</span>
+            <span class="chart-desc">Pérdida atmosférica (dB/km) en barrido de humedad relativa</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="airAbsHumChart"></canvas>
+          </div>
+        </div>
+      </div>
+
     </div>
+
+    <!-- PESTAÑA B: INTERFERENCIA Y PEINE -->
+    <div id="tabContentB" class="tab-content">
+      
+      <!-- Fila de Ecuaciones (3) -->
+      <div class="eq-grid">
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 4: Diferencia de Fase Angular</div>
+          <div class="eq-math">Δθ = (360 * f * Δt) mod 360</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Desfase (Δθ):</span>
+            <span class="eq-res-val"><span id="eq4Val">360°</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 8: Suma Vectorial de 2 Señales</div>
+          <div class="eq-math">L_sum = 10 log(10^(L1/10) + 10^(L2/10) + 2*10^((L1+L2)/20)*cos(Δθ))</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Nivel Sumado:</span>
+            <span class="eq-res-val"><span id="eq8Val">0.0</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 9: Límites de Filtro de Peine</div>
+          <div class="eq-math">Peak = 20log(1 + 10^(-ΔL/20))  |  Valley = ...</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Pico / Valle:</span>
+            <span class="eq-res-val" style="font-size:1.1rem;"><span id="eq9ValP">+6.0</span> / <span id="eq9ValV">-inf</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de Gráficos (3) -->
+      <div class="charts-grid">
+        <div class="chart-card span-2">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 2: Respuesta en Frecuencia del Filtro de Peine</span>
+            <span class="chart-desc">Respuesta combinada en escala logarítmica (20 Hz - 20 kHz)</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="combChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 3: Suma Acústica vs Ángulo de Fase</span>
+            <span class="chart-desc">Ganancia resultante desde 0° a 360°</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="phaseSumChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 4: Respuesta de Fase vs Frecuencia</span>
+            <span class="chart-desc">Fase enrollada (Wrapped Phase Angle)</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="phaseFreqChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PESTAÑA C: ARREGLOS Y COBERTURA -->
+    <div id="tabContentC" class="tab-content">
+      
+      <!-- Fila de Ecuaciones (3) -->
+      <div class="eq-grid">
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 6: Transición de Campo de Line Array</div>
+          <div class="eq-math">d_trans = (h^2 * f) / (2 * c)</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Distancia Límite:</span>
+            <span class="eq-res-val"><span id="eq6Val">5.8</span> <span style="font-size:0.75rem; font-weight:normal;">m</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 7: Atenuación Line Array</div>
+          <div class="eq-math">d <= d_t: 10log(d)  |  d > d_t: 10log(d_t) + 20log(d/d_t)</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Pérdida por Distancia:</span>
+            <span class="eq-res-val"><span id="eq7Val">-20.0</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 10: Alineación End-Fire de Subs</div>
+          <div class="eq-math">d_ef = c / (4 * f0)  |  τ_ef = d_ef / c</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Retraso Trasero:</span>
+            <span class="eq-res-val" style="font-size:1.15rem;"><span id="eq10ValD">1.07</span>m / <span id="eq10ValT">3.1</span>ms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de Gráficos (3) -->
+      <div class="charts-grid">
+        <div class="chart-card span-2">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 7: Visualizador 2D del Patrón de Cobertura</span>
+            <span class="chart-desc">Arrastra el marcador amarillo del oyente para actualizar los cálculos en vivo</span>
+          </div>
+          <div class="canvas-container large">
+            <canvas id="coverageCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 8: Respuesta de Suma Frontal End-Fire</span>
+            <span class="chart-desc">Suma acústica en el eje de radiación frontal</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="efFrontChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 9: Atenuación Polar Trasera End-Fire</span>
+            <span class="chart-desc">Rechazo trasero (cancelación en fase)</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="efRearChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PESTAÑA D: ELECTRÓNICA Y 3D -->
+    <div id="tabContentD" class="tab-content">
+      
+      <!-- Fila de Ecuaciones (3) -->
+      <div class="eq-grid">
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 11: Eficiencia del Altavoz</div>
+          <div class="eq-math">η = 10^((Sens - 109) / 10) * 100</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Eficiencia (η):</span>
+            <span class="eq-res-val"><span id="eq11Val">3.98</span> <span style="font-size:0.75rem; font-weight:normal;">%</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Ecuación 12: Voltaje RMS y Pico Requeridos</div>
+          <div class="eq-math">V_rms = √(P * Z)  |  V_pico = V_rms * √2</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Voltajes RMS / Pico:</span>
+            <span class="eq-res-val" style="font-size:1.15rem;"><span id="eq12ValV">44.7</span> / <span id="eq12ValVP">63.2</span> <span style="font-size:0.75rem; font-weight:normal;">V</span></span>
+          </div>
+        </div>
+
+        <div class="eq-card">
+          <div class="eq-title">Impedancia / Corriente Amplificador</div>
+          <div class="eq-math">I_rms = V_rms / Z</div>
+          <div class="eq-res-row">
+            <span class="eq-res-lbl">Corriente Requerida:</span>
+            <span class="eq-res-val"><span id="eq12ValI">5.59</span> <span style="font-size:0.75rem; font-weight:normal;">A</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de Gráficos (2) -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 10: Voltaje y Corriente RMS vs Impedancia (Z)</span>
+            <span class="chart-desc">Carga nominal para 2, 4, 8 y 16 Ohmios</span>
+          </div>
+          <div class="canvas-container">
+            <canvas id="ampZChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Gráfico 11: Simulación de Frente de Onda 3D</span>
+            <span class="chart-desc">Frentes de onda en expansión en tiempo real (Three.js)</span>
+          </div>
+          <div class="canvas-container" id="threeContainer">
+            <!-- Three.js renderer goes here -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
 <script>
-// THREE.JS BACKGROUND
-const canvasBg = document.getElementById('three-bg');
-const renderer = new THREE.WebGLRenderer({ canvas: canvasBg, alpha: true, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 20;
+// VARIABLES GLOBALES DE FÍSICA
+let activeTab = 'A';
+const c_ref = 343.2; // velocidad de referencia
 
-const pGeo = new THREE.BufferGeometry();
-const pPos = new Float32Array(300 * 3);
-for (let i = 0; i < 900; i++) pPos[i] = (Math.random()-0.5)*60;
-pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x00e676, size: 0.08, transparent: true, opacity: 0.2 }));
-scene.add(particles);
+// REFERENCIAS DE ELEMENTOS E INTERACTIVOS
+const ids = [
+  ['freqS', 'freqN', 'freqVal', ' Hz'],
+  ['tempS', 'tempN', 'tempVal', ' °C'],
+  ['humS', 'humN', 'humVal', ' %'],
+  ['presS', 'presN', 'presVal', ' kPa'],
+  ['levDiffS', 'levDiffN', 'levDiffVal', ' dB'],
+  ['timeDiffS', 'timeDiffN', 'timeDiffVal', ' ms'],
+  ['arrayHS', 'arrayHN', 'arrayHVal', ' m'],
+  ['covAngleS', 'covAngleN', 'covAngleVal', '°'],
+  ['subFreqS', 'subFreqN', 'subFreqVal', ' Hz'],
+  ['distS', 'distN', 'distVal', ' m'],
+  ['sensS', 'sensN', 'sensVal', ' dB'],
+  ['pwrS', 'pwrN', 'pwrVal', ' W']
+];
 
-// Add wireframe spheres for wave visualization
-const sphereGeo = new THREE.SphereGeometry(4, 16, 16);
-const sphereMat = new THREE.MeshBasicMaterial({ color: 0x00e676, wireframe: true, transparent: true, opacity: 0.04 });
-const spheres = [];
-for (let i = 0; i < 3; i++) {
-    const s = new THREE.Mesh(sphereGeo, sphereMat.clone());
-    s.position.set((Math.random()-0.5)*30, (Math.random()-0.5)*20, -15);
-    s.userData = { phase: i * 2, baseScale: 0.5 + i * 0.8 };
-    scene.add(s);
-    spheres.push(s);
+// Mapeo e interactividad en vivo de Sliders e Inputs numéricos
+ids.forEach(([sId, nId, dispId, unit]) => {
+  const se = document.getElementById(sId);
+  const ne = document.getElementById(nId);
+  const de = document.getElementById(dispId);
+  
+  if (se && ne) {
+    const update = () => {
+      let val = parseFloat(se.value);
+      ne.value = val;
+      if (de) de.innerText = val.toFixed(sId === 'tempS' || sId === 'presS' || sId === 'timeDiffS' || sId === 'arrayHS' || sId === 'distS' || sId === 'sensS' ? 1 : 0) + unit;
+      calculateAll();
+    };
+    se.addEventListener('input', update);
+    ne.addEventListener('input', () => {
+      se.value = ne.value;
+      update();
+    });
+  }
+});
+
+function setTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(cont => cont.classList.remove('active'));
+  
+  document.getElementById('tabBtn' + tabName).classList.add('active');
+  document.getElementById('tabContent' + tabName).classList.add('active');
+  activeTab = tabName;
+  
+  // Forzar redibujado de gráficos asociados
+  setTimeout(() => {
+    resizeAndRenderCharts();
+  }, 10);
 }
 
-function animateBg(t) {
-  requestAnimationFrame(animateBg);
-  const time = t * 0.001;
-  particles.rotation.y = t * 0.00005;
-  particles.rotation.x = t * 0.00002;
-  spheres.forEach(s => {
-      const sc = s.userData.baseScale + Math.sin(time + s.userData.phase) * 0.3;
-      s.scale.setScalar(sc);
-      s.material.opacity = 0.02 + Math.sin(time + s.userData.phase) * 0.02;
+// -------------------------------------------------------------
+// INICIALIZACIÓN DE LOS 9 GRÁFICOS CHART.JS
+// -------------------------------------------------------------
+Chart.defaults.color = '#8ba0b8';
+Chart.defaults.font.family = 'Fira Code';
+Chart.defaults.font.size = 10;
+const gridColor = '#142538';
+
+// Helper de gráfico de línea
+function createLineChart(ctxId, xLabel, yLabel, color) {
+  const ctx = document.getElementById(ctxId).getContext('2d');
+  return new Chart(ctx, {
+    type: 'line',
+    data: { datasets: [] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { type: 'linear', title: { display: true, text: xLabel }, grid: { color: gridColor } },
+        y: { title: { display: true, text: yLabel }, grid: { color: gridColor } }
+      },
+      plugins: { legend: { display: false } }
+    }
   });
+}
+
+// 1. SPL vs Distancia (Logarítmico)
+const splChart = new Chart(document.getElementById('splChart').getContext('2d'), {
+  type: 'line',
+  data: { datasets: [] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { type: 'logarithmic', title: { display: true, text: 'Distancia (m)' }, min: 1, max: 200, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'SPL (dB)' }, grid: { color: gridColor } }
+    },
+    plugins: { legend: { display: true, labels: { boxWidth: 15 } } }
+  }
+});
+
+// 2. Respuesta Filtro Peine
+const combChart = new Chart(document.getElementById('combChart').getContext('2d'), {
+  type: 'line',
+  data: { datasets: [] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { type: 'logarithmic', title: { display: true, text: 'Frecuencia (Hz)' }, min: 20, max: 20000, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'Nivel Relativo (dB)' }, min: -35, max: 8, grid: { color: gridColor } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// 3. Suma Fase vs Nivel
+const phaseSumChart = createLineChart('phaseSumChart', 'Desfase (grados)', 'Suma Acústica (dB)', 'rgba(0, 229, 255, 0.85)');
+phaseSumChart.options.scales.x.min = 0;
+phaseSumChart.options.scales.x.max = 360;
+
+// 4. Respuesta de Fase vs Frecuencia (Fase enrollada)
+const phaseFreqChart = new Chart(document.getElementById('phaseFreqChart').getContext('2d'), {
+  type: 'line',
+  data: { datasets: [] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { type: 'logarithmic', title: { display: true, text: 'Frecuencia (Hz)' }, min: 20, max: 20000, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'Fase (grados)' }, min: -180, max: 180, grid: { color: gridColor } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// 5. Deriva vs Temperatura
+const delayTempChart = createLineChart('delayTempChart', 'Temperatura (°C)', 'Desviación de Tiempo (ms)', 'rgba(240, 192, 64, 0.85)');
+
+// 6. Absorción Aire vs Humedad
+const airAbsHumChart = createLineChart('airAbsHumChart', 'Humedad Relativa (%)', 'Atenuación del Aire (dB/km)', 'rgba(0, 229, 255, 0.85)');
+airAbsHumChart.options.scales.x.min = 0;
+airAbsHumChart.options.scales.x.max = 100;
+
+// 8. Respuesta End-Fire Frontal
+const efFrontChart = new Chart(document.getElementById('efFrontChart').getContext('2d'), {
+  type: 'line',
+  data: { datasets: [] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { type: 'linear', title: { display: true, text: 'Frecuencia (Hz)' }, min: 20, max: 250, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'Respuesta Frontal (dB)' }, min: -30, max: 10, grid: { color: gridColor } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// 9. Atenuación Polar Trasera End-Fire
+const efRearChart = new Chart(document.getElementById('efRearChart').getContext('2d'), {
+  type: 'line',
+  data: { datasets: [] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { type: 'linear', title: { display: true, text: 'Frecuencia (Hz)' }, min: 20, max: 250, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'Rechazo Trasero (dB)' }, min: -40, max: 0, grid: { color: gridColor } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// 10. Amplificador Requisitos vs Z
+const ampZChart = new Chart(document.getElementById('ampZChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['2 Ω', '4 Ω', '8 Ω', '16 Ω'],
+    datasets: [
+      { label: 'Voltaje RMS (V)', data: [], backgroundColor: 'rgba(0, 229, 255, 0.45)', borderColor: 'var(--border-cyan)', borderWidth: 1.5, yAxisID: 'yV' },
+      { label: 'Corriente RMS (A)', data: [], backgroundColor: 'rgba(240, 192, 64, 0.45)', borderColor: 'var(--border-gold)', borderWidth: 1.5, yAxisID: 'yI' }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      yV: { type: 'linear', position: 'left', title: { display: true, text: 'Voltaje (V)', color: 'var(--border-cyan)' }, grid: { color: gridColor } },
+      yI: { type: 'linear', position: 'right', title: { display: true, text: 'Corriente (A)', color: 'var(--border-gold)' }, grid: { drawOnChartArea: false } }
+    }
+  }
+});
+
+// Redimensionar gráficos para evitar bugs de Chart.js en tabs ocultas
+function resizeAndRenderCharts() {
+  const charts = [splChart, combChart, phaseSumChart, phaseFreqChart, delayTempChart, airAbsHumChart, efFrontChart, efRearChart, ampZChart];
+  charts.forEach(c => {
+    c.resize();
+    c.update();
+  });
+}
+
+// -------------------------------------------------------------
+// MOTOR ACÚSTICO: CÁLCULOS Y ACTUALIZACIÓN
+// -------------------------------------------------------------
+function calculateAirAbsorptionCoef(f, T_C, hr, pr) {
+  const T = T_C + 273.15;
+  const T0 = 293.15;
+  const T01 = 273.16;
+  const pr0 = 101.325;
+  
+  const pstar = pr / pr0;
+  const Tstar = T / T0;
+  
+  const psat = pr0 * Math.pow(10, -6.8346 * Math.pow(T01 / T, 1.261) + 4.6151);
+  const h = hr * (psat / pr);
+  
+  const frO = pstar * (24 + 4.04e4 * h * (0.02 + h) / (0.391 + h));
+  const frN = pstar * Math.pow(Tstar, -0.5) * (9 + 280 * h * Math.exp(-4.17 * (Math.pow(Tstar, -1/3) - 1)));
+  
+  const alphaNp = f * f * (
+    1.84e-11 * Math.pow(Tstar, 0.5) / pstar +
+    Math.pow(Tstar, -2.5) * (
+      0.1068 * Math.exp(-2239.1 / T) * frO / (f * f + frO * frO) +
+      0.3607 * Math.exp(-3352 / T) * frN / (f * f + frN * frN)
+    )
+  );
+  return alphaNp * 8.68589; // dB por metro
+}
+
+function calculateAll() {
+  const f = parseFloat(document.getElementById('freqN').value);
+  const T = parseFloat(document.getElementById('tempN').value);
+  const hr = parseFloat(document.getElementById('humN').value);
+  const pr = parseFloat(document.getElementById('presN').value);
+  
+  const dL = parseFloat(document.getElementById('levDiffN').value);
+  const dT_ms = parseFloat(document.getElementById('timeDiffN').value);
+  
+  const h = parseFloat(document.getElementById('arrayHN').value);
+  const angle = parseFloat(document.getElementById('covAngleN').value);
+  const f0_sub = parseFloat(document.getElementById('subFreqN').value);
+  const d = parseFloat(document.getElementById('distN').value);
+  
+  const sens = parseFloat(document.getElementById('sensN').value);
+  const P = parseFloat(document.getElementById('pwrN').value);
+
+  // --- CÁLCULOS ---
+
+  // Ecuación 1: Velocidad del Sonido
+  const c = 331.3 * Math.sqrt(1 + T / 273.15) + 0.6 * (hr / 100) * 1.2;
+  document.getElementById('eq1Val').innerText = c.toFixed(1);
+
+  // Ecuación 2: Longitud de Onda y Periodo
+  const lambda = c / f;
+  const period = 1000 / f; // ms
+  document.getElementById('eq2ValL').innerText = lambda.toFixed(3);
+
+  // Ecuación 3: Tiempo de Tránsito
+  const flightTime = (d / c) * 1000; // ms
+  document.getElementById('eq3Val').innerText = flightTime.toFixed(1);
+
+  // Ecuación 4: Desfase Angular
+  const dT_sec = dT_ms / 1000;
+  const phaseDiff = (dT_sec * f * 360) % 360;
+  document.getElementById('eq4Val').innerText = phaseDiff.toFixed(0) + '°';
+
+  // Ecuación 8: Suma Vectorial (Suponiendo L1 = 0 dB y L2 = -dL dB)
+  const l1_lin = 1.0;
+  const l2_lin = Math.pow(10, -dL / 20);
+  const phaseRad = (phaseDiff * Math.PI) / 180;
+  const sumLin = Math.sqrt(l1_lin*l1_lin + l2_lin*l2_lin + 2*l1_lin*l2_lin*Math.cos(phaseRad));
+  const sumDb = 20 * Math.log10(sumLin);
+  document.getElementById('eq8Val').innerText = (sumDb >= 0 ? '+' : '') + sumDb.toFixed(1);
+
+  // Ecuación 9: Límites de Filtro de Peine
+  const combPeak = 20 * Math.log10(1 + l2_lin);
+  const combValley = 20 * Math.log10(Math.abs(1 - l2_lin));
+  document.getElementById('eq9ValP').innerText = '+' + combPeak.toFixed(1);
+  document.getElementById('eq9ValV').innerText = l2_lin === 1 ? '-inf' : combValley.toFixed(1);
+
+  // Ecuación 6: Transición Line Array
+  const d_trans = (h * h * f) / (2 * c);
+  document.getElementById('eq6Val').innerText = d_trans.toFixed(1);
+
+  // Ecuación 7: Pérdida Line Array a la distancia d
+  let arrayLoss = 0;
+  if (d <= d_trans) {
+    arrayLoss = 10 * Math.log10(d);
+  } else {
+    arrayLoss = 10 * Math.log10(d_trans) + 20 * Math.log10(d / d_trans);
+  }
+  document.getElementById('eq7Val').innerText = '-' + arrayLoss.toFixed(1);
+
+  // Ecuación 10: Arreglo End-Fire (distancia y delay)
+  const subLambda = c / f0_sub;
+  const efDist = subLambda / 4;
+  const efDelay = (efDist / c) * 1000; // ms
+  document.getElementById('eq10ValD').innerText = efDist.toFixed(2);
+  document.getElementById('eq10ValT').innerText = efDelay.toFixed(1);
+
+  // Ecuación 11: Eficiencia
+  const eta = Math.pow(10, (sens - 109) / 10) * 100;
+  document.getElementById('eq11Val').innerText = eta < 0.01 ? eta.toExponential(3) : eta.toFixed(3);
+
+  // Ecuación 12: Voltaje RMS y Corriente RMS (Para carga fija de 8 Ohmios de muestra)
+  const z_ref = 8;
+  const v_rms = Math.sqrt(P * z_ref);
+  const v_peak = v_rms * Math.sqrt(2);
+  const i_rms = v_rms / z_ref;
+  document.getElementById('eq12ValV').innerText = v_rms.toFixed(1);
+  document.getElementById('eq12ValVP').innerText = v_peak.toFixed(1);
+  document.getElementById('eq12ValI').innerText = i_rms.toFixed(2);
+
+  // -------------------------------------------------------------
+  // RENDERIZADO DE GRÁFICOS LOGARÍTMICOS Y BARRIDOS
+  // -------------------------------------------------------------
+  
+  // Gráfico 1: SPL vs Distancia
+  const airAbsCoef = calculateAirAbsorptionCoef(f, T, hr, pr);
+  const spl1m = sens + 10 * Math.log10(P);
+  let ptCurve = [];
+  let lnCurve = [];
+  
+  for (let rVal = 1; rVal <= 200; rVal *= 1.1) {
+    // Puntual (6dB/dd)
+    const ptSPL = spl1m - 20 * Math.log10(rVal) - (airAbsCoef * rVal);
+    ptCurve.push({ x: rVal, y: ptSPL });
+    
+    // Lineal (3dB/dd -> 6dB/dd)
+    let lnSPL = 0;
+    if (rVal <= d_trans) {
+      lnSPL = spl1m - 10 * Math.log10(rVal) - (airAbsCoef * rVal);
+    } else {
+      const transSPL = spl1m - 10 * Math.log10(d_trans);
+      lnSPL = transSPL - 20 * Math.log10(rVal / d_trans) - (airAbsCoef * rVal);
+    }
+    lnCurve.push({ x: rVal, y: lnSPL });
+  }
+  
+  // Nivel del oyente
+  let listenerSPL = 0;
+  if (sourceType === 'point') {
+    listenerSPL = spl1m - 20 * Math.log10(d) - (airAbsCoef * d);
+  } else {
+    if (d <= d_trans) {
+      listenerSPL = spl1m - 10 * Math.log10(d) - (airAbsCoef * d);
+    } else {
+      listenerSPL = (spl1m - 10 * Math.log10(d_trans)) - 20 * Math.log10(d / d_trans) - (airAbsCoef * d);
+    }
+  }
+  
+  splChart.data.datasets = [
+    { label: 'Fuente Puntual', data: ptCurve, borderColor: 'rgba(240, 192, 64, 0.7)', pointRadius: 0, borderWidth: 2 },
+    { label: 'Fuente Lineal (Array)', data: lnCurve, borderColor: 'rgba(0, 229, 255, 0.7)', pointRadius: 0, borderWidth: 2 },
+    { label: 'Oyente', data: [{ x: d, y: listenerSPL }], backgroundColor: '#fff', borderColor: '#fff', pointRadius: 6, showLine: false }
+  ];
+  splChart.update();
+
+  // Gráfico 2: Respuesta Filtro de Peine (20Hz - 20kHz)
+  let combCurve = [];
+  for (let freqIdx = 20; freqIdx <= 20000; freqIdx *= 1.05) {
+    const fPhase = (dT_sec * freqIdx * 360) % 360;
+    const fPhaseRad = (fPhase * Math.PI) / 180;
+    const fSumLin = Math.sqrt(l1_lin*l1_lin + l2_lin*l2_lin + 2*l1_lin*l2_lin*Math.cos(fPhaseRad));
+    combCurve.push({ x: freqIdx, y: 20 * Math.log10(fSumLin) });
+  }
+  combChart.data.datasets = [{ data: combCurve, borderColor: 'rgba(0, 229, 255, 0.85)', borderWidth: 1.5, pointRadius: 0 }];
+  combChart.update();
+
+  // Gráfico 3: Suma Acústica vs Ángulo de Fase (0° - 360°)
+  let phaseSumCurve = [];
+  for (let ang = 0; ang <= 360; ang += 5) {
+    const angRad = (ang * Math.PI) / 180;
+    const aSum = Math.sqrt(l1_lin*l1_lin + l2_lin*l2_lin + 2*l1_lin*l2_lin*Math.cos(angRad));
+    phaseSumCurve.push({ x: ang, y: 20 * Math.log10(aSum) });
+  }
+  phaseSumChart.data.datasets = [
+    { data: phaseSumCurve, borderColor: 'rgba(240, 192, 64, 0.85)', borderWidth: 2, pointRadius: 0 },
+    { data: [{ x: phaseDiff, y: sumDb }], backgroundColor: '#fff', pointRadius: 5, showLine: false }
+  ];
+  phaseSumChart.update();
+
+  // Gráfico 4: Respuesta de Fase vs Frecuencia (20Hz - 20kHz)
+  let phaseFreqCurve = [];
+  for (let freqIdx = 20; freqIdx <= 20000; freqIdx *= 1.05) {
+    // Fase relativa: theta_relative = -w * dT
+    let phaseDeg = (-freqIdx * dT_sec * 360) % 360;
+    if (phaseDeg < -180) phaseDeg += 360;
+    if (phaseDeg > 180) phaseDeg -= 360;
+    phaseFreqCurve.push({ x: freqIdx, y: phaseDeg });
+  }
+  phaseFreqChart.data.datasets = [{ data: phaseFreqCurve, borderColor: 'rgba(0, 229, 255, 0.8)', borderWidth: 1, pointRadius: 0 }];
+  phaseFreqChart.update();
+
+  // Gráfico 5: Deriva vs Temperatura
+  let delayTempCurve = [];
+  for (let tIdx = -10; tIdx <= 40; tIdx += 2) {
+    const c_t = 331.3 * Math.sqrt(1 + tIdx / 273.15) + 0.6 * (hr / 100) * 1.2;
+    const t_t = (d / c_t) * 1000; // ms
+    const delayShift = t_t - flightTime; // ms relativos a la temperatura de test
+    delayTempCurve.push({ x: tIdx, y: delayShift });
+  }
+  delayTempChart.data.datasets = [
+    { data: delayTempCurve, borderColor: 'rgba(240, 192, 64, 0.85)', borderWidth: 2, pointRadius: 0 },
+    { data: [{ x: T, y: 0 }], backgroundColor: '#fff', pointRadius: 5, showLine: false }
+  ];
+  delayTempChart.update();
+
+  // Gráfico 6: Absorción de Aire vs Humedad
+  let airAbsHumCurve = [];
+  for (let hIdx = 0; hIdx <= 100; hIdx += 2) {
+    const absCoef = calculateAirAbsorptionCoef(f, T, hIdx, pr) * 1000; // dB/km
+    airAbsHumCurve.push({ x: hIdx, y: absCoef });
+  }
+  airAbsHumChart.data.datasets = [
+    { data: airAbsHumCurve, borderColor: 'rgba(0, 229, 255, 0.85)', borderWidth: 2, pointRadius: 0 },
+    { data: [{ x: hr, y: airAbsCoef * 1000 }], backgroundColor: '#fff', pointRadius: 5, showLine: false }
+  ];
+  airAbsHumChart.update();
+
+  // Gráficos de Arreglo de Subwoofers End-Fire
+  let efFrontCurve = [];
+  let efRearCurve = [];
+  
+  for (let freqIdx = 20; freqIdx <= 250; freqIdx += 2) {
+    efFrontCurve.push({ x: freqIdx, y: 6.0 });
+    
+    const dt_rear = (2 * efDist) / c;
+    const phase_rear = (dt_rear * freqIdx * 360) % 360;
+    const phaseRadRear = (phase_rear * Math.PI) / 180;
+    const sumRearLin = Math.sqrt(2 + 2*Math.cos(phaseRadRear));
+    
+    efRearCurve.push({ x: freqIdx, y: 20 * Math.log10(Math.max(0.0001, sumRearLin / 2)) });
+  }
+  
+  efFrontChart.data.datasets = [{ data: efFrontCurve, borderColor: 'rgba(0, 229, 255, 0.85)', borderWidth: 2, pointRadius: 0 }];
+  efFrontChart.update();
+  
+  efRearChart.data.datasets = [
+    { data: efRearCurve, borderColor: 'rgba(240, 192, 64, 0.85)', borderWidth: 2, pointRadius: 0 },
+    { data: [{ x: f0_sub, y: -40 }], backgroundColor: '#fff', pointRadius: 4, showLine: false }
+  ];
+  efRearChart.update();
+
+  // Gráfico 10: Requisitos Amp vs Carga
+  const z_values = [2, 4, 8, 16];
+  const volts_data = z_values.map(z => Math.sqrt(P * z));
+  const current_data = z_values.map((z, idx) => volts_data[idx] / z);
+  
+  ampZChart.data.datasets[0].data = volts_data;
+  ampZChart.data.datasets[1].data = current_data;
+  ampZChart.update();
+
+  // Redibujar Canvas 2D
+  drawCoverageCone();
+}
+
+// -------------------------------------------------------------
+// DIBUJADO DE COBERTURA 2D EN CANVAS
+// -------------------------------------------------------------
+function drawCoverageCone() {
+  const canvas = document.getElementById('coverageCanvas');
+  if (!canvas) return;
+  const ctxCov = canvas.getContext('2d');
+  
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  
+  const W = canvas.width;
+  const H = canvas.height;
+  
+  // Limpiar
+  ctxCov.fillStyle = '#020710';
+  ctxCov.fillRect(0, 0, W, H);
+  
+  // Rejilla de Radar / Holograma
+  ctxCov.strokeStyle = 'rgba(0, 229, 255, 0.05)';
+  ctxCov.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) {
+    ctxCov.beginPath(); ctxCov.moveTo(x, 0); ctxCov.lineTo(x, H); ctxCov.stroke();
+  }
+  for (let y = 0; y < H; y += 40) {
+    ctxCov.beginPath(); ctxCov.moveTo(0, y); ctxCov.lineTo(W, y); ctxCov.stroke();
+  }
+  
+  // Círculos de distancia concéntricos
+  ctxCov.strokeStyle = 'rgba(0, 229, 255, 0.08)';
+  for (let r = 100; r < W; r += 100) {
+    ctxCov.beginPath();
+    ctxCov.arc(40, H/2, r, -Math.PI/2, Math.PI/2);
+    ctxCov.stroke();
+  }
+  
+  const angleDeg = parseFloat(document.getElementById('covAngleN').value);
+  const angleRad = (angleDeg * Math.PI) / 180;
+  const d = parseFloat(document.getElementById('distN').value);
+  
+  // Origen de emisión
+  const ox = 40;
+  const oy = H / 2;
+  
+  // Dibujar haz de cobertura (Cono de sonido)
+  const coneLength = W - 120;
+  const edgeY1 = oy - coneLength * Math.sin(angleRad / 2);
+  const endX = ox + coneLength * Math.cos(angleRad / 2);
+  
+  // Degradado radial
+  const grad = ctxCov.createRadialGradient(ox, oy, 10, ox, oy, coneLength);
+  grad.addColorStop(0, 'rgba(0, 229, 255, 0.25)');
+  grad.addColorStop(0.3, 'rgba(0, 229, 255, 0.12)');
+  grad.addColorStop(0.7, 'rgba(0, 229, 255, 0.03)');
+  grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  
+  ctxCov.fillStyle = grad;
+  ctxCov.beginPath();
+  ctxCov.moveTo(ox, oy);
+  ctxCov.lineTo(endX, edgeY1);
+  ctxCov.arc(ox, oy, coneLength, -angleRad/2, angleRad/2);
+  ctxCov.lineTo(ox, oy);
+  ctxCov.fill();
+  
+  // Dibujar líneas límite de dispersión
+  ctxCov.strokeStyle = 'rgba(0, 229, 255, 0.35)';
+  ctxCov.lineWidth = 1.5;
+  ctxCov.setLineDash([6, 4]);
+  ctxCov.beginPath();
+  ctxCov.moveTo(ox, oy); ctxCov.lineTo(ox + coneLength * Math.cos(-angleRad/2), oy + coneLength * Math.sin(-angleRad/2));
+  ctxCov.moveTo(ox, oy); ctxCov.lineTo(ox + coneLength * Math.cos(angleRad/2), oy + coneLength * Math.sin(angleRad/2));
+  ctxCov.stroke();
+  ctxCov.setLineDash([]);
+  
+  // Dibujar oyente (representado como un marcador dorado)
+  const scale = coneLength / 120; // 120 metros representados
+  const targetX = ox + Math.min(d, 120) * scale;
+  const targetY = oy;
+  
+  ctxCov.fillStyle = '#f0c040';
+  ctxCov.beginPath();
+  ctxCov.arc(targetX, targetY, 6, 0, 2*Math.PI);
+  ctxCov.fill();
+  
+  // Brillo dorado
+  ctxCov.strokeStyle = 'rgba(240, 192, 64, 0.45)';
+  ctxCov.lineWidth = 2;
+  ctxCov.beginPath();
+  ctxCov.arc(targetX, targetY, 11, 0, 2*Math.PI);
+  ctxCov.stroke();
+  
+  // Texto indicativo del oyente
+  ctxCov.fillStyle = '#fff';
+  ctxCov.font = '11px Fira Code';
+  ctxCov.fillText('OYENTE (' + d.toFixed(1) + 'm)', targetX - 50, targetY - 18);
+  
+  // Dibujar ancho de haz en el punto del oyente
+  const beamYHalf = Math.min(d, 120) * scale * Math.sin(angleRad / 2);
+  ctxCov.strokeStyle = '#f0c040';
+  ctxCov.lineWidth = 1.5;
+  ctxCov.beginPath();
+  ctxCov.moveTo(targetX, targetY - beamYHalf);
+  ctxCov.lineTo(targetX, targetY + beamYHalf);
+  ctxCov.stroke();
+  
+  // Flechas en extremos
+  ctxCov.fillStyle = '#f0c040';
+  ctxCov.beginPath();
+  ctxCov.moveTo(targetX, targetY - beamYHalf); ctxCov.lineTo(targetX-4, targetY - beamYHalf + 6); ctxCov.lineTo(targetX+4, targetY - beamYHalf + 6); ctxCov.fill();
+  ctxCov.beginPath();
+  ctxCov.moveTo(targetX, targetY + beamYHalf); ctxCov.lineTo(targetX-4, targetY + beamYHalf - 6); ctxCov.lineTo(targetX+4, targetY + beamYHalf - 6); ctxCov.fill();
+  
+  // Texto del ancho de cobertura
+  const covWidth = 2 * d * Math.tan((angleDeg / 2) * Math.PI / 180);
+  ctxCov.fillStyle = '#f0c040';
+  ctxCov.font = '12px Rajdhani';
+  ctxCov.fillText('Ancho: ' + covWidth.toFixed(1) + ' m', targetX + 12, targetY + 4);
+  
+  // Simulación de fuente
+  ctxCov.fillStyle = 'var(--border-cyan)';
+  ctxCov.beginPath();
+  if (sourceType === 'point') {
+    ctxCov.arc(ox, oy, 8, 0, 2*Math.PI);
+  } else {
+    // Dibujar arreglo lineal
+    ctxCov.rect(ox - 8, oy - 20, 10, 40);
+  }
+  ctxCov.fill();
+}
+
+// INTERACTIVIDAD EN EL CANVAS DE COBERTURA (ARRASTRAR Y HACER CLIC)
+const covCanvasEl = document.getElementById('coverageCanvas');
+let isDraggingListener = false;
+
+function getDistanceFromX(x) {
+  const ox = 40;
+  const W = covCanvasEl.width;
+  const coneLength = W - 120;
+  const scale = coneLength / 120;
+  
+  let calculatedD = (x - ox) / scale;
+  if (calculatedD < 1) calculatedD = 1;
+  if (calculatedD > 120) calculatedD = 120;
+  return calculatedD;
+}
+
+function handleCanvasInteraction(clientX) {
+  const rect = covCanvasEl.getBoundingClientRect();
+  const x = (clientX - rect.left) * (covCanvasEl.width / rect.width);
+  const newD = getDistanceFromX(x);
+  
+  const distS = document.getElementById('distS');
+  const distN = document.getElementById('distN');
+  
+  distS.value = Math.round(newD * 2) / 2;
+  distN.value = newD.toFixed(1);
+  document.getElementById('distVal').innerText = newD.toFixed(1) + ' m';
+  
+  calculateAll();
+}
+
+covCanvasEl.addEventListener('mousedown', (e) => {
+  const rect = covCanvasEl.getBoundingClientRect();
+  const clickX = (e.clientX - rect.left) * (covCanvasEl.width / rect.width);
+  const clickY = (e.clientY - rect.top) * (covCanvasEl.height / rect.height);
+  
+  const d = parseFloat(document.getElementById('distN').value);
+  const ox = 40;
+  const oy = covCanvasEl.height / 2;
+  const coneLength = covCanvasEl.width - 120;
+  const scale = coneLength / 120;
+  const targetX = ox + Math.min(d, 120) * scale;
+  
+  const dx = clickX - targetX;
+  const dy = clickY - oy;
+  const distToDot = Math.sqrt(dx*dx + dy*dy);
+  
+  if (distToDot < 25) {
+    isDraggingListener = true;
+    covCanvasEl.style.cursor = 'grabbing';
+  } else if (clickX > ox) {
+    handleCanvasInteraction(e.clientX);
+    isDraggingListener = true;
+    covCanvasEl.style.cursor = 'grabbing';
+  }
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (isDraggingListener) {
+    handleCanvasInteraction(e.clientX);
+  } else {
+    // Cambiar cursor al pasar sobre el oyente
+    const rect = covCanvasEl.getBoundingClientRect();
+    const mouseX = (e.clientX - rect.left) * (covCanvasEl.width / rect.width);
+    const mouseY = (e.clientY - rect.top) * (covCanvasEl.height / rect.height);
+    
+    const d = parseFloat(document.getElementById('distN').value);
+    const ox = 40;
+    const oy = covCanvasEl.height / 2;
+    const coneLength = covCanvasEl.width - 120;
+    const scale = coneLength / 120;
+    const targetX = ox + Math.min(d, 120) * scale;
+    
+    const dx = mouseX - targetX;
+    const dy = mouseY - oy;
+    const distToDot = Math.sqrt(dx*dx + dy*dy);
+    
+    if (distToDot < 15) {
+      covCanvasEl.style.cursor = 'grab';
+    } else {
+      covCanvasEl.style.cursor = 'default';
+    }
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  if (isDraggingListener) {
+    isDraggingListener = false;
+    covCanvasEl.style.cursor = 'default';
+  }
+});
+
+// Soporte touch
+covCanvasEl.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    const touch = e.touches[0];
+    const rect = covCanvasEl.getBoundingClientRect();
+    const clickX = (touch.clientX - rect.left) * (covCanvasEl.width / rect.width);
+    const clickY = (touch.clientY - rect.top) * (covCanvasEl.height / rect.height);
+    
+    const d = parseFloat(document.getElementById('distN').value);
+    const ox = 40;
+    const oy = covCanvasEl.height / 2;
+    const coneLength = covCanvasEl.width - 120;
+    const scale = coneLength / 120;
+    const targetX = ox + Math.min(d, 120) * scale;
+    
+    const dx = clickX - targetX;
+    const dy = clickY - oy;
+    const distToDot = Math.sqrt(dx*dx + dy*dy);
+    
+    if (distToDot < 30) {
+      isDraggingListener = true;
+      e.preventDefault();
+    } else if (clickX > ox) {
+      handleCanvasInteraction(touch.clientX);
+      isDraggingListener = true;
+      e.preventDefault();
+    }
+  }
+});
+
+covCanvasEl.addEventListener('touchmove', (e) => {
+  if (isDraggingListener && e.touches.length === 1) {
+    handleCanvasInteraction(e.touches[0].clientX);
+    e.preventDefault();
+  }
+});
+
+covCanvasEl.addEventListener('touchend', () => {
+  isDraggingListener = false;
+});
+
+// -------------------------------------------------------------
+// RENDERING 3D CON THREE.JS (FONDO Y FRENTE DE ONDA)
+// -------------------------------------------------------------
+let renderer, scene, camera, waveMaterial, waveMesh, particleSystem;
+let particlesCount = 400;
+let particlesPositions = new Float32Array(particlesCount * 3);
+
+function initThree() {
+  const container = document.getElementById('threeContainer');
+  if (!container) return;
+  
+  const W = container.clientWidth || 300;
+  const H = container.clientHeight || 260;
+  
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 100);
+  camera.position.set(0, 0, 18);
+  
+  renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(W, H);
+  container.appendChild(renderer.domElement);
+  
+  // Onda esférica animada en 3D
+  const waveGeo = new THREE.SphereGeometry(1, 32, 32);
+  waveMaterial = new THREE.MeshBasicMaterial({ color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.1 });
+  waveMesh = new THREE.Mesh(waveGeo, waveMaterial);
+  scene.add(waveMesh);
+  
+  // Sistema de partículas
+  const pGeometry = new THREE.BufferGeometry();
+  for (let i = 0; i < particlesCount * 3; i += 3) {
+    const radius = Math.random() * 8;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos((Math.random() * 2) - 1);
+    
+    particlesPositions[i] = radius * Math.sin(phi) * Math.cos(theta);
+    particlesPositions[i+1] = radius * Math.sin(phi) * Math.sin(theta);
+    particlesPositions[i+2] = radius * Math.cos(phi);
+  }
+  pGeometry.setAttribute('position', new THREE.BufferAttribute(particlesPositions, 3));
+  
+  const pMaterial = new THREE.PointsMaterial({
+    color: 0xf0c040,
+    size: 0.12,
+    transparent: true,
+    opacity: 0.5
+  });
+  particleSystem = new THREE.Points(pGeometry, pMaterial);
+  scene.add(particleSystem);
+  
+  animateThree();
+}
+
+function animateThree() {
+  requestAnimationFrame(animateThree);
+  
+  if (particleSystem) {
+    particleSystem.rotation.y += 0.003;
+    particleSystem.rotation.x += 0.0015;
+  }
+  
+  if (waveMesh) {
+    waveMesh.scale.addScalar(0.06);
+    waveMaterial.opacity = Math.max(0, 0.35 - (waveMesh.scale.x / 14) * 0.35);
+    
+    if (waveMesh.scale.x > 14) {
+      waveMesh.scale.set(1, 1, 1);
+      waveMaterial.opacity = 0.35;
+    }
+  }
+  
   renderer.render(scene, camera);
 }
-animateBg(0);
 
+// -------------------------------------------------------------
+// CONTROLADOR GENERAL DE FUENTE Y RENDER
+// -------------------------------------------------------------
+let sourceType = 'point'; // 'point' o 'line'
+
+function setSourceType(type) {
+  sourceType = type;
+  document.getElementById('btnPoint').classList.toggle('active', type === 'point');
+  document.getElementById('btnLine').classList.toggle('active', type === 'line');
+  
+  const lineFields = document.getElementById('lineFields');
+  if (type === 'line') {
+    lineFields.classList.remove('hidden');
+  } else {
+    lineFields.classList.add('hidden');
+  }
+  calculateAll();
+}
+
+// Inicializar al cargar
+window.addEventListener('DOMContentLoaded', () => {
+  initThree();
+  calculateAll();
+});
+
+// Redimensionar Three.js
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  const container = document.getElementById('threeContainer');
+  if (container && renderer && camera) {
+    const W = container.clientWidth;
+    const H = container.clientHeight;
+    renderer.setSize(W, H);
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+  }
 });
-
-// CALCULATOR LOGIC
-const sensSlider = document.getElementById('sensSlider');
-const sensNum = document.getElementById('sensNum');
-const powerSlider = document.getElementById('powerSlider');
-const powerNum = document.getElementById('powerNum');
-const distSlider = document.getElementById('distSlider');
-const distNum = document.getElementById('distNum');
-const srcSlider = document.getElementById('srcSlider');
-const srcNum = document.getElementById('srcNum');
-
-const outSPL1m = document.getElementById('outSPL1m');
-const outSPLd = document.getElementById('outSPLd');
-const outArrayGain = document.getElementById('outArrayGain');
-const outIntensity = document.getElementById('outIntensity');
-
-function syncInput(source, target) {
-    let val = parseFloat(source.value);
-    if (isNaN(val)) return;
-    target.value = val;
-    calculate();
-}
-
-sensSlider.addEventListener('input', () => syncInput(sensSlider, sensNum));
-sensNum.addEventListener('input', () => syncInput(sensNum, sensSlider));
-powerSlider.addEventListener('input', () => syncInput(powerSlider, powerNum));
-powerNum.addEventListener('input', () => syncInput(powerNum, powerSlider));
-distSlider.addEventListener('input', () => syncInput(distSlider, distNum));
-distNum.addEventListener('input', () => syncInput(distNum, distSlider));
-srcSlider.addEventListener('input', () => syncInput(srcSlider, srcNum));
-srcNum.addEventListener('input', () => syncInput(srcNum, srcSlider));
-
-// Chart
-const ctx = document.getElementById('splChart').getContext('2d');
-Chart.defaults.color = '#c8daf0';
-Chart.defaults.font.family = 'Rajdhani';
-
-let splChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [
-            {
-                label: 'SPL (dB)',
-                data: [],
-                borderColor: 'rgba(0, 230, 118, 0.8)',
-                backgroundColor: 'rgba(0, 230, 118, 0.1)',
-                borderWidth: 2,
-                fill: true,
-                pointRadius: 0,
-                tension: 0.4
-            },
-            {
-                label: 'Current Position',
-                data: [],
-                backgroundColor: '#f0c040',
-                borderColor: '#f0c040',
-                borderWidth: 2,
-                pointRadius: 7,
-                pointHoverRadius: 9,
-                showLine: false
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 200 },
-        scales: {
-            x: {
-                type: 'linear',
-                title: { display: true, text: 'Distance (m)', color: '#00e676' },
-                grid: { color: 'rgba(255,255,255,0.05)' }
-            },
-            y: {
-                title: { display: true, text: 'SPL (dB)', color: '#f0c040' },
-                grid: { color: 'rgba(255,255,255,0.05)' }
-            }
-        },
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        return context.raw.y.toFixed(1) + ' dB @ ' + context.raw.x.toFixed(1) + ' m';
-                    }
-                }
-            }
-        }
-    }
-});
-
-function calculate() {
-    const sens = parseFloat(sensNum.value);
-    const P = parseFloat(powerNum.value);
-    const d = parseFloat(distNum.value);
-    const N = parseInt(srcNum.value);
-
-    if (isNaN(sens) || isNaN(P) || isNaN(d) || isNaN(N) || P <= 0 || d <= 0 || N < 1) return;
-
-    const arrayGain = 10 * Math.log10(N);
-    const spl1m = sens + 10 * Math.log10(P) + arrayGain;
-    const splAtDist = spl1m - 20 * Math.log10(d);
-
-    // Acoustic intensity: I = P_acoustic / (4 * pi * r^2)
-    // Using reference: SPL = 10*log10(I/I0), I0 = 1e-12
-    const intensity = Math.pow(10, splAtDist / 10) * 1e-12;
-
-    outSPL1m.innerText = spl1m.toFixed(1);
-    outSPLd.innerText = splAtDist.toFixed(1);
-    outArrayGain.innerText = (arrayGain > 0 ? '+' : '') + arrayGain.toFixed(1);
-    outIntensity.innerText = intensity < 0.001 ? intensity.toExponential(2) : intensity.toFixed(4);
-
-    // Update Chart — SPL vs distance
-    const maxD = Math.max(50, d * 2.5);
-    let curveData = [];
-    for (let dd = 1; dd <= maxD; dd += maxD / 80) {
-        const splDD = spl1m - 20 * Math.log10(dd);
-        curveData.push({ x: dd, y: splDD });
-    }
-
-    splChart.data.datasets[0].data = curveData;
-    splChart.data.datasets[1].data = [{ x: d, y: splAtDist }];
-    splChart.options.scales.x.max = maxD;
-    splChart.update();
-}
-
-calculate();
 </script>
 </body>
 </html>
