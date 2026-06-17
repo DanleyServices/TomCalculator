@@ -7,6 +7,19 @@
 <meta name="description" content="Dashboard de análisis acústico y eléctrico de alta densidad basado en el estándar adversarial de ingeniería.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
@@ -540,7 +553,7 @@
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Ecuación 1: Velocidad del Sonido</div>
-          <div class="eq-math">c = 331.3 * √(1 + T / 273.15) + (0.6 * H * 1.2)</div>
+          <div class="eq-math">$$c = 331.3 \sqrt{1 + \frac{T}{273.15}} + 0.6 \left(\frac{H}{100}\right) 1.2$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Resultado (c):</span>
             <span class="eq-res-val"><span id="eq1Val">344.0</span> <span style="font-size:0.75rem; font-weight:normal;">m/s</span></span>
@@ -549,7 +562,7 @@
         
         <div class="eq-card">
           <div class="eq-title">Ecuación 2: Longitud de Onda y Periodo</div>
-          <div class="eq-math">λ = c / f  |  T = 1 / f</div>
+          <div class="eq-math">$$\lambda = \frac{c}{f} \quad \Big| \quad T_{\text{period}} = \frac{1000}{f}\text{ ms}$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Longitud (λ):</span>
             <span class="eq-res-val"><span id="eq2ValL">0.34</span> <span style="font-size:0.75rem; font-weight:normal;">m</span></span>
@@ -558,7 +571,7 @@
 
         <div class="eq-card">
           <div class="eq-title">Ecuación 3: Tiempo de Tránsito</div>
-          <div class="eq-math">t = d / c</div>
+          <div class="eq-math">$$t = \frac{d}{c} \cdot 1000$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Tiempo de Vuelo:</span>
             <span class="eq-res-val"><span id="eq3Val">29.1</span> <span style="font-size:0.75rem; font-weight:normal;">ms</span></span>
@@ -608,7 +621,7 @@
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Ecuación 4: Diferencia de Fase Angular</div>
-          <div class="eq-math">Δθ = (360 * f * Δt) mod 360</div>
+          <div class="eq-math">$$\Delta\theta = (360 \cdot f \cdot \Delta t_{\text{sec}}) \pmod{360}$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Desfase (Δθ):</span>
             <span class="eq-res-val"><span id="eq4Val">360°</span></span>
@@ -617,7 +630,7 @@
 
         <div class="eq-card">
           <div class="eq-title">Ecuación 8: Suma Vectorial de 2 Señales</div>
-          <div class="eq-math">L_sum = 10 log(10^(L1/10) + 10^(L2/10) + 2*10^((L1+L2)/20)*cos(Δθ))</div>
+          <div class="eq-math">$$L_{\text{sum}} = 10 \log_{10}\left(10^{\frac{L_1}{10}} + 10^{\frac{L_2}{10}} + 2 \cdot 10^{\frac{L_1+L_2}{20}}\cos(\Delta\theta)\right)$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Nivel Sumado:</span>
             <span class="eq-res-val"><span id="eq8Val">0.0</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
@@ -626,7 +639,7 @@
 
         <div class="eq-card">
           <div class="eq-title">Ecuación 9: Límites de Filtro de Peine</div>
-          <div class="eq-math">Peak = 20log(1 + 10^(-ΔL/20))  |  Valley = ...</div>
+          <div class="eq-math">$$\text{Peak} = 20\log_{10}(1+a) \ \Big| \ \text{Valley} = 20\log_{10}|1-a|$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Pico / Valle:</span>
             <span class="eq-res-val" style="font-size:1.1rem;"><span id="eq9ValP">+6.0</span> / <span id="eq9ValV">-inf</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
@@ -676,7 +689,7 @@
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Ecuación 6: Transición de Campo de Line Array</div>
-          <div class="eq-math">d_trans = (h^2 * f) / (2 * c)</div>
+          <div class="eq-math">$$d_{\text{trans}} = \frac{H^2 \cdot f}{2c}$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Distancia Límite:</span>
             <span class="eq-res-val"><span id="eq6Val">5.8</span> <span style="font-size:0.75rem; font-weight:normal;">m</span></span>
@@ -685,7 +698,7 @@
 
         <div class="eq-card">
           <div class="eq-title">Ecuación 7: Atenuación Line Array</div>
-          <div class="eq-math">d <= d_t: 10log(d)  |  d > d_t: 10log(d_t) + 20log(d/d_t)</div>
+          <div class="eq-math">$$Att = \begin{cases} 10\log_{10}(d) & d \le d_{\text{trans}} \\ 10\log_{10}(d_{\text{trans}}) + 20\log_{10}(d/d_{\text{trans}}) & d \gt d_{\text{trans}} \end{cases}$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Pérdida por Distancia:</span>
             <span class="eq-res-val"><span id="eq7Val">-20.0</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
@@ -694,7 +707,7 @@
 
         <div class="eq-card">
           <div class="eq-title">Ecuación 10: Alineación End-Fire de Subs</div>
-          <div class="eq-math">d_ef = c / (4 * f0)  |  τ_ef = d_ef / c</div>
+          <div class="eq-math">$$d_{\text{ef}} = \frac{c}{4f_0} \quad \Big| \quad \tau_{\text{ef}} = \frac{d_{\text{ef}}}{c} \cdot 1000\text{ ms}$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Retraso Trasero:</span>
             <span class="eq-res-val" style="font-size:1.15rem;"><span id="eq10ValD">1.07</span>m / <span id="eq10ValT">3.1</span>ms</span>
@@ -744,7 +757,7 @@
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Ecuación 11: Eficiencia del Altavoz</div>
-          <div class="eq-math">η = 10^((Sens - 109) / 10) * 100</div>
+          <div class="eq-math">$$\eta = 10^{\frac{\text{Sens} - 109}{10}} \cdot 100\%$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Eficiencia (η):</span>
             <span class="eq-res-val"><span id="eq11Val">3.98</span> <span style="font-size:0.75rem; font-weight:normal;">%</span></span>
@@ -753,7 +766,7 @@
 
         <div class="eq-card">
           <div class="eq-title">Ecuación 12: Voltaje RMS y Pico Requeridos</div>
-          <div class="eq-math">V_rms = √(P * Z)  |  V_pico = V_rms * √2</div>
+          <div class="eq-math">$$V_{\text{rms}} = \sqrt{P \cdot Z} \quad \Big| \quad V_{\text{pico}} = V_{\text{rms}}\sqrt{2}$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Voltajes RMS / Pico:</span>
             <span class="eq-res-val" style="font-size:1.15rem;"><span id="eq12ValV">44.7</span> / <span id="eq12ValVP">63.2</span> <span style="font-size:0.75rem; font-weight:normal;">V</span></span>
@@ -762,7 +775,7 @@
 
         <div class="eq-card">
           <div class="eq-title">Impedancia / Corriente Amplificador</div>
-          <div class="eq-math">I_rms = V_rms / Z</div>
+          <div class="eq-math">$$I_{\text{rms}} = \frac{V_{\text{rms}}}{Z}$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">Corriente Requerida:</span>
             <span class="eq-res-val"><span id="eq12ValI">5.59</span> <span style="font-size:0.75rem; font-weight:normal;">A</span></span>
@@ -800,6 +813,114 @@
 </div>
 
 <script>
+// --- CONTRATO MODULAR ELECTROACÚSTICA REQUERIDO ---
+const electroacousticsModule = {
+  meta: {
+    id: "electroacoustics",
+    title: "Consola Científica de Electroacústica",
+    desc: "Análisis acústico y eléctrico de alta densidad basado en el estándar adversarial de ingeniería."
+  },
+  inputs: {
+    freq: 1000.0,
+    temp: 20.0,
+    hum: 50.0,
+    pres: 101.3,
+    levDiff: 0.0,
+    timeDiff: 1.0,
+    sourceType: 'point',
+    arrayH: 2.0,
+    covAngle: 90.0,
+    subFreq: 80.0,
+    dist: 10.0,
+    sens: 95.0,
+    pwr: 250.0
+  },
+  compute: function(inputs) {
+    const f = inputs.freq;
+    const T = inputs.temp;
+    const hr = inputs.hum;
+    const pr = inputs.pres;
+    const dL = inputs.levDiff;
+    const dT_ms = inputs.timeDiff;
+    const h = inputs.arrayH;
+    const angle = inputs.covAngle;
+    const f0_sub = inputs.subFreq;
+    const d = inputs.dist;
+    const sens = inputs.sens;
+    const P = inputs.pwr;
+
+    // Ecuación 1: Velocidad del Sonido
+    const c = 331.3 * Math.sqrt(1 + T / 273.15) + 0.6 * (hr / 100) * 1.2;
+
+    // Ecuación 2: Longitud de Onda y Periodo
+    const lambda = c / f;
+    const period = 1000 / f; // ms
+
+    // Ecuación 3: Tiempo de Tránsito
+    const flightTime = (d / c) * 1000; // ms
+
+    // Ecuación 4: Desfase Angular
+    const dT_sec = dT_ms / 1000;
+    const phaseDiff = (dT_sec * f * 360) % 360;
+
+    // Ecuación 8: Suma Vectorial
+    const l1_lin = 1.0;
+    const l2_lin = Math.pow(10, -dL / 20);
+    const phaseRad = (phaseDiff * Math.PI) / 180;
+    const sumLin = Math.sqrt(l1_lin*l1_lin + l2_lin*l2_lin + 2*l1_lin*l2_lin*Math.cos(phaseRad));
+    const sumDb = 20 * Math.log10(sumLin);
+
+    // Ecuación 9: Límites de Filtro de Peine
+    const combPeak = 20 * Math.log10(1 + l2_lin);
+    const combValley = 20 * Math.log10(Math.max(0.0001, Math.abs(1 - l2_lin)));
+
+    // Ecuación 6: Transición Line Array
+    const d_trans = (h * h * f) / (2 * c);
+
+    // Ecuación 7: Pérdida Line Array a la distancia d
+    let arrayLoss = 0;
+    if (d <= d_trans) {
+      arrayLoss = 10 * Math.log10(d);
+    } else {
+      arrayLoss = 10 * Math.log10(d_trans) + 20 * Math.log10(d / d_trans);
+    }
+
+    // Ecuación 10: Arreglo End-Fire (distancia y delay)
+    const subLambda = c / f0_sub;
+    const efDist = subLambda / 4;
+    const efDelay = (efDist / c) * 1000; // ms
+
+    // Ecuación 11: Eficiencia
+    const eta = Math.pow(10, (sens - 109) / 10) * 100;
+
+    // Ecuación 12: Voltaje RMS, Pico y Corriente RMS (carga nominal 8 Ohms)
+    const z_ref = 8;
+    const v_rms = Math.sqrt(P * z_ref);
+    const v_peak = v_rms * Math.sqrt(2);
+    const i_rms = v_rms / z_ref;
+
+    return {
+      c,
+      lambda,
+      period,
+      flightTime,
+      phaseDiff,
+      sumDb,
+      combPeak,
+      combValley,
+      d_trans,
+      arrayLoss,
+      efDist,
+      efDelay,
+      eta,
+      v_rms,
+      v_peak,
+      i_rms,
+      l2_lin
+    };
+  }
+};
+
 // VARIABLES GLOBALES DE FÍSICA
 let activeTab = 'A';
 const c_ref = 343.2; // velocidad de referencia
@@ -1027,93 +1148,58 @@ function calculateAirAbsorptionCoef(f, T_C, hr, pr) {
 }
 
 function calculateAll() {
-  const f = parseFloat(document.getElementById('freqN').value);
-  const T = parseFloat(document.getElementById('tempN').value);
-  const hr = parseFloat(document.getElementById('humN').value);
-  const pr = parseFloat(document.getElementById('presN').value);
-  
-  const dL = parseFloat(document.getElementById('levDiffN').value);
-  const dT_ms = parseFloat(document.getElementById('timeDiffN').value);
-  
-  const h = parseFloat(document.getElementById('arrayHN').value);
-  const angle = parseFloat(document.getElementById('covAngleN').value);
-  const f0_sub = parseFloat(document.getElementById('subFreqN').value);
-  const d = parseFloat(document.getElementById('distN').value);
-  
-  const sens = parseFloat(document.getElementById('sensN').value);
-  const P = parseFloat(document.getElementById('pwrN').value);
+  const inputs = {
+    freq: parseFloat(document.getElementById('freqN').value),
+    temp: parseFloat(document.getElementById('tempN').value),
+    hum: parseFloat(document.getElementById('humN').value),
+    pres: parseFloat(document.getElementById('presN').value),
+    levDiff: parseFloat(document.getElementById('levDiffN').value),
+    timeDiff: parseFloat(document.getElementById('timeDiffN').value),
+    sourceType: sourceType,
+    arrayH: parseFloat(document.getElementById('arrayHN').value),
+    covAngle: parseFloat(document.getElementById('covAngleN').value),
+    subFreq: parseFloat(document.getElementById('subFreqN').value),
+    dist: parseFloat(document.getElementById('distN').value),
+    sens: parseFloat(document.getElementById('sensN').value),
+    pwr: parseFloat(document.getElementById('pwrN').value)
+  };
 
-  // --- CÁLCULOS ---
+  const res = electroacousticsModule.compute(inputs);
+  if (!res) return;
 
-  // Ecuación 1: Velocidad del Sonido
-  const c = 331.3 * Math.sqrt(1 + T / 273.15) + 0.6 * (hr / 100) * 1.2;
-  document.getElementById('eq1Val').innerText = c.toFixed(1);
-
-  // Ecuación 2: Longitud de Onda y Periodo
-  const lambda = c / f;
-  const period = 1000 / f; // ms
-  document.getElementById('eq2ValL').innerText = lambda.toFixed(3);
-
-  // Ecuación 3: Tiempo de Tránsito
-  const flightTime = (d / c) * 1000; // ms
-  document.getElementById('eq3Val').innerText = flightTime.toFixed(1);
-
-  // Ecuación 4: Desfase Angular
-  const dT_sec = dT_ms / 1000;
-  const phaseDiff = (dT_sec * f * 360) % 360;
-  document.getElementById('eq4Val').innerText = phaseDiff.toFixed(0) + '°';
-
-  // Ecuación 8: Suma Vectorial (Suponiendo L1 = 0 dB y L2 = -dL dB)
-  const l1_lin = 1.0;
-  const l2_lin = Math.pow(10, -dL / 20);
-  const phaseRad = (phaseDiff * Math.PI) / 180;
-  const sumLin = Math.sqrt(l1_lin*l1_lin + l2_lin*l2_lin + 2*l1_lin*l2_lin*Math.cos(phaseRad));
-  const sumDb = 20 * Math.log10(sumLin);
-  document.getElementById('eq8Val').innerText = (sumDb >= 0 ? '+' : '') + sumDb.toFixed(1);
-
-  // Ecuación 9: Límites de Filtro de Peine
-  const combPeak = 20 * Math.log10(1 + l2_lin);
-  const combValley = 20 * Math.log10(Math.abs(1 - l2_lin));
-  document.getElementById('eq9ValP').innerText = '+' + combPeak.toFixed(1);
-  document.getElementById('eq9ValV').innerText = l2_lin === 1 ? '-inf' : combValley.toFixed(1);
-
-  // Ecuación 6: Transición Line Array
-  const d_trans = (h * h * f) / (2 * c);
-  document.getElementById('eq6Val').innerText = d_trans.toFixed(1);
-
-  // Ecuación 7: Pérdida Line Array a la distancia d
-  let arrayLoss = 0;
-  if (d <= d_trans) {
-    arrayLoss = 10 * Math.log10(d);
-  } else {
-    arrayLoss = 10 * Math.log10(d_trans) + 20 * Math.log10(d / d_trans);
-  }
-  document.getElementById('eq7Val').innerText = '-' + arrayLoss.toFixed(1);
-
-  // Ecuación 10: Arreglo End-Fire (distancia y delay)
-  const subLambda = c / f0_sub;
-  const efDist = subLambda / 4;
-  const efDelay = (efDist / c) * 1000; // ms
-  document.getElementById('eq10ValD').innerText = efDist.toFixed(2);
-  document.getElementById('eq10ValT').innerText = efDelay.toFixed(1);
-
-  // Ecuación 11: Eficiencia
-  const eta = Math.pow(10, (sens - 109) / 10) * 100;
-  document.getElementById('eq11Val').innerText = eta < 0.01 ? eta.toExponential(3) : eta.toFixed(3);
-
-  // Ecuación 12: Voltaje RMS y Corriente RMS (Para carga fija de 8 Ohmios de muestra)
-  const z_ref = 8;
-  const v_rms = Math.sqrt(P * z_ref);
-  const v_peak = v_rms * Math.sqrt(2);
-  const i_rms = v_rms / z_ref;
-  document.getElementById('eq12ValV').innerText = v_rms.toFixed(1);
-  document.getElementById('eq12ValVP').innerText = v_peak.toFixed(1);
-  document.getElementById('eq12ValI').innerText = i_rms.toFixed(2);
+  // Actualizar DOM con resultados
+  document.getElementById('eq1Val').innerText = res.c.toFixed(1);
+  document.getElementById('eq2ValL').innerText = res.lambda.toFixed(3);
+  document.getElementById('eq3Val').innerText = res.flightTime.toFixed(1);
+  document.getElementById('eq4Val').innerText = res.phaseDiff.toFixed(0) + '°';
+  document.getElementById('eq8Val').innerText = (res.sumDb >= 0 ? '+' : '') + res.sumDb.toFixed(1);
+  document.getElementById('eq9ValP').innerText = '+' + res.combPeak.toFixed(1);
+  document.getElementById('eq9ValV').innerText = res.l2_lin === 1 ? '-inf' : res.combValley.toFixed(1);
+  document.getElementById('eq6Val').innerText = res.d_trans.toFixed(1);
+  document.getElementById('eq7Val').innerText = '-' + res.arrayLoss.toFixed(1);
+  document.getElementById('eq10ValD').innerText = res.efDist.toFixed(2);
+  document.getElementById('eq10ValT').innerText = res.efDelay.toFixed(1);
+  document.getElementById('eq11Val').innerText = res.eta < 0.01 ? res.eta.toExponential(3) : res.eta.toFixed(3);
+  document.getElementById('eq12ValV').innerText = res.v_rms.toFixed(1);
+  document.getElementById('eq12ValVP').innerText = res.v_peak.toFixed(1);
+  document.getElementById('eq12ValI').innerText = res.i_rms.toFixed(2);
 
   // -------------------------------------------------------------
   // RENDERIZADO DE GRÁFICOS LOGARÍTMICOS Y BARRIDOS
   // -------------------------------------------------------------
   
+  const f = inputs.freq;
+  const T = inputs.temp;
+  const hr = inputs.hum;
+  const pr = inputs.pres;
+  const d = inputs.dist;
+  const sens = inputs.sens;
+  const P = inputs.pwr;
+  const dT_sec = inputs.timeDiff / 1000;
+  const l1_lin = 1.0;
+  const l2_lin = res.l2_lin;
+  const d_trans = res.d_trans;
+
   // Gráfico 1: SPL vs Distancia
   const airAbsCoef = calculateAirAbsorptionCoef(f, T, hr, pr);
   const spl1m = sens + 10 * Math.log10(P);
@@ -1175,14 +1261,13 @@ function calculateAll() {
   }
   phaseSumChart.data.datasets = [
     { data: phaseSumCurve, borderColor: 'rgba(240, 192, 64, 0.85)', borderWidth: 2, pointRadius: 0 },
-    { data: [{ x: phaseDiff, y: sumDb }], backgroundColor: '#fff', pointRadius: 5, showLine: false }
+    { data: [{ x: res.phaseDiff, y: res.sumDb }], backgroundColor: '#fff', pointRadius: 5, showLine: false }
   ];
   phaseSumChart.update();
 
   // Gráfico 4: Respuesta de Fase vs Frecuencia (20Hz - 20kHz)
   let phaseFreqCurve = [];
   for (let freqIdx = 20; freqIdx <= 20000; freqIdx *= 1.05) {
-    // Fase relativa: theta_relative = -w * dT
     let phaseDeg = (-freqIdx * dT_sec * 360) % 360;
     if (phaseDeg < -180) phaseDeg += 360;
     if (phaseDeg > 180) phaseDeg -= 360;
@@ -1196,7 +1281,7 @@ function calculateAll() {
   for (let tIdx = -10; tIdx <= 40; tIdx += 2) {
     const c_t = 331.3 * Math.sqrt(1 + tIdx / 273.15) + 0.6 * (hr / 100) * 1.2;
     const t_t = (d / c_t) * 1000; // ms
-    const delayShift = t_t - flightTime; // ms relativos a la temperatura de test
+    const delayShift = t_t - res.flightTime;
     delayTempCurve.push({ x: tIdx, y: delayShift });
   }
   delayTempChart.data.datasets = [
@@ -1224,7 +1309,7 @@ function calculateAll() {
   for (let freqIdx = 20; freqIdx <= 250; freqIdx += 2) {
     efFrontCurve.push({ x: freqIdx, y: 6.0 });
     
-    const dt_rear = (2 * efDist) / c;
+    const dt_rear = (2 * res.efDist) / res.c;
     const phase_rear = (dt_rear * freqIdx * 360) % 360;
     const phaseRadRear = (phase_rear * Math.PI) / 180;
     const sumRearLin = Math.sqrt(2 + 2*Math.cos(phaseRadRear));
