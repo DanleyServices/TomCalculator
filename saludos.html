@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Gaceta de los Chistes del Fleet</title>
+  <meta name="description" content="La mejor gaceta humorística sobre la gran flota digital, naval y de IA. Chistes premium servidos con estilo cyberpunk.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --panel-bg: rgba(17, 24, 39, 0.75);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-color: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.5);
+      --text-color: #e2e8f0;
+      --text-muted: #94a3b8;
+      --highlight: #00f2fe;
+      --highlight-glow: rgba(0, 242, 254, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    /* Background Animation (Floating Ships/Fleet) */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .ship-particle {
+      position: absolute;
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 4px;
+      clip-path: polygon(50% 0%, 100% 70%, 50% 100%, 0% 70%);
+      animation: floatUp 25s infinite linear;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(110vh) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-10vh) translateX(50px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Container & Header */
+    .container {
+      max-width: 800px;
+      width: 90%;
+      margin: 40px auto;
+      z-index: 2;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 15px var(--highlight-glow));
+      animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      from { filter: drop-shadow(0 0 10px var(--highlight-glow)); }
+      to { filter: drop-shadow(0 0 25px rgba(0, 242, 254, 0.8)); }
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .decor-line {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--highlight), var(--accent-color), transparent);
+      width: 60%;
+      margin: 10px auto;
+    }
+
+    /* Main Card Layout */
+    .gaceta-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gaceta-panel::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Joke Card */
+    .joke-container {
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .joke-card {
+      width: 100%;
+      opacity: 0;
+      transform: translateY(20px);
+      display: none;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .joke-card.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .joke-meta {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      color: var(--highlight);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .joke-meta::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--highlight);
+      box-shadow: 0 0 8px var(--highlight);
+      border-radius: 50%;
+    }
+
+    .joke-text {
+      font-size: 1.35rem;
+      line-height: 1.7;
+      font-weight: 400;
+      color: #f8fafc;
+      text-align: left;
+      white-space: pre-line;
+      border-left: 4px solid var(--accent-color);
+      padding-left: 20px;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 35px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 25px;
+    }
+
+    .btn {
+      font-family: 'Space Grotesk', sans-serif;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.2) 100%);
+      border: 1px solid var(--accent-color);
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, var(--accent-color) 0%, #2563eb 100%);
+      box-shadow: 0 0 15px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: none;
+    }
+
+    .page-indicator {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+    }
+
+    /* Interaction Feedback */
+    .interaction-bar {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .rate-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rate-btn:hover {
+      border-color: var(--highlight);
+      color: var(--highlight);
+      background: rgba(0, 242, 254, 0.05);
+    }
+
+    .rate-btn.liked {
+      border-color: var(--highlight);
+      color: #0b0f19;
+      background: var(--highlight);
+      font-weight: 600;
+      box-shadow: 0 0 10px var(--highlight-glow);
+    }
+
+    /* Add Custom Joke Form */
+    .add-joke-section {
+      margin-top: 40px;
+      background: rgba(17, 24, 39, 0.4);
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .add-joke-section:focus-within {
+      border-color: var(--highlight);
+      background: rgba(17, 24, 39, 0.6);
+    }
+
+    .add-joke-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--highlight);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      background: rgba(11, 15, 25, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      resize: none;
+      margin-bottom: 12px;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin: 40px 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: var(--highlight);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .floating-accent {
+      animation: float 6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background animation elements -->
+  <div class="bg-animation" id="bg-animation"></div>
+
+  <div class="container">
+    <header>
+      <div class="floating-accent" style="display:inline-block;">
+        <span style="font-size: 3rem; filter: drop-shadow(0 0 10px var(--accent-glow));">⚓</span>
+      </div>
+      <h1>La Gaceta del Fleet</h1>
+      <div class="subtitle">Edición Especial: Humor de Alta Mar y Código</div>
+      <div class="decor-line"></div>
+    </header>
+
+    <main class="gaceta-panel">
+      <!-- Cards list -->
+      <div class="joke-container" id="joke-container">
+        <!-- Chistes precargados -->
+        <div class="joke-card active" data-id="1">
+          <div class="joke-meta">Chiste 01 // Ataque en el Puerto</div>
+          <div class="joke-text">— ¡Capitán, nos atacan!
+— ¿Cuántos barcos son, grumete?
+— Veo 10 fragatas, 8 destructores y 4 acorazados...
+— ¡Mala señal! ¿Es una flota?
+— ¡Ojalá, mi capitán! Lo malo es que flotan todas y vienen derecho a embestirnos.</div>
+        </div>
+
+        <div class="joke-card" data-id="2">
+          <div class="joke-meta">Chiste 02 // El Puerto Bloqueado</div>
+          <div class="joke-text">¿Por qué los buques de la flota de inteligencia artificial nunca pueden soltar amarras?
+Porque siempre se quedan congelados en el puerto `localhost:8085` esperando respuesta del servidor principal.</div>
+        </div>
+
+        <div class="joke-card" data-id="3">
+          <div class="joke-meta">Chiste 03 // Navegación Aérea</div>
+          <div class="joke-text">¿Qué hace un programador de sistemas cuando el barco de la flota empieza a hundirse?
+No se preocupa. Dice que es un problema de hardware y que él solo trabaja en la nube (Cloud).</div>
+        </div>
+
+        <div class="joke-card" data-id="4">
+          <div class="joke-meta">Chiste 04 // Carga Digital</div>
+          <div class="joke-text">¿Por qué los capitanes de la marina moderna están obsesionados con aprender Docker?
+Porque les dijeron que para manejar la flota del futuro necesitaban empaquetar todo en contenedores que floten perfectamente en producción.</div>
+        </div>
+
+        <div class="joke-card" data-id="5">
+          <div class="joke-meta">Chiste 05 // El Faro de la Flota</div>
+          <div class="joke-text">— Aquí la flota del Almirante. Desvíen su curso 15 grados al norte inmediatamente para evitar una colisión catastrófica.
+— Aquí un faro en tierra firme. Desvíen su curso ustedes 15 grados al sur. ¡Nosotros no flotamos ni nos movemos!</div>
+        </div>
+      </div>
+
+      <!-- User Interactions -->
+      <div class="interaction-bar">
+        <button class="rate-btn" id="like-btn" onclick="toggleLike()">
+          <span>👍</span> Me hace gracia
+        </button>
+        <button class="rate-btn" onclick="shareJoke()">
+          <span>🔗</span> Compartir Bitácora
+        </button>
+      </div>
+
+      <!-- Page Controls -->
+      <div class="controls">
+        <button class="btn btn-secondary" id="prev-btn" onclick="prevJoke()">Anterior</button>
+        <span class="page-indicator" id="page-indicator">1 / 5</span>
+        <button class="btn" id="next-btn" onclick="nextJoke()">Siguiente ➔</button>
+      </div>
+    </main>
+
+    <!-- Custom Joke Form -->
+    <section class="add-joke-section">
+      <h3 class="add-joke-title">✍️ Registrar nuevo chiste en la Bitácora</h3>
+      <textarea id="custom-joke-input" placeholder="Escribe aquí tu chiste sobre barcos, flotas, capitanes o código..."></textarea>
+      <div class="form-footer">
+        <button class="btn" onclick="addCustomJoke()">Guardar en la Flota</button>
+      </div>
+    </section>
+
+    <footer>
+      <p>Diseñado para el <strong>Jefe Lenovo</strong> y su flota de desarrollo.</p>
+      <p>Desarrollado con ❤️ por <strong>Antigravity</strong> en honor al gran Tom Danley.</p>
+      <p><a href="index.html">➔ Regresar al Calculador Principal</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // Generate background floating ship particles
+    const bgAnimation = document.getElementById('bg-animation');
+    const particleCount = 15;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('ship-particle');
+      
+      // Randomize sizing and placement
+      const size = Math.random() * 30 + 15;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size * 1.5}px`;
+      
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.animationDelay = `${Math.random() * 20}s`;
+      particle.style.animationDuration = `${Math.random() * 15 + 15}s`;
+      
+      bgAnimation.appendChild(particle);
+    }
+
+    // Jokes navigation logic
+    let currentIdx = 0;
+    let jokeCards = document.querySelectorAll('.joke-card');
+    let likesState = {}; // Keeps track of likes
+
+    function updateNav() {
+      jokeCards = document.querySelectorAll('.joke-card');
+      jokeCards.forEach((card, idx) => {
+        card.classList.remove('active');
+        if (idx === currentIdx) {
+          card.classList.add('active');
+        }
+      });
+      
+      document.getElementById('page-indicator').textContent = `${currentIdx + 1} / ${jokeCards.length}`;
+      
+      // Update Like button state
+      const currentCard = jokeCards[currentIdx];
+      const jokeId = currentCard.getAttribute('data-id');
+      const likeBtn = document.getElementById('like-btn');
+      
+      if (likesState[jokeId]) {
+        likeBtn.classList.add('liked');
+        likeBtn.innerHTML = '<span>⭐</span> ¡Favorito!';
+      } else {
+        likeBtn.classList.remove('liked');
+        likeBtn.innerHTML = '<span>👍</span> Me hace gracia';
+      }
+    }
+
+    function nextJoke() {
+      currentIdx = (currentIdx + 1) % jokeCards.length;
+      updateNav();
+    }
+
+    function prevJoke() {
+      currentIdx = (currentIdx - 1 + jokeCards.length) % jokeCards.length;
+      updateNav();
+    }
+
+    function toggleLike() {
+      const currentCard = jokeCards[currentIdx];
+      const jokeId = currentCard.getAttribute('data-id');
+      
+      likesState[jokeId] = !likesState[jokeId];
+      updateNav();
+      
+      // Small feedback alert
+      if (likesState[jokeId]) {
+        createFloatingEmoji('😂');
+      }
+    }
+
+    function shareJoke() {
+      const currentCard = jokeCards[currentIdx];
+      const text = currentCard.querySelector('.joke-text').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('¡Chiste copiado a la bitácora del portapapeles!');
+      });
+    }
+
+    function createFloatingEmoji(emoji) {
+      const floating = document.createElement('div');
+      floating.textContent = emoji;
+      floating.style.position = 'fixed';
+      floating.style.left = '50%';
+      floating.style.top = '50%';
+      floating.style.transform = 'translate(-50%, -50%)';
+      floating.style.fontSize = '3rem';
+      floating.style.pointerEvents = 'none';
+      floating.style.zIndex = '9999';
+      floating.style.transition = 'all 0.8s ease-out';
+      document.body.appendChild(floating);
+      
+      setTimeout(() => {
+        floating.style.transform = 'translate(-50%, -150%) scale(1.5)';
+        floating.style.opacity = '0';
+      }, 50);
+      
+      setTimeout(() => {
+        floating.remove();
+      }, 900);
+    }
+
+    // Add custom jokes
+    function addCustomJoke() {
+      const input = document.getElementById('custom-joke-input');
+      const jokeText = input.value.trim();
+      
+      if (!jokeText) {
+        alert('Escribe algo divertido antes de guardar.');
+        return;
+      }
+      
+      const container = document.getElementById('joke-container');
+      const newId = Date.now();
+      
+      const newCard = document.createElement('div');
+      newCard.classList.add('joke-card');
+      newCard.setAttribute('data-id', newId);
+      
+      const count = document.querySelectorAll('.joke-card').length + 1;
+      const displayNum = count < 10 ? `0${count}` : count;
+      
+      newCard.innerHTML = `
+        <div class="joke-meta">Chiste ${displayNum} // Bitácora de Usuario</div>
+        <div class="joke-text">${escapeHtml(jokeText)}</div>
+      `;
+      
+      container.appendChild(newCard);
+      input.value = '';
+      
+      // Go to new joke
+      currentIdx = count - 1;
+      updateNav();
+      createFloatingEmoji('🚢');
+      
+      // Save locally
+      saveJokesToStorage();
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Persist custom jokes
+    function saveJokesToStorage() {
+      const cards = document.querySelectorAll('.joke-card');
+      const jokesArray = [];
+      
+      // Skip the default 5 in storage so we don't duplicate
+      cards.forEach((card, index) => {
+        if (index >= 5) {
+          jokesArray.push({
+            id: card.getAttribute('data-id'),
+            meta: card.querySelector('.joke-meta').textContent,
+            text: card.querySelector('.joke-text').textContent
+          });
+        }
+      });
+      
+      localStorage.setItem('fleet_custom_jokes', JSON.stringify(jokesArray));
+    }
+
+    function loadJokesFromStorage() {
+      const saved = localStorage.getItem('fleet_custom_jokes');
+      if (saved) {
+        const jokes = JSON.parse(saved);
+        const container = document.getElementById('joke-container');
+        
+        jokes.forEach((joke, index) => {
+          const newCard = document.createElement('div');
+          newCard.classList.add('joke-card');
+          newCard.setAttribute('data-id', joke.id);
+          newCard.innerHTML = `
+            <div class="joke-meta">${joke.meta}</div>
+            <div class="joke-text">${joke.text}</div>
+          `;
+          container.appendChild(newCard);
+        });
+        updateNav();
+      }
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      loadJokesFromStorage();
+      updateNav();
+    });
+  </script>
+</body>
+</html>
