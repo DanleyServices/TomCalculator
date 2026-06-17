@@ -2025,7 +2025,7 @@
   }
 
   // VISUALIZACIÓN DE SALA EN 3D (THREE.JS - CHART 11)
-  let scene3D, camera3D, renderer3D, points3D, roomOutline3D;
+  let scene3D, camera3D, renderer3D, points3D, roomOutline3D, sourceMesh3D, receiverMesh3D;
   let rotX3D = -0.4, rotY3D = 0.5;
   let isDragging3D = false;
   let prevMouseX = 0, prevMouseY = 0;
@@ -2050,11 +2050,56 @@
     group.name = "roomGroup";
     scene3D.add(group);
 
-    // Contorno del Cuarto (Box Wireframe)
-    const boxGeom = new THREE.BoxGeometry(4, 3, 3);
-    const boxMat = new THREE.MeshBasicMaterial({ color: '#00e5ff', wireframe: true, transparent: true, opacity: 0.15 });
+    // Contorno del Cuarto (Cube 1, 1, 1 scaled dynamically to keep proportions)
+    const boxGeom = new THREE.BoxGeometry(1, 1, 1);
+    const boxMat = new THREE.MeshBasicMaterial({ 
+      color: '#00e5ff', 
+      transparent: true, 
+      opacity: 0.05, 
+      side: THREE.DoubleSide 
+    });
     roomOutline3D = new THREE.Mesh(boxGeom, boxMat);
+    
+    // Edges (glowing wireframe borders)
+    const edges = new THREE.EdgesGeometry(boxGeom);
+    const lineMat = new THREE.LineBasicMaterial({ 
+      color: '#00e5ff', 
+      transparent: true, 
+      opacity: 0.65 
+    });
+    const lineSegments = new THREE.LineSegments(edges, lineMat);
+    roomOutline3D.add(lineSegments);
+
+    // Floor Grid Helper (1 unit wide/deep, scaled with the room)
+    const gridHelper = new THREE.GridHelper(1, 10, 0x00e5ff, 0x004455);
+    gridHelper.material.transparent = true;
+    gridHelper.material.opacity = 0.45;
+    gridHelper.position.y = -0.5; // aligned to bottom floor
+    roomOutline3D.add(gridHelper);
+
     group.add(roomOutline3D);
+
+    // Create 3D Source (red sphere representing speaker)
+    const srcGeom = new THREE.SphereGeometry(0.12, 16, 16);
+    const srcMat = new THREE.MeshBasicMaterial({ color: '#ff4444' });
+    sourceMesh3D = new THREE.Mesh(srcGeom, srcMat);
+    const srcRingGeom = new THREE.TorusGeometry(0.18, 0.015, 4, 32);
+    const srcRingMat = new THREE.MeshBasicMaterial({ color: '#ff4444', transparent: true, opacity: 0.5 });
+    const srcRing = new THREE.Mesh(srcRingGeom, srcRingMat);
+    srcRing.rotation.x = Math.PI / 2;
+    sourceMesh3D.add(srcRing);
+    group.add(sourceMesh3D);
+
+    // Create 3D Receiver (gold sphere representing listener)
+    const recGeom = new THREE.SphereGeometry(0.12, 16, 16);
+    const recMat = new THREE.MeshBasicMaterial({ color: '#f0c040' });
+    receiverMesh3D = new THREE.Mesh(recGeom, recMat);
+    const recRingGeom = new THREE.TorusGeometry(0.18, 0.015, 4, 32);
+    const recRingMat = new THREE.MeshBasicMaterial({ color: '#f0c040', transparent: true, opacity: 0.5 });
+    const recRing = new THREE.Mesh(recRingGeom, recRingMat);
+    recRing.rotation.x = Math.PI / 2;
+    receiverMesh3D.add(recRing);
+    group.add(receiverMesh3D);
 
     // Cuadrícula de partículas de presión modal
     const pGridSide = 10;
@@ -2137,7 +2182,27 @@
 
     // Escalar la caja del contorno según la escala real de la sala normalizada
     const maxDim = Math.max(L, W, H);
-    roomOutline3D.scale.set(L / maxDim * 6, H / maxDim * 6, W / maxDim * 6);
+    
+    const lScale = L / maxDim * 6;
+    const hScale = H / maxDim * 6;
+    const wScale = W / maxDim * 6;
+    roomOutline3D.scale.set(lScale, hScale, wScale);
+
+    // Sync 3D positions of source (speaker) and receiver (listener)
+    if (typeof sourceMesh3D !== 'undefined') {
+      sourceMesh3D.position.set(
+        (srcPos.x - 0.5) * lScale,
+        -0.1 * hScale, // placed slightly below center height
+        (srcPos.y - 0.5) * wScale
+      );
+    }
+    if (typeof receiverMesh3D !== 'undefined') {
+      receiverMesh3D.position.set(
+        (recPos.x - 0.5) * lScale,
+        -0.1 * hScale,
+        (recPos.y - 0.5) * wScale
+      );
+    }
 
     const activeP = parseInt(document.getElementById('modePS').value);
     const activeQ = parseInt(document.getElementById('modeQS').value);

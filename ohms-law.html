@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ohm's Law & Power Calculator</title>
+<title>Sound Basics & Ohm's Law — Tom Danley Calculator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
   :root {
     --cyan: #00e5ff;
-    --blue-deep: #0a1628;
+    --blue-deep: #020813;
     --gold: #f0c040;
+    --pink: #ff4081;
     --text: #c8daf0;
-    --bg-panel: rgba(10, 22, 40, 0.6);
+    --bg-panel: rgba(7, 18, 33, 0.8);
+    --border-glass: rgba(0, 229, 255, 0.2);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,6 +35,7 @@
     position: fixed;
     inset: 0;
     z-index: 0;
+    pointer-events: none;
   }
 
   .top-bar {
@@ -43,75 +46,142 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(3,10,16,0.9), transparent);
+    background: linear-gradient(to bottom, rgba(2, 8, 19, 0.95), transparent);
   }
+
   .back-btn {
     color: var(--cyan);
     text-decoration: none;
     font-family: 'Orbitron', monospace;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.9rem;
     padding: 10px 20px;
     border: 1px solid var(--cyan);
     border-radius: 8px;
-    transition: all 0.3s;
-    background: rgba(0,229,255,0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(0, 229, 255, 0.1);
+    letter-spacing: 1px;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.1);
   }
   .back-btn:hover {
     background: var(--cyan);
     color: #000;
     box-shadow: 0 0 20px var(--cyan);
+    transform: translateY(-2px);
   }
 
   h1 {
     font-family: 'Orbitron', monospace;
-    font-size: 2.5rem;
-    color: var(--gold);
-    text-shadow: 0 0 20px rgba(240, 192, 64, 0.4);
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--cyan);
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
     text-transform: uppercase;
     letter-spacing: 4px;
-    margin: 20px 0;
+    margin: 15px 0 5px 0;
     z-index: 10;
+    text-align: center;
+  }
+  .page-subtitle {
+    font-size: 1.05rem;
+    color: rgba(200, 218, 240, 0.6);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    z-index: 10;
+    text-align: center;
+  }
+
+  .tabs-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 10;
+  }
+  .tab-btn {
+    background: rgba(10, 22, 40, 0.6);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    color: var(--cyan);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.95rem;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .tab-btn:hover, .tab-btn.active {
+    background: rgba(0, 229, 255, 0.15);
+    border-color: var(--cyan);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+  }
+  .tab-btn.active {
+    color: #fff;
+    font-weight: 700;
   }
 
   .calculator-container {
     position: relative;
     z-index: 10;
-    width: 90%;
-    max-width: 1200px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    width: 95%;
+    max-width: 1400px;
     margin-bottom: 50px;
+  }
+
+  .tab-content {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+  }
+  .tab-content.active {
+    display: grid;
   }
 
   .panel {
     background: var(--bg-panel);
-    border: 1px solid rgba(0, 229, 255, 0.2);
+    border: 1px solid var(--border-glass);
     border-radius: 16px;
-    padding: 30px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 229, 255, 0.05);
+    padding: 25px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.65);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 
   .panel h2 {
     font-family: 'Orbitron', monospace;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     color: #fff;
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(0,229,255,0.3);
+    border-bottom: 1px solid var(--border-glass);
     padding-bottom: 10px;
     letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .input-section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    padding-left: 8px;
+    border-left: 2px solid var(--gold);
   }
 
   .input-group {
-    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
   .input-group label {
-    display: block;
-    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
     color: var(--cyan);
-    margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -140,77 +210,106 @@
     box-shadow: 0 0 10px var(--cyan);
   }
 
-  input[type=number] {
-    width: 90px;
+  input[type=number], select {
     background: rgba(0,0,0,0.6);
     border: 1px solid var(--cyan);
     color: #fff;
     font-family: 'Orbitron', monospace;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     padding: 8px;
     border-radius: 6px;
-    text-align: right;
     outline: none;
   }
-  input[type=number]:focus {
+  input[type=number] {
+    width: 100px;
+    text-align: right;
+  }
+  select {
+    width: 100%;
+    font-family: 'Rajdhani', sans-serif;
+  }
+  input[type=number]:focus, select:focus {
     box-shadow: 0 0 15px rgba(0,229,255,0.4);
   }
 
   .unit {
     font-family: 'Orbitron', monospace;
     color: var(--gold);
-    font-size: 1.2rem;
-    width: 30px;
+    font-size: 1.1rem;
+    min-width: 45px;
   }
 
   .results-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
   }
   .result-box {
     background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(240, 192, 64, 0.3);
+    border: 1px solid rgba(0, 229, 255, 0.15);
     border-radius: 10px;
     padding: 15px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .result-box .label {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: rgba(200,218,240,0.6);
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-bottom: 5px;
   }
   .result-box .value {
     font-family: 'Orbitron', monospace;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: var(--gold);
-    margin-top: 5px;
+  }
+  .result-box .value.cyan {
+    color: var(--cyan);
+  }
+  .result-box .value.pink {
+    color: var(--pink);
   }
 
   .formulas {
-    margin-top: 30px;
-    font-family: 'Rajdhani', serif;
-    font-size: 1.1rem;
-    color: rgba(0, 229, 255, 0.7);
+    margin-top: 15px;
+    font-size: 0.95rem;
+    color: rgba(0, 229, 255, 0.6);
     line-height: 1.8;
   }
   .formulas span {
     display: inline-block;
-    background: rgba(0,229,255,0.1);
+    background: rgba(0,229,255,0.06);
     padding: 2px 8px;
     border-radius: 4px;
     margin: 2px 4px;
+    border: 1px solid rgba(0,229,255,0.1);
   }
 
   .chart-container {
     position: relative;
     width: 100%;
-    height: 350px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(0, 229, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  canvas.drawing-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
   @media (max-width: 900px) {
-    .calculator-container { grid-template-columns: 1fr; }
+    .tab-content { grid-template-columns: 1fr; }
+    h1 { font-size: 1.6rem; }
+    .top-bar { padding: 15px 20px; }
   }
 </style>
 </head>
@@ -219,80 +318,238 @@
 <canvas id="three-bg"></canvas>
 
 <div class="top-bar">
-    <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+  <a href="index.html" class="back-btn">← BACK TO DASHBOARD</a>
 </div>
 
-<h1>Ohm's Law & Power</h1>
+<h1>Sound Basics & Ohm</h1>
+<div class="page-subtitle">Electrical AC Impedance & Acoustic Decibels Bridge</div>
+
+<div class="tabs-container">
+  <button id="tabBtnA" class="tab-btn active" onclick="setTab('A')">Electrical & AC Impedance</button>
+  <button id="tabBtnB" class="tab-btn" onclick="setTab('B')">Acoustical dB & Summation</button>
+</div>
 
 <div class="calculator-container">
-    <!-- INPUTS AND FORMULAS PANEL -->
+  
+  <!-- TAB A: ELECTRICAL AC IMPEDANCE -->
+  <div id="tabContentA" class="tab-content active">
     <div class="panel">
-        <h2>System Parameters</h2>
-        
-        <div class="input-group">
-            <label>Voltage (V)</label>
-            <div class="control-row">
-                <input type="range" id="vSlider" min="0.01" max="100" step="0.01" value="2.73">
-                <input type="number" id="vNum" min="0.01" max="1000" step="0.01" value="2.73">
-                <span class="unit">V</span>
-            </div>
+      <h2>Parameters</h2>
+      
+      <div class="input-section-title">Ohm's Law Input</div>
+      <div class="input-group">
+        <label>Voltage (V)</label>
+        <div class="control-row">
+          <input type="range" id="vSlider" min="0.1" max="250" step="0.1" value="2.83">
+          <input type="number" id="vNum" min="0.001" max="10000" step="0.1" value="2.83">
+          <span class="unit">V</span>
         </div>
+      </div>
+      <div class="input-group">
+        <label>Resistance / Real Load (R)</label>
+        <div class="control-row">
+          <input type="range" id="rSlider" min="1" max="100" step="1" value="8">
+          <input type="number" id="rNum" min="0.1" max="10000" step="0.1" value="8">
+          <span class="unit">Ω</span>
+        </div>
+      </div>
 
-        <div class="input-group">
-            <label>Impedance (Z / R)</label>
-            <div class="control-row">
-                <input type="range" id="zSlider" min="1" max="600" step="1" value="8">
-                <input type="number" id="zNum" min="1" max="10000" step="1" value="8">
-                <span class="unit">Ω</span>
-            </div>
+      <div class="input-section-title">AC Reactance Input</div>
+      <div class="input-group">
+        <label>Frequency (f)</label>
+        <div class="control-row">
+          <input type="range" id="fSlider" min="20" max="20000" step="1" value="1000">
+          <input type="number" id="fNum" min="1" max="100000" step="1" value="1000">
+          <span class="unit">Hz</span>
         </div>
+      </div>
+      <div class="input-group">
+        <label>Inductance (L)</label>
+        <div class="control-row">
+          <input type="range" id="lSlider" min="0" max="50" step="0.1" value="0.5">
+          <input type="number" id="lNum" min="0" max="5000" step="0.01" value="0.5">
+          <span class="unit">mH</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Capacitance (C)</label>
+        <div class="control-row">
+          <input type="range" id="cSlider" min="0" max="500" step="1" value="0">
+          <input type="number" id="cNum" min="0" max="50000" step="0.1" value="0">
+          <span class="unit">µF</span>
+        </div>
+      </div>
 
-        <div class="input-group">
-            <label>Power (P)</label>
-            <div class="control-row">
-                <input type="range" id="pSlider" min="0.01" max="2000" step="0.1" value="0.93">
-                <input type="number" id="pNum" min="0.001" max="100000" step="0.01" value="0.93">
-                <span class="unit">W</span>
-            </div>
-        </div>
-
-        <div class="formulas">
-            <strong>Key Formulas:</strong><br>
-            <span>P = V² / R</span>
-            <span>I = V / R</span>
-            <span>dBu = 20 log₁₀(V / 0.7746)</span>
-            <span>dBV = 20 log₁₀(V / 1.0)</span>
-            <span>dBm = 10 log₁₀(P / 0.001)</span>
-        </div>
+      <div class="formulas">
+        <strong>AC Calculations:</strong><br>
+        <span>X_L = 2πfL</span> <span>X_C = 1 / 2πfC</span><br>
+        <span>Z = R + j(X_L - X_C)</span> <span>PF = cos(θ)</span><br>
+        <span>S (VA) = V · I</span> <span>P (W) = S · PF</span>
+      </div>
     </div>
 
-    <!-- RESULTS AND GRAPH PANEL -->
     <div class="panel">
-        <h2>Calculated Values</h2>
-        <div class="results-grid">
-            <div class="result-box">
-                <div class="label">Voltage Level (dBV)</div>
-                <div class="value"><span id="outDBV">+8.72</span> <span style="font-size:1rem">dBV</span></div>
-            </div>
-            <div class="result-box">
-                <div class="label">Current</div>
-                <div class="value"><span id="outI">0.354</span> <span style="font-size:1rem">A</span></div>
-            </div>
-            <div class="result-box">
-                <div class="label">Voltage Level (dBu)</div>
-                <div class="value" style="color:var(--cyan)"><span id="outDBU">+11.26</span> <span style="font-size:1rem">dBu</span></div>
-            </div>
-            <div class="result-box">
-                <div class="label">Power Level (dBm)</div>
-                <div class="value" style="color:var(--cyan)"><span id="outDBM">+30.00</span> <span style="font-size:1rem">dBm</span></div>
-            </div>
+      <h2>Calculated AC Values</h2>
+      <div class="results-grid">
+        <div class="result-box">
+          <span class="label">Reactance (X_L)</span>
+          <span class="value cyan" id="outXL">0.00 Ω</span>
         </div>
+        <div class="result-box">
+          <span class="label">Reactance (X_C)</span>
+          <span class="value cyan" id="outXC">0.00 Ω</span>
+        </div>
+        <div class="result-box">
+          <span class="label">Total Impedance (Z)</span>
+          <span class="value cyan" id="outZ">0.00 Ω</span>
+        </div>
+        <div class="result-box">
+          <span class="label">Phase Angle (θ)</span>
+          <span class="value" id="outTheta">+0.0°</span>
+        </div>
+        <div class="result-box">
+          <span class="label">Power Factor (PF)</span>
+          <span class="value" id="outPF">1.000</span>
+        </div>
+        <div class="result-box">
+          <span class="label">Current (I)</span>
+          <span class="value cyan" id="outI">0.00 A</span>
+        </div>
+      </div>
 
-        <h2 style="margin-top: 30px;">Power vs Voltage Curve</h2>
-        <div class="chart-container">
-            <canvas id="powerChart"></canvas>
+      <div class="input-section-title" style="margin-top: 15px;">Power Triangle Components</div>
+      <div class="results-grid">
+        <div class="result-box">
+          <span class="label">Real Power (P)</span>
+          <span class="value" id="outRealP">0.00 W</span>
         </div>
+        <div class="result-box">
+          <span class="label">Apparent Power (S)</span>
+          <span class="value pink" id="outAppS">0.00 VA</span>
+        </div>
+        <div class="result-box">
+          <span class="label">Reactive Power (Q)</span>
+          <span class="value cyan" id="outReacQ">0.00 VAR</span>
+        </div>
+      </div>
+
+      <div class="input-section-title">Vector Representation (Power Triangle)</div>
+      <div class="chart-container">
+        <canvas id="powerTriangleCanvas" class="drawing-canvas" width="500" height="300"></canvas>
+      </div>
     </div>
+  </div>
+
+  <!-- TAB B: ACOUSTICAL DECIBELS & SUMMATION -->
+  <div id="tabContentB" class="tab-content">
+    <div class="panel">
+      <h2>Acoustic & Reference Inputs</h2>
+      
+      <div class="input-section-title">Sound Level</div>
+      <div class="input-group">
+        <label>Sound Pressure Level</label>
+        <div class="control-row">
+          <input type="range" id="splSlider" min="0" max="194" step="0.5" value="94">
+          <input type="number" id="splNum" min="0" max="194" step="0.1" value="94">
+          <span class="unit">dBSPL</span>
+        </div>
+      </div>
+
+      <div class="input-section-title">Electrical Reference</div>
+      <div class="input-group">
+        <label>Voltage RMS</label>
+        <div class="control-row">
+          <input type="range" id="vRefSlider" min="0.001" max="150" step="0.01" value="1">
+          <input type="number" id="vRefNum" min="0.0001" max="10000" step="0.001" value="1">
+          <span class="unit">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Power Reference</label>
+        <div class="control-row">
+          <input type="range" id="pRefSlider" min="0.001" max="1000" step="0.01" value="1">
+          <input type="number" id="pRefNum" min="0.0001" max="100000" step="0.001" value="1">
+          <span class="unit">W</span>
+        </div>
+      </div>
+
+      <div class="input-section-title">Acoustic Source Summation</div>
+      <div class="input-group">
+        <label>Number of Equal Sources</label>
+        <div class="control-row">
+          <input type="range" id="nSlider" min="1" max="128" step="1" value="1">
+          <input type="number" id="nNum" min="1" max="1024" step="1" value="1">
+          <span class="unit">N</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Correlation Type</label>
+        <select id="sumType" onchange="calculatedB()">
+          <option value="incoherent" selected>Incoherent (Random Phase / Diffuse Field, +3dB doublings)</option>
+          <option value="coherent">Coherent (In-Phase / Line Arrays / Co-located, +6dB doublings)</option>
+        </select>
+      </div>
+
+      <div class="formulas">
+        <strong>Acoustic Refs & Logarithms:</strong><br>
+        <span>p_ref = 20 µPa</span> <span>I_ref = 1e-12 W/m²</span><br>
+        <span>dBu = 20 log₁₀(V / 0.7746)</span> <span>dBV = 20 log₁₀(V / 1.0)</span><br>
+        <span>Sum = SPL + K · log₁₀(N) (K=10 incoherent, K=20 coherent)</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Acoustic & Decibel Bridge Results</h2>
+      <div class="results-grid">
+        <div class="result-box">
+          <span class="label">Sound Level</span>
+          <span class="value" id="outSPL">94.0 dBSPL</span>
+        </div>
+        <div class="result-box">
+          <span class="label">dBV Level</span>
+          <span class="value" id="outDBV">0.00 dBV</span>
+        </div>
+        <div class="result-box">
+          <span class="label">dBu Level</span>
+          <span class="value cyan" id="outDBU">+2.22 dBu</span>
+        </div>
+        <div class="result-box">
+          <span class="label">dBm Level</span>
+          <span class="value cyan" id="outDBM">+30.0 dBm</span>
+        </div>
+        <div class="result-box">
+          <span class="label">dBW Level</span>
+          <span class="value" id="outDBW">0.00 dBW</span>
+        </div>
+        <div class="result-box">
+          <span class="label">Pressure (Pa)</span>
+          <span class="value pink" id="outPa">1.000 Pa</span>
+        </div>
+      </div>
+
+      <div class="input-section-title" style="margin-top: 15px;">Summation Output</div>
+      <div class="results-grid">
+        <div class="result-box">
+          <span class="label">Combined Sound Level</span>
+          <span class="value" id="outSumSPL">94.0 dBSPL</span>
+        </div>
+        <div class="result-box">
+          <span class="label">Summation Gain</span>
+          <span class="value cyan" id="outSumGain">+0.0 dB</span>
+        </div>
+        <div class="result-box" style="grid-column: span 1.5;">
+          <span class="label">Sound Intensity</span>
+          <span class="value pink" id="outInt">0.0025 W/m²</span>
+        </div>
+      </div>
+
+      <div class="input-section-title">Relative sound levels (dB scale)</div>
+      <div class="chart-container" style="height: 250px;">
+        <canvas id="dbChart"></canvas>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -300,6 +557,8 @@
 const canvasBg = document.getElementById('three-bg');
 const renderer = new THREE.WebGLRenderer({ canvas: canvasBg, alpha: true, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 20;
@@ -308,12 +567,12 @@ const pGeo = new THREE.BufferGeometry();
 const pPos = new Float32Array(300 * 3);
 for (let i = 0; i < 900; i++) pPos[i] = (Math.random()-0.5)*60;
 pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xf0c040, size: 0.08, transparent: true, opacity: 0.2 }));
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x00e5ff, size: 0.08, transparent: true, opacity: 0.18 }));
 scene.add(particles);
 
 function animateBg(t) {
   requestAnimationFrame(animateBg);
-  particles.rotation.y = t * 0.00005;
+  particles.rotation.y = t * 0.00004;
   particles.rotation.x = t * 0.00002;
   renderer.render(scene, camera);
 }
@@ -325,167 +584,262 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// CALCULATOR LOGIC
-const vSlider = document.getElementById('vSlider');
-const vNum = document.getElementById('vNum');
-const zSlider = document.getElementById('zSlider');
-const zNum = document.getElementById('zNum');
-const pSlider = document.getElementById('pSlider');
-const pNum = document.getElementById('pNum');
-
-// Outputs
-const outDBV = document.getElementById('outDBV');
-const outI = document.getElementById('outI');
-const outDBU = document.getElementById('outDBU');
-const outDBM = document.getElementById('outDBM');
-
-let isCalculating = false;
-
-// Sync inputs
-function syncInput(source, target, type) {
-    if (isCalculating) return;
-    
-    let val = parseFloat(source.value);
-    if (isNaN(val)) return;
-    
-    // Bounds checking
-    if (val < 0.001) val = 0.001;
-    if (source.id.includes('v') && val > 10000) val = 10000;
-    if (source.id.includes('z') && val > 100000) val = 100000;
-    if (source.id.includes('p') && val > 1000000) val = 1000000;
-    
-    target.value = val;
-    calculate(type);
+// TAB SWITCHER
+function setTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tabBtn' + name).classList.add('active');
+  document.getElementById('tabContent' + name).classList.add('active');
+  if (name === 'A') {
+    calculateAC();
+  } else {
+    calculatedB();
+  }
 }
 
-vSlider.addEventListener('input', () => syncInput(vSlider, vNum, 'voltage'));
-vNum.addEventListener('input', () => syncInput(vNum, vSlider, 'voltage'));
-zSlider.addEventListener('input', () => syncInput(zSlider, zNum, 'impedance'));
-zNum.addEventListener('input', () => syncInput(zNum, zSlider, 'impedance'));
-pSlider.addEventListener('input', () => syncInput(pSlider, pNum, 'power'));
-pNum.addEventListener('input', () => syncInput(pNum, pSlider, 'power'));
-
-// Chart Initialization
-const ctx = document.getElementById('powerChart').getContext('2d');
-Chart.defaults.color = '#c8daf0';
-Chart.defaults.font.family = 'Rajdhani';
-
-let powerChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [
-            {
-                label: 'Power (W)',
-                data: [],
-                borderColor: 'rgba(240, 192, 64, 0.8)',
-                backgroundColor: 'rgba(240, 192, 64, 0.1)',
-                borderWidth: 2,
-                fill: true,
-                pointRadius: 0,
-                tension: 0.4
-            },
-            {
-                label: 'Current State',
-                data: [],
-                backgroundColor: '#00e5ff',
-                borderColor: '#00e5ff',
-                borderWidth: 2,
-                pointRadius: 6,
-                pointHoverRadius: 8,
-                showLine: false
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 200 }, // Smooth short animation for sliding
-        scales: {
-            x: {
-                type: 'linear',
-                title: { display: true, text: 'Voltage (V)', color: '#00e5ff' },
-                grid: { color: 'rgba(255,255,255,0.05)' }
-            },
-            y: {
-                title: { display: true, text: 'Power (W)', color: '#f0c040' },
-                grid: { color: 'rgba(255,255,255,0.05)' }
-            }
-        },
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        return context.raw.y.toFixed(2) + ' W @ ' + context.raw.x.toFixed(2) + ' V';
-                    }
-                }
-            }
-        }
-    }
+// PARAMETERS SYNC (Tab A)
+const pairsA = [
+  ['vSlider', 'vNum'],
+  ['rSlider', 'rNum'],
+  ['fSlider', 'fNum'],
+  ['lSlider', 'lNum'],
+  ['cSlider', 'cNum']
+];
+pairsA.forEach(([s, n]) => {
+  const se = document.getElementById(s);
+  const ne = document.getElementById(n);
+  se.addEventListener('input', () => { ne.value = se.value; calculateAC(); });
+  ne.addEventListener('input', () => { se.value = ne.value; calculateAC(); });
 });
 
-function calculate(sourceType = 'voltage') {
-    isCalculating = true;
-    let V = parseFloat(vNum.value);
-    let Z = parseFloat(zNum.value);
-    let P = parseFloat(pNum.value);
-    
-    if (isNaN(V) || isNaN(Z) || isNaN(P) || Z <= 0) {
-        isCalculating = false;
-        return;
-    }
+// PARAMETERS SYNC (Tab B)
+const pairsB = [
+  ['splSlider', 'splNum'],
+  ['vRefSlider', 'vRefNum'],
+  ['pRefSlider', 'pRefNum'],
+  ['nSlider', 'nNum']
+];
+pairsB.forEach(([s, n]) => {
+  const se = document.getElementById(s);
+  const ne = document.getElementById(n);
+  se.addEventListener('input', () => { ne.value = se.value; calculatedB(); });
+  ne.addEventListener('input', () => { se.value = ne.value; calculatedB(); });
+});
 
-    if (sourceType === 'power') {
-        // Calculate Voltage from Power and Z
-        V = Math.sqrt(P * Z);
-        vNum.value = V.toFixed(2);
-        vSlider.value = V.toFixed(2);
-    } else {
-        // Calculate Power from Voltage and Z
-        P = (V * V) / Z;
-        pNum.value = P.toFixed(2);
-        pSlider.value = P.toFixed(2);
-    }
-    
-    // Current
-    const I = V / Z;
-    
-    // Decibels
-    const dBu = 20 * Math.log10(V / 0.7746);
-    const dBV = 20 * Math.log10(V / 1.0);
-    const dBm = 10 * Math.log10(P / 0.001);
+// INITIALIZE DB CHART
+const ctxdB = document.getElementById('dbChart').getContext('2d');
+Chart.defaults.color = '#c8daf0';
+Chart.defaults.font.family = 'Rajdhani';
+const dbLabels = ['Threshold\n0dB','Whisper\n20dB','Office\n50dB','Speech\n60dB','Traffic\n70dB','Factory\n80dB','Concert\n100dB','Pain\n130dB','Current'];
+const dbRef = [0, 20, 50, 60, 70, 80, 100, 130, 94];
+let dbChart = new Chart(ctxdB, {
+  type: 'bar',
+  data: {
+    labels: dbLabels,
+    datasets: [{
+      label: 'dB SPL',
+      data: dbRef,
+      backgroundColor: dbRef.map((_, i) => i === 8 ? 'rgba(255, 64, 129, 0.8)' : 'rgba(0, 229, 255, 0.25)'),
+      borderColor: dbRef.map((_, i) => i === 8 ? '#ff4081' : 'rgba(0, 229, 255, 0.5)'),
+      borderWidth: 1.5,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    animation: { duration: 150 },
+    scales: {
+      x: { title: { display: true, text: 'dB SPL', color: '#00e5ff' }, grid: { color: 'rgba(255,255,255,0.05)' }, max: 150 },
+      y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
 
-    // Format output
-    outDBV.innerText = (dBV > 0 ? '+' : '') + dBV.toFixed(2);
-    outI.innerText = I < 0.01 ? I.toExponential(2) : I.toFixed(3);
-    
-    outDBU.innerText = (dBu > 0 ? '+' : '') + dBu.toFixed(2);
-    outDBM.innerText = (dBm > 0 ? '+' : '') + dBm.toFixed(2);
+// AC CALCULATIONS & POWER TRIANGLE DRAWING
+function calculateAC() {
+  const V = parseFloat(document.getElementById('vNum').value);
+  const R = parseFloat(document.getElementById('rNum').value);
+  const f = parseFloat(document.getElementById('fNum').value);
+  const L_mh = parseFloat(document.getElementById('lNum').value);
+  const C_uf = parseFloat(document.getElementById('cNum').value);
 
-    // Update Chart
-    const maxV = Math.max(10, V * 2);
-    const points = 50;
-    const step = maxV / points;
-    
-    let curveData = [];
-    for(let v = 0; v <= maxV; v += step) {
-        curveData.push({ x: v, y: (v * v) / Z });
-    }
-    
-    powerChart.data.datasets[0].data = curveData;
-    powerChart.data.datasets[1].data = [{ x: V, y: P }];
-    
-    // Dynamically adjust axes
-    powerChart.options.scales.x.max = maxV;
-    powerChart.update();
-    
-    isCalculating = false;
+  if (isNaN(V) || isNaN(R) || isNaN(f) || isNaN(L_mh) || isNaN(C_uf) || R <= 0 || f <= 0) return;
+
+  const L = L_mh * 1e-3;
+  const C = C_uf * 1e-6;
+
+  const X_L = 2 * Math.PI * f * L;
+  const X_C = C === 0 ? 0 : 1 / (2 * Math.PI * f * C);
+  const X = X_L - X_C;
+  const Z = Math.sqrt(R * R + X * X);
+  const I = V / Z;
+
+  const theta_rad = Math.atan2(X, R);
+  const theta_deg = theta_rad * 180 / Math.PI;
+  const PF = Math.cos(theta_rad);
+
+  const S = V * I;
+  const P = S * PF;
+  const Q = S * Math.sin(theta_rad);
+
+  document.getElementById('outXL').innerText = X_L.toFixed(2) + ' Ω';
+  document.getElementById('outXC').innerText = (C === 0 ? '∞' : X_C.toFixed(2)) + ' Ω';
+  document.getElementById('outZ').innerText = Z.toFixed(2) + ' Ω';
+  document.getElementById('outTheta').innerText = (theta_deg >= 0 ? '+' : '') + theta_deg.toFixed(1) + '°';
+  document.getElementById('outPF').innerText = PF.toFixed(3);
+  document.getElementById('outI').innerText = I < 0.01 ? I.toExponential(3) : I.toFixed(3) + ' A';
+
+  document.getElementById('outRealP').innerText = P.toFixed(2) + ' W';
+  document.getElementById('outAppS').innerText = S.toFixed(2) + ' VA';
+  document.getElementById('outReacQ').innerText = (Q >= 0 ? '+' : '') + Q.toFixed(2) + ' VAR';
+
+  drawPowerTriangle(P, Q, S, theta_rad);
 }
 
-// Initial calculation
-calculate();
+function drawPowerTriangle(P, Q, S, theta) {
+  const canvas = document.getElementById('powerTriangleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
 
+  // Grid background
+  ctx.fillStyle = 'rgba(0, 229, 255, 0.03)';
+  for (let x = 15; x < w; x += 25) {
+    for (let y = 15; y < h; y += 25) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+  }
+
+  const ox = 60;
+  const oy = h - 60;
+
+  const maxVal = Math.max(P, Math.abs(Q));
+  if (maxVal <= 0) return;
+  const scale = (Math.min(w, h) - 100) / maxVal;
+
+  const px = ox + P * scale;
+  const qy = oy - Q * scale;
+
+  // Draw axis helpers
+  ctx.strokeStyle = 'rgba(200, 218, 240, 0.08)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(ox, 0); ctx.lineTo(ox, h);
+  ctx.moveTo(0, oy); ctx.lineTo(w, oy);
+  ctx.stroke();
+
+  // Draw triangle lines
+  ctx.lineWidth = 3.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  // 1. P (Real Power) -> Gold
+  ctx.strokeStyle = '#f0c040';
+  ctx.beginPath();
+  ctx.moveTo(ox, oy);
+  ctx.lineTo(px, oy);
+  ctx.stroke();
+
+  // 2. Q (Reactive Power) -> Cyan
+  ctx.strokeStyle = '#00e5ff';
+  ctx.beginPath();
+  ctx.moveTo(px, oy);
+  ctx.lineTo(px, qy);
+  ctx.stroke();
+
+  // 3. S (Apparent Power) -> Pink
+  ctx.strokeStyle = '#ff4081';
+  ctx.beginPath();
+  ctx.moveTo(ox, oy);
+  ctx.lineTo(px, qy);
+  ctx.stroke();
+
+  // Draw theta angle arc
+  if (Math.abs(theta) > 0.01) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(ox, oy, 30, 0, -theta, theta < 0);
+    ctx.stroke();
+  }
+
+  // Draw labels
+  ctx.fillStyle = '#fff';
+  ctx.font = '500 12px Rajdhani';
+  
+  // Angle
+  const thetaDeg = theta * 180 / Math.PI;
+  ctx.fillText(`θ = ${thetaDeg.toFixed(1)}°`, ox + 35, oy - 12);
+
+  // Real Power (P)
+  ctx.fillStyle = '#f0c040';
+  ctx.fillText(`P = ${P.toFixed(2)} W`, ox + (P * scale)/2 - 30, oy + 20);
+
+  // Reactive Power (Q)
+  ctx.fillStyle = '#00e5ff';
+  ctx.fillText(`Q = ${Q.toFixed(2)} VAR`, px + 10, oy - (Q * scale)/2);
+
+  // Apparent Power (S)
+  ctx.fillStyle = '#ff4081';
+  const hx = ox + (P * scale)/2 - 35;
+  const hy = oy - (Q * scale)/2 - 12;
+  ctx.fillText(`S = ${S.toFixed(2)} VA`, hx, hy);
+}
+
+// ACOUSTICAL DECIBELS & SUMMATION CALCULATIONS
+function calculatedB() {
+  const spl = parseFloat(document.getElementById('splNum').value);
+  const V = parseFloat(document.getElementById('vRefNum').value);
+  const P = parseFloat(document.getElementById('pRefNum').value);
+  const N = parseInt(document.getElementById('nNum').value);
+  const sumType = document.getElementById('sumType').value;
+
+  if (isNaN(spl) || isNaN(V) || isNaN(P) || isNaN(N)) return;
+
+  const dBV = 20 * Math.log10(V / 1.0);
+  const dBu = 20 * Math.log10(V / 0.7746);
+  const dBm = 10 * Math.log10(P / 0.001);
+  const dBW = 10 * Math.log10(P / 1.0);
+  
+  const pa = 20e-6 * Math.pow(10, spl / 20);
+  const intensity = Math.pow(10, spl / 10) * 1e-12;
+
+  let sumGain, sumSPL;
+  if (sumType === 'coherent') {
+    sumGain = 20 * Math.log10(N);
+  } else {
+    sumGain = 10 * Math.log10(N);
+  }
+  sumSPL = spl + sumGain;
+
+  document.getElementById('outSPL').innerText = spl.toFixed(1) + ' dBSPL';
+  document.getElementById('outDBV').innerText = (dBV >= 0 ? '+' : '') + dBV.toFixed(2) + ' dBV';
+  document.getElementById('outDBU').innerText = (dBu >= 0 ? '+' : '') + dBu.toFixed(2) + ' dBu';
+  document.getElementById('outDBM').innerText = (dBm >= 0 ? '+' : '') + dBm.toFixed(1) + ' dBm';
+  document.getElementById('outDBW').innerText = (dBW >= 0 ? '+' : '') + dBW.toFixed(2) + ' dBW';
+  document.getElementById('outPa').innerText = pa < 0.01 ? pa.toExponential(3) + ' Pa' : pa.toFixed(4) + ' Pa';
+  document.getElementById('outInt').innerText = intensity < 0.001 ? intensity.toExponential(3) + ' W/m²' : intensity.toFixed(5) + ' W/m²';
+  document.getElementById('outSumSPL').innerText = sumSPL.toFixed(1) + ' dBSPL';
+  document.getElementById('outSumGain').innerText = (sumGain >= 0 ? '+' : '') + sumGain.toFixed(1) + ' dB';
+
+  if (dbChart) {
+    dbChart.data.datasets[0].data[8] = spl;
+    dbChart.data.labels[8] = 'Current\n' + spl.toFixed(0) + 'dB';
+    dbChart.update();
+  }
+}
+
+// INITIAL TRIGGER
+calculateAC();
+calculatedB();
 </script>
+
 </body>
 </html>
