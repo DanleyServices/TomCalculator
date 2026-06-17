@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eberhard Sengpiel — Interactive Tonmeister &amp; Acoustical Physics Dashboard</title>
-<meta name="description" content="Colección completa de 15 calculadoras acústicas avanzadas y 10 gráficos interactivos basados en Sengpiel y Bob McCarthy.">
+<meta name="description" content="Comprehensive collection of 15 advanced acoustics calculators and 10 interactive charts based on Sengpiel and Bob McCarthy.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -423,7 +423,7 @@
 <canvas id="three-bg"></canvas>
 
 <div class="top-bar">
-  <a href="index.html" class="back-btn">← INICIO</a>
+  <a href="index.html" class="back-btn">← HOME</a>
   <div class="logo-title">SENGPIEL AUDIO LAB</div>
 </div>
 
@@ -433,35 +433,35 @@
 <div class="dashboard-wrapper">
   <!-- SIDEBAR NAVIGATION -->
   <div class="sidebar">
-    <div class="sidebar-title">Categorías</div>
-    <button class="tab-link active" onclick="switchTab(event, 'tab-stereo')">🎙️ Estéreo &amp; Mics</button>
-    <button class="tab-link" onclick="switchTab(event, 'tab-room')">🏠 Acústica &amp; Modos</button>
-    <button class="tab-link" onclick="switchTab(event, 'tab-phase')">⏳ Fase &amp; Haas</button>
-    <button class="tab-link" onclick="switchTab(event, 'tab-db')">📊 Decibelios &amp; V</button>
-    <button class="tab-link" onclick="switchTab(event, 'tab-system')">🔊 Altavoces &amp; DF</button>
+    <div class="sidebar-title">Categories</div>
+    <button class="tab-link active" onclick="switchTab(event, 'tab-stereo')">🎙️ Stereo &amp; Mics</button>
+    <button class="tab-link" onclick="switchTab(event, 'tab-room')">🏠 Acoustics &amp; Modes</button>
+    <button class="tab-link" onclick="switchTab(event, 'tab-phase')">⏳ Phase &amp; Haas</button>
+    <button class="tab-link" onclick="switchTab(event, 'tab-db')">📊 Decibels &amp; V</button>
+    <button class="tab-link" onclick="switchTab(event, 'tab-system')">🔊 Speakers &amp; DF</button>
   </div>
 
   <!-- TAB 1: STEREO & MICROPHONES -->
   <div id="tab-stereo" class="content-panel active">
     <div class="panel-header">
-      <h2>Estéreo y Arreglos de Micrófonos</h2>
-      <p>Cálculo del Ángulo de Grabación Estéreo (SRA), sensibilidad de cápsulas, acoplamientos M-S e impedancias.</p>
+      <h2>Stereo and Microphone Arrays</h2>
+      <p>Calculation of the Stereo Recording Angle (SRA), capsule sensitivity, M-S matrix coupling, and load impedance.</p>
     </div>
     
     <div class="grid-2col">
       <div>
         <div class="calculator-card">
-          <h3>1. Arreglos Estéreo Coincidentes/Espaciados (Williams SRA)</h3>
+          <h3>1. Coincident/Spaced Stereo Arrays (Williams SRA)</h3>
           <div class="input-group">
-            <label>Ángulo entre Mics (α) <span id="lblMicAngle">90°</span></label>
+            <label>Angle between Mics (α) <span id="lblMicAngle">90°</span></label>
             <div class="control-row">
               <input type="range" id="micAngleS" min="0" max="180" step="5" value="90">
               <input type="number" id="micAngleN" min="0" max="180" step="1" value="90">
-              <span class="unit">grados</span>
+              <span class="unit">degrees</span>
             </div>
           </div>
           <div class="input-group">
-            <label>Distancia entre Mics (d) <span id="lblMicDist">17.0 cm</span></label>
+            <label>Distance between Mics (d) <span id="lblMicDist">17.0 cm</span></label>
             <div class="control-row">
               <input type="range" id="micDistS" min="0" max="100" step="1" value="17">
               <input type="number" id="micDistN" min="0" max="300" step="0.5" value="17">
@@ -469,14 +469,14 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Patrón Polar de las Cápsulas</label>
+            <label>Capsule Polar Pattern</label>
             <select id="micPolar">
-              <option value="omni">Omnidireccional</option>
-              <option value="subcardioid">Subcardioide</option>
-              <option value="cardioid" selected>Cardioide</option>
-              <option value="supercardioid">Supercardioide</option>
-              <option value="hypercardioid">Hipercardioide</option>
-              <option value="fig8">Bidireccional (Figura 8)</option>
+              <option value="omni">Omnidirectional</option>
+              <option value="subcardioid">Subcardioid</option>
+              <option value="cardioid" selected>Cardioid</option>
+              <option value="supercardioid">Supercardioid</option>
+              <option value="hypercardioid">Hypercardioid</option>
+              <option value="fig8">Bidirectional (Figure 8)</option>
             </select>
           </div>
           
@@ -486,35 +486,35 @@
               <span class="output-value highlight"><span id="outSRA">96.8</span>°</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Max Diferencia de Nivel (ΔL)</span>
+              <span class="output-label">Max Level Difference (ΔL)</span>
               <span class="output-value"><span id="outMaxDL">12.5</span> dB</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Max Diferencia Temporal (Δt)</span>
+              <span class="output-label">Max Time Difference (Δt)</span>
               <span class="output-value"><span id="outMaxDt">0.495</span> ms</span>
             </div>
           </div>
           
           <div class="formula-display">
-            <strong>Ecuaciones de Williams SRA:</strong>
-            $$\text{SRA} = 2 \cdot \theta_{\text{limit}} \quad \text{donde} \quad \frac{\Delta L(\theta_{\text{limit}})}{15} + \frac{\Delta t(\theta_{\text{limit}})}{1.5} = 1.0$$
+            <strong>Williams SRA Equations:</strong>
+            $$\text{SRA} = 2 \cdot \theta_{\text{limit}} \quad \text{where} \quad \frac{\Delta L(\theta_{\text{limit}})}{15} + \frac{\Delta t(\theta_{\text{limit}})}{1.5} = 1.0$$
             $$\Delta t(\theta) = \frac{d \sin\theta}{c}, \quad \Delta L(\theta) = 20 \log_{10}\left(\frac{A(\theta - \alpha/2)}{A(\theta + \alpha/2)}\right)$$
           </div>
         </div>
 
         <div class="calculator-card">
-          <h3>2. Arreglo Mid-Side (M-S Stereo)</h3>
+          <h3>2. Mid-Side Array (M-S Stereo)</h3>
           <div class="input-group">
-            <label>Patrón del Mic Central (Mid)</label>
+            <label>Mid Microphone Pattern</label>
             <select id="msMidPolar">
-              <option value="omni">Omnidireccional</option>
-              <option value="cardioid" selected>Cardioide</option>
-              <option value="supercardioid">Supercardioide</option>
-              <option value="fig8">Figura-8</option>
+              <option value="omni">Omnidirectional</option>
+              <option value="cardioid" selected>Cardioid</option>
+              <option value="supercardioid">Supercardioid</option>
+              <option value="fig8">Figure-8</option>
             </select>
           </div>
           <div class="input-group">
-            <label>Relación de Ganancia Mid/Side <span id="lblMsRatio">1.0</span></label>
+            <label>Mid/Side Gain Ratio <span id="lblMsRatio">1.0</span></label>
             <div class="control-row">
               <input type="range" id="msRatioS" min="0.1" max="3.0" step="0.1" value="1.0">
               <input type="number" id="msRatioN" min="0" max="10" step="0.05" value="1.0">
@@ -524,16 +524,16 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Ángulo de Grabación M-S Equiv.</span>
+              <span class="output-label">Equiv. M-S Recording Angle</span>
               <span class="output-value highlight"><span id="outMsSra">100.0</span>°</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Nivel de Suma Izq/Der</span>
+              <span class="output-label">Left/Right Sum Level</span>
               <span class="output-value">L = Mid + Side, R = Mid - Side</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Ecuación de M-S Stereo:</strong>
+            <strong>M-S Stereo Equation:</strong>
             $$\text{SRA} = 2 \arccos\left(\frac{1-k}{k \cdot \text{Ratio}}\right)$$
           </div>
         </div>
@@ -551,9 +551,9 @@
         </div>
         
         <div class="calculator-card" style="margin-bottom:0;">
-          <h3>3. Sensibilidad &amp; Pérdida por Carga de Impedancia</h3>
+          <h3>3. Sensitivity &amp; Impedance Loading Loss</h3>
           <div class="input-group">
-            <label>Sensibilidad Mic (mV/Pa) <span id="lblMicSens">20.0 mV</span></label>
+            <label>Mic Sensitivity (mV/Pa) <span id="lblMicSens">20.0 mV</span></label>
             <div class="control-row">
               <input type="range" id="micSensS" min="1" max="100" step="1" value="20">
               <input type="number" id="micSensN" min="0.1" max="1000" step="0.1" value="20">
@@ -561,7 +561,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Z Salida Mic (Z_src) <span id="lblZsrc">200 Ω</span></label>
+            <label>Mic Output Z (Z_src) <span id="lblZsrc">200 Ω</span></label>
             <div class="control-row">
               <input type="range" id="zsrcS" min="10" max="1000" step="10" value="200">
               <input type="number" id="zsrcN" min="1" max="5000" step="1" value="200">
@@ -569,7 +569,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Z Entrada Preamp (Z_load) <span id="lblZload">2000 Ω</span></label>
+            <label>Preamp Input Z (Z_load) <span id="lblZload">2000 Ω</span></label>
             <div class="control-row">
               <input type="range" id="zloadS" min="100" max="10000" step="100" value="2000">
               <input type="number" id="zloadN" min="10" max="50000" step="10" value="2000">
@@ -579,16 +579,16 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Sensibilidad en dB (re 1V/Pa)</span>
+              <span class="output-label">Sensitivity in dB (re 1V/Pa)</span>
               <span class="output-value highlight"><span id="outMicSensDb">-34.0</span> dB</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Atenuación de Entrada</span>
+              <span class="output-label">Input Attenuation</span>
               <span class="output-value"><span id="outZAtt">-0.83</span> dB</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Carga de Impedancia y Sensibilidad:</strong>
+            <strong>Impedance Loading and Sensitivity:</strong>
             $$\text{dB (re 1V/Pa)} = 20 \log_{10}\left(\frac{\text{Sens (mV)}}{1000}\right)$$
             $$\text{Loss (dB)} = 20 \log_{10}\left(\frac{Z_{\text{load}}}{Z_{\text{src}} + Z_{\text{load}}}\right)$$
           </div>
@@ -600,16 +600,16 @@
   <!-- TAB 2: ROOM ACOUSTICS & MODES -->
   <div id="tab-room" class="content-panel">
     <div class="panel-header">
-      <h2>Acústica de Salas y Modos Propios</h2>
-      <p>Análisis modal en salas rectangulares (modos axiales, tangenciales y oblicuos) y distancia crítica.</p>
+      <h2>Room Acoustics and Normal Modes</h2>
+      <p>Modal analysis in rectangular rooms (axial, tangential, and oblique modes) and critical distance.</p>
     </div>
     
     <div class="grid-2col">
       <div>
         <div class="calculator-card">
-          <h3>4. Distribución Modal (Resonancias Físicas)</h3>
+          <h3>4. Modal Distribution (Physical Resonances)</h3>
           <div class="input-group">
-            <label>Largo de Sala (L) <span id="lblRoomL">6.0 m</span></label>
+            <label>Room Length (L) <span id="lblRoomL">6.0 m</span></label>
             <div class="control-row">
               <input type="range" id="roomLS" min="2" max="30" step="0.5" value="6">
               <input type="number" id="roomLN" min="1" max="100" step="0.1" value="6">
@@ -617,7 +617,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Ancho de Sala (W) <span id="lblRoomW">4.5 m</span></label>
+            <label>Room Width (W) <span id="lblRoomW">4.5 m</span></label>
             <div class="control-row">
               <input type="range" id="roomWS" min="2" max="25" step="0.5" value="4.5">
               <input type="number" id="roomWN" min="1" max="100" step="0.1" value="4.5">
@@ -625,7 +625,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Alto de Sala (H) <span id="lblRoomH">3.0 m</span></label>
+            <label>Room Height (H) <span id="lblRoomH">3.0 m</span></label>
             <div class="control-row">
               <input type="range" id="roomHS" min="2" max="15" step="0.1" value="3">
               <input type="number" id="roomHN" min="1" max="50" step="0.1" value="3">
@@ -635,16 +635,16 @@
           
           <div class="output-box" style="margin-top:10px;">
             <div class="output-row">
-              <span class="output-label">Volumen (V) / Superficie (S)</span>
+              <span class="output-label">Volume (V) / Surface Area (S)</span>
               <span class="output-value"><span id="outRoomVol">81.0</span> m³ / <span id="outRoomSurf">117.0</span> m²</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Fórmula de Modos de Rayleigh:</strong>
+            <strong>Rayleigh Wave Equation for Room Modes:</strong>
             $$f_{p,q,r} = \frac{c}{2} \sqrt{\left(\frac{p}{L}\right)^2 + \left(\frac{q}{W}\right)^2 + \left(\frac{r}{H}\right)^2}$$
           </div>
           
-          <h4 style="margin-top:15px; font-size:0.9rem; color:var(--accent);">Espectro de Modos Propios (&lt; 250 Hz):</h4>
+          <h4 style="margin-top:15px; font-size:0.9rem; color:var(--accent);">Normal Modes Spectrum (&lt; 250 Hz):</h4>
           <div class="modes-list" id="lstModes">
             <!-- Items generados dinámicamente -->
           </div>
@@ -658,9 +658,9 @@
         </div>
         
         <div class="calculator-card" style="margin-bottom:0;">
-          <h3>5. Distancia Crítica (Campo Directo vs Reverberante)</h3>
+          <h3>5. Critical Distance (Direct vs Reverberant Field)</h3>
           <div class="input-group">
-            <label>Tiempo RT60 <span id="lblT60">1.20 s</span></label>
+            <label>RT60 Time <span id="lblT60">1.20 s</span></label>
             <div class="control-row">
               <input type="range" id="t60S" min="0.1" max="5.0" step="0.05" value="1.2">
               <input type="number" id="t60N" min="0.05" max="15.00" step="0.01" value="1.2">
@@ -668,28 +668,28 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Factor Directividad (Q)</label>
+            <label>Directivity Factor (Q)</label>
             <select id="srcQ">
               <option value="1">Omni (Q = 1)</option>
-              <option value="2" selected>Cardioide (Q = 2)</option>
-              <option value="4">Supercardioide (Q = 4)</option>
-              <option value="8">Hipercardioide (Q = 8)</option>
-              <option value="15">Speaker Directivo (Q = 15)</option>
+              <option value="2" selected>Cardioid (Q = 2)</option>
+              <option value="4">Supercardioid (Q = 4)</option>
+              <option value="8">Hypercardioid (Q = 8)</option>
+              <option value="15">Directive Speaker (Q = 15)</option>
             </select>
           </div>
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Distancia Crítica (Dc)</span>
+              <span class="output-label">Critical Distance (Dc)</span>
               <span class="output-value highlight"><span id="outDc">1.31</span> m</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Área Absorbente Equivalente</span>
+              <span class="output-label">Equivalent Absorption Area</span>
               <span class="output-value"><span id="outAbsArea">10.9</span> m²-sab</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Fórmula de Distancia Crítica:</strong>
+            <strong>Critical Distance Formula:</strong>
             $$D_c = 0.057 \sqrt{\frac{Q \cdot V}{T_{60}}}$$
           </div>
         </div>
@@ -700,16 +700,16 @@
   <!-- TAB 3: PHASE, DELAY & HAAS -->
   <div id="tab-phase" class="content-panel">
     <div class="panel-header">
-      <h2>Fase, Retardo Temporal y Comb Filtering</h2>
-      <p>Relaciones entre frecuencia, longitud de onda y la profundidad del comb filtering inducida por diferencias de tiempo.</p>
+      <h2>Phase, Time Delay & Comb Filtering</h2>
+      <p>Relationship between frequency, wavelength, and comb filtering depth induced by time offsets.</p>
     </div>
     
     <div class="grid-2col">
       <div>
         <div class="calculator-card">
-          <h3>6. Conversor de Fase a Tiempo / Wavelength</h3>
+          <h3>6. Phase-to-Time / Wavelength Converter</h3>
           <div class="input-group">
-            <label>Frecuencia (f) <span id="lblPhaseFreq">1000 Hz</span></label>
+            <label>Frequency (f) <span id="lblPhaseFreq">1000 Hz</span></label>
             <div class="control-row">
               <input type="range" id="phaseFreqS" min="20" max="5000" step="20" value="1000">
               <input type="number" id="phaseFreqN" min="20" max="20000" step="1" value="1000">
@@ -717,7 +717,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Ángulo de Desfase (θ) <span id="lblPhaseAngle">90°</span></label>
+            <label>Phase Angle (θ) <span id="lblPhaseAngle">90°</span></label>
             <div class="control-row">
               <input type="range" id="phaseAngleS" min="0" max="360" step="5" value="90">
               <input type="number" id="phaseAngleN" min="0" max="1440" step="1" value="90">
@@ -725,7 +725,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Temperatura Ambiente <span id="lblTemp">20.0 °C</span></label>
+            <label>Ambient Temperature <span id="lblTemp">20.0 °C</span></label>
             <div class="control-row">
               <input type="range" id="tempS" min="-10" max="40" step="0.5" value="20">
               <input type="number" id="tempN" min="-30" max="60" step="0.1" value="20">
@@ -735,24 +735,24 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Velocidad del Sonido (c)</span>
+              <span class="output-label">Speed of Sound (c)</span>
               <span class="output-value"><span id="outC">343.4</span> m/s</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Longitud de Onda (λ)</span>
+              <span class="output-label">Wavelength (λ)</span>
               <span class="output-value"><span id="outWavelen">34.3</span> cm</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Retardo de Tiempo</span>
+              <span class="output-label">Time Delay</span>
               <span class="output-value highlight"><span id="outPhaseDelay">0.250</span> ms</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Diferencia de Distancia</span>
+              <span class="output-label">Distance Difference</span>
               <span class="output-value"><span id="outPhaseDist">8.6</span> cm</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Fórmula de Velocidad, Onda y Fase:</strong>
+            <strong>Speed of Sound, Wavelength and Phase Formulas:</strong>
             $$c = 331.3 \sqrt{1 + \frac{T_{\text{temp}}}{273.15}}\text{ m/s}, \quad \lambda = \frac{c}{f}$$
             $$t_{\text{delay}} = \frac{\theta}{360 \cdot f}, \quad d_{\text{phase}} = \frac{\theta}{360} \cdot \lambda$$
           </div>
@@ -761,7 +761,7 @@
         <div class="calculator-card">
           <h3>7. Comb Filter Ripple Depth (Bob McCarthy Ch 3)</h3>
           <div class="input-group">
-            <label>Diferencia de Nivel (ΔL) <span id="lblCombDl">6.0 dB</span></label>
+            <label>Level Difference (ΔL) <span id="lblCombDl">6.0 dB</span></label>
             <div class="control-row">
               <input type="range" id="combDlS" min="0" max="30" step="0.5" value="6">
               <input type="number" id="combDlN" min="0" max="60" step="0.1" value="6">
@@ -771,18 +771,18 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Amplitud Pico-a-Valle</span>
+              <span class="output-label">Peak-to-Valley Amplitude</span>
               <span class="output-value highlight"><span id="outCombRipple">11.2</span> dB</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Atenuación del Valle</span>
+              <span class="output-label">Valley Attenuation</span>
               <span class="output-value"><span id="outCombValley">-14.2</span> dB</span>
             </div>
           </div>
           
           <div class="formula-display">
-            <strong>Ondulación y Cancelación del Peine:</strong>
-            $$\text{Ripple} = 20 \log_{10}\left(\frac{1+a}{1-a}\right)\text{ dB}, \quad \text{Valle} = 20 \log_{10}(1-a)\text{ dB}$$
+            <strong>Comb Filter Ripple and Cancellation:</strong>
+            $$\text{Ripple} = 20 \log_{10}\left(\frac{1+a}{1-a}\right)\text{ dB}, \quad \text{Valley} = 20 \log_{10}(1-a)\text{ dB}$$
             $$\text{donde } a = 10^{-\Delta L/20}$$
           </div>
         </div>
@@ -800,9 +800,9 @@
         </div>
         
         <div class="calculator-card" style="margin-bottom:0;">
-          <h3>8. Efecto Haas (Precedence)</h3>
+          <h3>8. Haas Effect (Precedence)</h3>
           <div class="input-group">
-            <label>Retardo de Arribo (Δt) <span id="lblHaasDt">15.0 ms</span></label>
+            <label>Arrival Delay (Δt) <span id="lblHaasDt">15.0 ms</span></label>
             <div class="control-row">
               <input type="range" id="haasDtS" min="0" max="80" step="1" value="15">
               <input type="number" id="haasDtN" min="0" max="250" step="0.1" value="15">
@@ -810,7 +810,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Diferencia de Nivel (ΔL) <span id="lblHaasDl">3.0 dB</span></label>
+            <label>Level Difference (ΔL) <span id="lblHaasDl">3.0 dB</span></label>
             <div class="control-row">
               <input type="range" id="haasDlS" min="-24" max="24" step="0.5" value="3">
               <input type="number" id="haasDlN" min="-50" max="50" step="0.1" value="3">
@@ -820,12 +820,12 @@
           
           <div class="output-box" style="margin-top: 10px;">
             <div class="output-row">
-              <span class="output-label">Percepción de Ubicación</span>
-              <span class="output-value highlight" style="font-size:1.05rem;"><span id="outHaasPerc">Localizado al Primario</span></span>
+              <span class="output-label">Perceived Location</span>
+              <span class="output-value highlight" style="font-size:1.05rem;"><span id="outHaasPerc">Localized to Primary</span></span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Efecto Haas (Precedencia):</strong>
+            <strong>Haas Effect (Precedence):</strong>
             $$\Delta L_{\text{limit}} = 10 \log_{10}(\Delta t / 4) \text{ dB} \quad (5\text{ ms} \lt \Delta t \lt 35\text{ ms})$$
           </div>
         </div>
@@ -836,16 +836,16 @@
   <!-- TAB 4: DECIBELS & ELECTRICAL -->
   <div id="tab-db" class="content-panel">
     <div class="panel-header">
-      <h2>Decibelios, Tensiones y Conversor de Niveles</h2>
-      <p>Cálculo de niveles eléctricos dBu, dBV, dBm y voltajes RMS, suma coherente de fase e incoherente.</p>
+      <h2>Decibels, Voltages &amp; Level Converter</h2>
+      <p>Calculation of electrical levels dBu, dBV, dBm, and RMS voltages, coherent phase and incoherent summation.</p>
     </div>
     
     <div class="grid-2col">
       <div>
         <div class="calculator-card">
-          <h3>9. Conversor de Tensiones &amp; Potencia Eléctrica</h3>
+          <h3>9. Voltage &amp; Electrical Power Converter</h3>
           <div class="input-group">
-            <label>Voltaje RMS de Entrada <span id="lblVolts">1.00 V</span></label>
+            <label>Input RMS Voltage <span id="lblVolts">1.00 V</span></label>
             <div class="control-row">
               <input type="range" id="voltsS" min="0.01" max="10" step="0.05" value="1">
               <input type="number" id="voltsN" min="0.0001" max="10000" step="0.0001" value="1">
@@ -853,10 +853,10 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Impedancia de la Carga (R)</label>
+            <label>Load Impedance (R)</label>
             <select id="dbImp">
-              <option value="600">600 Ω (Telefonía/Broadcast)</option>
-              <option value="150">150 Ω (Línea balanceada)</option>
+              <option value="600">600 Ω (Telecom/Broadcast)</option>
+              <option value="150">150 Ω (Balanced line)</option>
               <option value="8" selected>8 Ω (Speaker Nominal)</option>
               <option value="4">4 Ω (Speaker Nominal)</option>
             </select>
@@ -864,33 +864,33 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Nivel Eléctrico dBu (ref 0.775V)</span>
+              <span class="output-label">Electrical Level dBu (ref 0.775V)</span>
               <span class="output-value"><span id="outDbu">2.22</span> dBu</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Nivel Eléctrico dBV (ref 1.00V)</span>
+              <span class="output-label">Electrical Level dBV (ref 1.00V)</span>
               <span class="output-value"><span id="outDbv">0.00</span> dBV</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Nivel de Potencia dBm (ref 1mW)</span>
+              <span class="output-label">Power Level dBm (ref 1mW)</span>
               <span class="output-value highlight"><span id="outDbm">20.97</span> dBm</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Potencia Real Disipada</span>
+              <span class="output-label">Real Disipated Power</span>
               <span class="output-value"><span id="outWattPower">0.125</span> W</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Decibelios Eléctricos y Potencia:</strong>
+            <strong>Electrical Decibels and Power:</strong>
             $$\text{dBu} = 20 \log_{10}\left(\frac{V}{0.775}\right), \quad \text{dBV} = 20 \log_{10}(V)$$
             $$\text{dBm} = 10 \log_{10}\left(\frac{V^2 / R}{0.001}\right), \quad P = \frac{V^2}{R}\text{ Watts}$$
           </div>
         </div>
 
         <div class="calculator-card">
-          <h3>10. Suma Acústica (Coherente vs Incoherente)</h3>
+          <h3>10. Acoustic Summation (Coherent vs Incoherent)</h3>
           <div class="input-group">
-            <label>Nivel Canal 1 <span id="lblL1">90 dB</span></label>
+            <label>Channel 1 Level <span id="lblL1">90 dB</span></label>
             <div class="control-row">
               <input type="range" id="l1S" min="40" max="120" step="1" value="90">
               <input type="number" id="l1N" min="0" max="150" step="1" value="90">
@@ -898,7 +898,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Nivel Canal 2 <span id="lblL2">90 dB</span></label>
+            <label>Channel 2 Level <span id="lblL2">90 dB</span></label>
             <div class="control-row">
               <input type="range" id="l2S" min="40" max="120" step="1" value="90">
               <input type="number" id="l2N" min="0" max="150" step="1" value="90">
@@ -906,7 +906,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Diferencia de Fase (θ) <span id="lblSumPhase">0°</span></label>
+            <label>Phase Difference (θ) <span id="lblSumPhase">0°</span></label>
             <div class="control-row">
               <input type="range" id="sumPhaseS" min="0" max="360" step="5" value="0">
               <input type="number" id="sumPhaseN" min="0" max="360" step="1" value="0">
@@ -916,16 +916,16 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Suma Coherente (Mismo origen)</span>
+              <span class="output-label">Coherent Sum (Same origin)</span>
               <span class="output-value highlight"><span id="outCohSum">96.0</span> dB</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Suma Incoherente (Fuentes indep.)</span>
+              <span class="output-label">Incoherent Sum (Independent sources)</span>
               <span class="output-value"><span id="outIncohSum">93.0</span> dB</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Suma Acústica (Presión vs Potencia):</strong>
+            <strong>Acoustic Summation (Pressure vs Power):</strong>
             $$L_{\text{coh}} = 20 \log_{10}\left(\sqrt{p_1^2 + p_2^2 + 2p_1p_2\cos\theta}\right)$$
             $$L_{\text{incoh}} = 10 \log_{10}\left(10^{L_1/10} + 10^{L_2/10}\right)$$
           </div>
@@ -949,16 +949,16 @@
   <!-- TAB 5: LOUDSPEAKERS & SYSTEM OPTIMIZATION -->
   <div id="tab-system" class="content-panel">
     <div class="panel-header">
-      <h2>Optimizaciones del Sistema y Propagación</h2>
-      <p>Cálculo de cobertura en distancia, límites de campo de arrays, arreglos de subwoofers y amortiguamiento de cables.</p>
+      <h2>System Optimizations &amp; Propagation</h2>
+      <p>Distance coverage calculation, array field limits, subwoofer spacing and cable damping factor.</p>
     </div>
     
     <div class="grid-2col">
       <div>
         <div class="calculator-card">
-          <h3>11. Propagación SPL, Aire &amp; Ley Inversa</h3>
+          <h3>11. SPL Propagation, Air &amp; Inverse Square Law</h3>
           <div class="input-group">
-            <label>Sensibilidad Altavoz <span id="lblSysSens">98.0 dB</span></label>
+            <label>Speaker Sensitivity <span id="lblSysSens">98.0 dB</span></label>
             <div class="control-row">
               <input type="range" id="sysSensS" min="80" max="115" step="0.5" value="98">
               <input type="number" id="sysSensN" min="50" max="130" step="0.1" value="98">
@@ -966,7 +966,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Potencia Aplicada <span id="lblSysPower">500 W</span></label>
+            <label>Applied Power <span id="lblSysPower">500 W</span></label>
             <div class="control-row">
               <input type="range" id="sysPowerS" min="1" max="2000" step="10" value="500">
               <input type="number" id="sysPowerN" min="1" max="50000" step="1" value="500">
@@ -974,7 +974,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Distancia del Oyente <span id="lblSysDist">30 m</span></label>
+            <label>Listener Distance <span id="lblSysDist">30 m</span></label>
             <div class="control-row">
               <input type="range" id="sysDistS" min="1" max="150" step="1" value="30">
               <input type="number" id="sysDistN" min="0.5" max="1000" step="0.5" value="30">
@@ -984,20 +984,20 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">SPL a 1m (Max Potencia)</span>
+              <span class="output-label">SPL at 1m (Max Power)</span>
               <span class="output-value">125.0 dB</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Pérdida por Aire (1 kHz)</span>
+              <span class="output-label">Air Loss (1 kHz)</span>
               <span class="output-value">-0.16 dB</span>
             </div>
             <div class="output-row">
-              <span class="output-label">SPL en Oyente</span>
+              <span class="output-label">SPL at Listener</span>
               <span class="output-value highlight"><span id="outNetSPL">95.3</span> dB</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Atenuación por Distancia e Inversa del Cuadrado:</strong>
+            <strong>Distance Attenuation and Inverse Square Law:</strong>
             $$\text{SPL} = \text{Sens} + 10 \log_{10}(P) - 20 \log_{10}(d) - \alpha_{\text{aire}} \cdot d$$
           </div>
         </div>
@@ -1281,18 +1281,18 @@ const sengpielModule = {
     const combValley = 20 * Math.log10(1 - a || 0.0001);
 
     // 5. Haas Effect
-    let haasWin = "Fuera de Ventana";
-    let haasPerc = "Eco Distinto";
+    let haasWin = "Out of Window";
+    let haasPerc = "Distinct Echo";
     if (inputs.haasDt <= 5) {
-      haasWin = "Fusión Coherente";
-      haasPerc = "Focalización al Primario";
+      haasWin = "Coherent Fusion";
+      haasPerc = "Focus to Primary";
     } else if (inputs.haasDt <= 35) {
-      haasWin = "Fusión de Sonido (Efecto Haas)";
+      haasWin = "Sound Fusion (Haas Effect)";
       const limitDl = 10 * Math.log10(inputs.haasDt / 4);
       if (inputs.haasDl >= -limitDl && inputs.haasDl <= limitDl + 10) {
-        haasPerc = "Localizado al Primario (Precedencia)";
+        haasPerc = "Localized to Primary (Precedence)";
       } else {
-        haasPerc = "Eco Desplazado";
+        haasPerc = "Shifted Echo";
       }
     }
 
@@ -1795,8 +1795,8 @@ function drawWeightingChart() {
     type: 'line',
     data: {
       datasets: [
-        { label: 'Ponderación A', data: aCurve, borderColor: '#ffb300', borderWidth: 2.5, pointRadius: 0, tension: 0.3 },
-        { label: 'Ponderación C', data: cCurve, borderColor: '#00e5ff', borderWidth: 1.5, borderDash: [4, 2], pointRadius: 0, tension: 0.3 }
+        { label: 'A-Weighting', data: aCurve, borderColor: '#ffb300', borderWidth: 2.5, pointRadius: 0, tension: 0.3 },
+        { label: 'C-Weighting', data: cCurve, borderColor: '#00e5ff', borderWidth: 1.5, borderDash: [4, 2], pointRadius: 0, tension: 0.3 }
       ]
     },
     options: {
@@ -1805,7 +1805,7 @@ function drawWeightingChart() {
       scales: {
         x: {
           type: 'logarithmic',
-          title: { display: true, text: 'Frecuencia (Hz)', color: '#ffb300' },
+          title: { display: true, text: 'Frequency (Hz)', color: '#ffb300' },
           grid: { color: 'rgba(255,255,255,0.05)' },
           min: 10, max: 20000,
           ticks: {
@@ -1815,7 +1815,7 @@ function drawWeightingChart() {
             }
           }
         },
-        y: { title: { display: true, text: 'Atenuación (dB)', color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' }, min: -40, max: 2 }
+        y: { title: { display: true, text: 'Attenuation (dB)', color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' }, min: -40, max: 2 }
       },
       plugins: { legend: { display: true, labels: { color: '#c8daf0' } } }
     }
@@ -1848,15 +1848,15 @@ function drawLineArrayChart(dTrans, sysDist, sens) {
     type: 'line',
     data: {
       datasets: [
-        { label: 'Atenuación SPL vs Distancia (dB)', data: curve, borderColor: '#ffb300', borderWidth: 2, pointRadius: 0 },
-        { label: 'Oyente', data: [{ x: sysDist, y: sens + currentLoss }], backgroundColor: '#00e5ff', pointRadius: 8, showLine: false }
+        { label: 'SPL Attenuation vs Distance (dB)', data: curve, borderColor: '#ffb300', borderWidth: 2, pointRadius: 0 },
+        { label: 'Listener', data: [{ x: sysDist, y: sens + currentLoss }], backgroundColor: '#00e5ff', pointRadius: 8, showLine: false }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Distancia (m)', color: '#ffb300' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { title: { display: true, text: 'Distance (m)', color: '#ffb300' }, grid: { color: 'rgba(255,255,255,0.05)' } },
         y: { title: { display: true, text: 'SPL (dB)', color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' } }
       },
       plugins: { legend: { display: false } }
@@ -1971,7 +1971,7 @@ function drawDampingChart(zSpk, ampDf, gaugeVal) {
     type: 'line',
     data: {
       datasets: [{
-        label: 'DF Neto en Altavoz',
+        label: 'Net DF at Speaker',
         data: curve,
         borderColor: '#00e5ff',
         borderWidth: 2,
@@ -1982,7 +1982,7 @@ function drawDampingChart(zSpk, ampDf, gaugeVal) {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Longitud del Cable (m)', color: '#00e5ff' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { title: { display: true, text: 'Cable Length (m)', color: '#00e5ff' }, grid: { color: 'rgba(255,255,255,0.05)' } },
         y: { title: { display: true, text: 'Damping Factor', color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' } }
       },
       plugins: { legend: { display: false } }

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Consola Científica de Acústica de Salas — Tom Danley Calculator</title>
-<meta name="description" content="Dashboard de análisis acústico y diseño modal de salas basado en el estándar adversarial de ingeniería.">
+<title>Room Acoustics Scientific Console — Tom Danley Calculator</title>
+<meta name="description" content="High-density room acoustics analysis and modal design dashboard based on adversarial engineering standards.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -480,23 +480,23 @@
 <body>
 
 <div class="top-bar">
-  <a href="index.html" class="back-btn">← MENU PRINCIPAL</a>
+  <a href="index.html" class="back-btn">← MAIN MENU</a>
   <div class="brand-title">STANDARDS OF ACOUSTICAL ENGINEERING</div>
 </div>
 
-<h1 class="main-title">Consola de Acústica de Salas</h1>
-<div class="subtitle">Tiempos de Reverberación RT60 y Modos Resonantes</div>
+<h1 class="main-title">Room Acoustics Console</h1>
+<div class="subtitle">RT60 Reverberation Times and Resonant Modes</div>
 
 <div class="dashboard">
   
   <!-- PANEL IZQUIERDO DE VARIABLES Y MATERIALES -->
   <div class="inputs-panel">
-    <h2>Parámetros Físicos</h2>
+    <h2>Physical Parameters</h2>
     
-    <div class="group-title">Dimensiones de la Sala</div>
+    <div class="group-title">Room Dimensions</div>
     
     <div class="input-control">
-      <label>Largo (L) <span class="val" id="lVal">6.0 m</span></label>
+      <label>Length (L) <span class="val" id="lVal">6.0 m</span></label>
       <div class="ctrl-row">
         <input type="range" id="lS" min="2" max="30" step="0.1" value="6.0">
         <input type="number" id="lN" min="1.5" max="100" step="0.05" value="6.0">
@@ -505,7 +505,7 @@
     </div>
 
     <div class="input-control">
-      <label>Ancho (W) <span class="val" id="wVal">4.5 m</span></label>
+      <label>Width (W) <span class="val" id="wVal">4.5 m</span></label>
       <div class="ctrl-row">
         <input type="range" id="wS" min="2" max="25" step="0.1" value="4.5">
         <input type="number" id="wN" min="1.5" max="100" step="0.05" value="4.5">
@@ -514,7 +514,7 @@
     </div>
 
     <div class="input-control">
-      <label>Alto (H) <span class="val" id="hVal">3.0 m</span></label>
+      <label>Height (H) <span class="val" id="hVal">3.0 m</span></label>
       <div class="ctrl-row">
         <input type="range" id="hS" min="2" max="15" step="0.1" value="3.0">
         <input type="number" id="hN" min="1.0" max="50" step="0.05" value="3.0">
@@ -522,10 +522,10 @@
       </div>
     </div>
 
-    <div class="group-title">Variables Atmosféricas</div>
+    <div class="group-title">Atmospheric Variables</div>
 
     <div class="input-control">
-      <label>Temperatura Aire <span class="val" id="tempVal">20.0 °C</span></label>
+      <label>Air Temperature <span class="val" id="tempVal">20.0 °C</span></label>
       <div class="ctrl-row">
         <input type="range" id="tempS" min="-10" max="40" step="0.5" value="20.0">
         <input type="number" id="tempN" min="-50" max="60" step="0.5" value="20.0">
@@ -534,7 +534,7 @@
     </div>
 
     <div class="input-control">
-      <label>Humedad Relativa <span class="val" id="humVal">50 %</span></label>
+      <label>Relative Humidity <span class="val" id="humVal">50 %</span></label>
       <div class="ctrl-row">
         <input type="range" id="humS" min="10" max="90" step="1" value="50">
         <input type="number" id="humN" min="0" max="100" step="1" value="50">
@@ -542,10 +542,10 @@
       </div>
     </div>
 
-    <div class="group-title">Fuente y Distancia</div>
+    <div class="group-title">Source and Distance</div>
 
     <div class="input-control">
-      <label>Directividad Fuente (Q) <span class="val" id="qVal">2.0</span></label>
+      <label>Source Directivity (Q) <span class="val" id="qVal">2.0</span></label>
       <div class="ctrl-row">
         <input type="range" class="gold-range" id="qS" min="1" max="24" step="0.1" value="2.0">
         <input type="number" id="qN" min="1" max="50" step="0.1" value="2.0">
@@ -554,7 +554,7 @@
     </div>
 
     <div class="input-control">
-      <label>Distancia Receptor <span class="val" id="recDistVal">3.0 m</span></label>
+      <label>Receiver Distance <span class="val" id="recDistVal">3.0 m</span></label>
       <div class="ctrl-row">
         <input type="range" class="gold-range" id="recDistS" min="0.5" max="25" step="0.1" value="3.0">
         <input type="number" id="recDistN" min="0.1" max="100" step="0.1" value="3.0">
@@ -562,53 +562,53 @@
       </div>
     </div>
 
-    <div class="group-title">Materiales por Superficie</div>
+    <div class="group-title">Surface Materials</div>
     
     <div class="input-control">
-      <label>Suelo (Floor)</label>
+      <label>Floor</label>
       <select id="matFloor" onchange="calc()"></select>
     </div>
 
     <div class="input-control">
-      <label>Techo (Ceiling)</label>
+      <label>Ceiling</label>
       <select id="matCeiling" onchange="calc()"></select>
     </div>
 
     <div class="input-control">
-      <label>Pared Izquierda (Left)</label>
+      <label>Left Wall</label>
       <select id="matLeft" onchange="calc()"></select>
     </div>
 
     <div class="input-control">
-      <label>Pared Derecha (Right)</label>
+      <label>Right Wall</label>
       <select id="matRight" onchange="calc()"></select>
     </div>
 
     <div class="input-control">
-      <label>Pared Frontal (Front)</label>
+      <label>Front Wall</label>
       <select id="matFront" onchange="calc()"></select>
     </div>
 
     <div class="input-control">
-      <label>Pared Trasera (Back)</label>
+      <label>Back Wall</label>
       <select id="matBack" onchange="calc()"></select>
     </div>
 
-    <div class="group-title">Modo Activo para Visualizar 3D</div>
+    <div class="group-title">Active Mode for 3D Visualization</div>
     <div class="input-control">
-      <label>Índice p (Largo) <span class="val" id="modePVal">1</span></label>
+      <label>p Index (Length) <span class="val" id="modePVal">1</span></label>
       <div class="ctrl-row">
         <input type="range" class="gold-range" id="modePS" min="0" max="6" step="1" value="1">
       </div>
     </div>
     <div class="input-control">
-      <label>Índice q (Ancho) <span class="val" id="modeQVal">0</span></label>
+      <label>q Index (Width) <span class="val" id="modeQVal">0</span></label>
       <div class="ctrl-row">
         <input type="range" class="gold-range" id="modeQS" min="0" max="6" step="1" value="0">
       </div>
     </div>
     <div class="input-control">
-      <label>Índice r (Alto) <span class="val" id="modeRVal">0</span></label>
+      <label>r Index (Height) <span class="val" id="modeRVal">0</span></label>
       <div class="ctrl-row">
         <input type="range" class="gold-range" id="modeRS" min="0" max="6" step="1" value="0">
       </div>
@@ -619,10 +619,10 @@
   <div class="content-panel">
     
     <div class="tabs-bar">
-      <button id="tabBtnA" class="tab-btn active" onclick="setTab('A')">RT60 Multibanda</button>
-      <button id="tabBtnB" class="tab-btn" onclick="setTab('B')">Modos de Sala y Bolt</button>
-      <button id="tabBtnC" class="tab-btn" onclick="setTab('C')">Campo Difuso e ISO</button>
-      <button id="tabBtnD" class="tab-btn" onclick="setTab('D')">Trazado y Cascada</button>
+      <button id="tabBtnA" class="tab-btn active" onclick="setTab('A')">Multiband RT60</button>
+      <button id="tabBtnB" class="tab-btn" onclick="setTab('B')">Room Modes & Bolt</button>
+      <button id="tabBtnC" class="tab-btn" onclick="setTab('C')">Diffuse Field & ISO</button>
+      <button id="tabBtnD" class="tab-btn" onclick="setTab('D')">Ray Tracing & Waterfall</button>
     </div>
 
     <!-- PESTAÑA A: RT60 MULTIBANDA -->
@@ -631,16 +631,16 @@
       <!-- Fila de Ecuaciones (3) -->
       <div class="eq-grid">
         <div class="eq-card">
-          <div class="eq-title">Ecuación 1: Velocidad del Sonido</div>
+          <div class="eq-title">Equation 1: Speed of Sound</div>
           <div class="eq-math">$$c = 331.3 \sqrt{1 + \frac{T}{273.15}} + 0.6 \left(\frac{RH}{100}\right) 1.2$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Resultado (c):</span>
+            <span class="eq-res-lbl">Result (c):</span>
             <span class="eq-res-val"><span id="eq1Val">344.0</span> <span style="font-size:0.75rem; font-weight:normal;">m/s</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 2: Volumen y Superficie</div>
+          <div class="eq-title">Equation 2: Volume & Surface Area</div>
           <div class="eq-math">$$V = L \cdot W \cdot H \quad | \quad S = 2(LW + LH + WH)$$</div>
           <div class="eq-res-row">
             <span class="eq-res-lbl">V / S:</span>
@@ -649,10 +649,10 @@
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 3: Sabine Estándar (500 Hz)</div>
+          <div class="eq-title">Equation 3: Standard Sabine (500 Hz)</div>
           <div class="eq-math">$$RT60_{\text{Sabine}} = \frac{0.161 \cdot V}{S \cdot \bar{\alpha}}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Tiempo:</span>
+            <span class="eq-res-lbl">Time:</span>
             <span class="eq-res-val"><span id="eq3Val">1.25</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
           </div>
         </div>
@@ -661,28 +661,28 @@
       <!-- Fila de Ecuaciones 4, 5, 6 -->
       <div class="eq-grid">
         <div class="eq-card">
-          <div class="eq-title">Ecuación 4: Sabine + Absorción del Aire</div>
+          <div class="eq-title">Equation 4: Sabine + Air Absorption</div>
           <div class="eq-math">$$RT60_{\text{Sabine+Air}} = \frac{0.161 \cdot V}{S \cdot \bar{\alpha} + 4m \cdot V}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Con Aire:</span>
+            <span class="eq-res-lbl">With Air:</span>
             <span class="eq-res-val"><span id="eq4Val">1.22</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 5: Eyring Estándar (500 Hz)</div>
+          <div class="eq-title">Equation 5: Standard Eyring (500 Hz)</div>
           <div class="eq-math">$$RT60_{\text{Eyring}} = \frac{0.161 \cdot V}{-S \cdot \ln(1 - \bar{\alpha})}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Tiempo:</span>
+            <span class="eq-res-lbl">Time:</span>
             <span class="eq-res-val"><span id="eq5Val">1.15</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 6: Eyring + Absorción del Aire</div>
+          <div class="eq-title">Equation 6: Eyring + Air Absorption</div>
           <div class="eq-math">$$RT60_{\text{Eyring+Air}} = \frac{0.161 \cdot V}{-S \cdot \ln(1 - \bar{\alpha}) + 4m \cdot V}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Con Aire:</span>
+            <span class="eq-res-lbl">With Air:</span>
             <span class="eq-res-val"><span id="eq6Val">1.12</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
           </div>
         </div>
@@ -691,19 +691,19 @@
       <!-- Fila de Ecuaciones 7, 8 -->
       <div class="eq-grid">
         <div class="eq-card" style="grid-column: span 1.5;">
-          <div class="eq-title">Ecuación 7: Modelo de Fitzroy (Direccional)</div>
+          <div class="eq-title">Equation 7: Fitzroy Model (Directional)</div>
           <div class="eq-math">$$RT60_{\text{Fitzroy}} = \frac{0.161 \cdot V}{S^2} \left[ \frac{S_x}{\bar{\alpha}_x} + \frac{S_y}{\bar{\alpha}_y} + \frac{S_z}{\bar{\alpha}_z} \right]$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">RT60 Fitzroy (500 Hz):</span>
+            <span class="eq-res-lbl">Fitzroy RT60 (500 Hz):</span>
             <span class="eq-res-val"><span id="eq7Val">1.35</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
           </div>
         </div>
 
         <div class="eq-card" style="grid-column: span 1.5;">
-          <div class="eq-title">Ecuación 8: Modelo de Arau-Puchades (Exponencial Direccional)</div>
+          <div class="eq-title">Equation 8: Arau-Puchades Model (Directional Exponential)</div>
           <div class="eq-math">$$RT60_{\text{Arau}} = \prod_{i=x,y,z} \left(\frac{0.161 \cdot V}{-S \cdot \ln(1 - \bar{\alpha}_i)}\right)^{\frac{S_i}{S}}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">RT60 Arau (500 Hz):</span>
+            <span class="eq-res-lbl">Arau RT60 (500 Hz):</span>
             <span class="eq-res-val"><span id="eq8Val">1.28</span> <span style="font-size:0.75rem; font-weight:normal;">s</span></span>
           </div>
         </div>
@@ -713,8 +713,8 @@
       <div class="charts-grid">
         <div class="chart-card span-2">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 1: Comparativa RT60 por Bandas de Octava</span>
-            <span class="chart-desc">Comparativa de Modelos Estocásticos y Direccionales (125 Hz - 4 kHz)</span>
+            <span class="chart-title">Chart 1: RT60 Octave Band Comparison</span>
+            <span class="chart-desc">Comparison of Stochastic and Directional Models (125 Hz - 4 kHz)</span>
           </div>
           <div class="canvas-container large">
             <canvas id="rt60BandsChart"></canvas>
@@ -723,8 +723,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 5: Coeficientes de Absorción de Materiales</span>
-            <span class="chart-desc">Curvas de los materiales seleccionados</span>
+            <span class="chart-title">Chart 5: Material Absorption Coefficients</span>
+            <span class="chart-desc">Absorption curves of selected materials</span>
           </div>
           <div class="canvas-container">
             <canvas id="materialsChart"></canvas>
@@ -733,8 +733,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 10: Área de Absorción Equivalente (Sabines)</span>
-            <span class="chart-desc">Distribución por bandas de frecuencia</span>
+            <span class="chart-title">Chart 10: Equivalent Absorption Area (Sabines)</span>
+            <span class="chart-desc">Distribution by frequency bands</span>
           </div>
           <div class="canvas-container">
             <canvas id="sabinesChart"></canvas>
@@ -749,19 +749,19 @@
       <!-- Ecuaciones 9, 10 -->
       <div class="eq-grid">
         <div class="eq-card" style="grid-column: span 1.5;">
-          <div class="eq-title">Ecuación 9: Frecuencias Propias (Modos 3D)</div>
+          <div class="eq-title">Equation 9: Normal Frequencies (3D Modes)</div>
           <div class="eq-math">$$f_{p,q,r} = \frac{c}{2} \sqrt{\left(\frac{p}{L}\right)^2 + \left(\frac{q}{W}\right)^2 + \left(\frac{r}{H}\right)^2}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Modo Seleccionado $f_{<span id="eq9Mode">1,0,0</span>}$:</span>
+            <span class="eq-res-lbl">Selected Mode $f_{<span id="eq9Mode">1,0,0</span>}$:</span>
             <span class="eq-res-val"><span id="eq9Val">28.7</span> <span style="font-size:0.75rem; font-weight:normal;">Hz</span></span>
           </div>
         </div>
 
         <div class="eq-card" style="grid-column: span 1.5;">
-          <div class="eq-title">Ecuación 10: Frecuencia de Schroeder (Límite Modal)</div>
+          <div class="eq-title">Equation 10: Schroeder Frequency (Modal Limit)</div>
           <div class="eq-math">$$f_s = 2000 \sqrt{\frac{RT60_{500}}{V}}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Frecuencia de Transición ($f_s$):</span>
+            <span class="eq-res-lbl">Transition Frequency ($f_s$):</span>
             <span class="eq-res-val"><span id="eq10Val">248.3</span> <span style="font-size:0.75rem; font-weight:normal;">Hz</span></span>
           </div>
         </div>
@@ -771,8 +771,8 @@
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 2: Espectro de Frecuencias Modales (20 - 250 Hz)</span>
-            <span class="chart-desc">Rojo=Axial, Verde=Tangencial, Morado=Oblicuo. Haz clic para seleccionar modo.</span>
+            <span class="chart-title">Chart 2: Modal Frequency Spectrum (20 - 250 Hz)</span>
+            <span class="chart-desc">Red=Axial, Green=Tangential, Purple=Oblique. Click to select mode.</span>
           </div>
           <div class="canvas-container">
             <canvas id="modalSpectrumCanvas"></canvas>
@@ -781,8 +781,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 3: Densidad Modal (Criterio de Bonello)</span>
-            <span class="chart-desc">Conteo en 1/3 Octava. Naranja indica caída de densidad (mala).</span>
+            <span class="chart-title">Chart 3: Modal Density (Bonello Criterion)</span>
+            <span class="chart-desc">1/3 Octave Count. Orange/Red indicates density drop (poor distribution).</span>
           </div>
           <div class="canvas-container">
             <canvas id="bonelloChart"></canvas>
@@ -791,8 +791,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 4: Diagrama de Proporciones Bolt</span>
-            <span class="chart-desc">Relación L/H vs W/H. Región cian = distribución modal óptima.</span>
+            <span class="chart-title">Chart 4: Bolt Ratio Diagram</span>
+            <span class="chart-desc">L/H vs W/H ratios. Cyan region = optimal modal distribution.</span>
           </div>
           <div class="canvas-container">
             <canvas id="boltCanvas"></canvas>
@@ -801,8 +801,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 11: Planos de Presión Acústica 3D (WebGL)</span>
-            <span class="chart-desc">Antinodos (Rojo/Naranja) vs Nodos (Cian/Azul). Arrastra para rotar.</span>
+            <span class="chart-title">Chart 11: 3D Acoustic Pressure Fields (WebGL)</span>
+            <span class="chart-desc">Antinodes (Red/Orange) vs Nodes (Cyan/Blue). Drag to rotate.</span>
           </div>
           <div class="canvas-container" id="canvas3dContainer">
             <canvas id="room3dCanvas"></canvas>
@@ -812,15 +812,15 @@
 
       <!-- Tabla de Modos -->
       <div class="modes-table-container">
-        <div class="table-header">Primeros 15 Modos Propios Ordenados por Frecuencia</div>
+        <div class="table-header">First 15 Normal Modes Ordered by Frequency</div>
         <table class="modes-table">
           <thead>
             <tr>
-              <th>Modo (p, q, r)</th>
-              <th>Frecuencia (Hz)</th>
-              <th>Tipo</th>
-              <th>Periodo (ms)</th>
-              <th>Longitud Onda (m)</th>
+              <th>Mode (p, q, r)</th>
+              <th>Frequency (Hz)</th>
+              <th>Type</th>
+              <th>Period (ms)</th>
+              <th>Wavelength (m)</th>
             </tr>
           </thead>
           <tbody id="modesTableBody"></tbody>
@@ -834,19 +834,19 @@
       <!-- Ecuaciones 11, 12 -->
       <div class="eq-grid">
         <div class="eq-card" style="grid-column: span 1.5;">
-          <div class="eq-title">Ecuación 11: Distancia Crítica ($D_c$)</div>
+          <div class="eq-title">Equation 11: Critical Distance ($D_c$)</div>
           <div class="eq-math">$$D_c = 0.141 \sqrt{Q \cdot S \cdot \bar{\alpha}_{500}}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Distancia Crítica ($D_c$):</span>
+            <span class="eq-res-lbl">Critical Distance ($D_c$):</span>
             <span class="eq-res-val"><span id="eq11Val">1.84</span> <span style="font-size:0.75rem; font-weight:normal;">m</span></span>
           </div>
         </div>
 
         <div class="eq-card" style="grid-column: span 1.5;">
-          <div class="eq-title">Ecuación 12: Coeficiente de Absorción Promedio ($\bar{\alpha}$)</div>
+          <div class="eq-title">Equation 12: Average Absorption Coefficient ($\bar{\alpha}$)</div>
           <div class="eq-math">$$\bar{\alpha} = \frac{\sum_{i} S_i \alpha_i}{S}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Ponderado (500 Hz):</span>
+            <span class="eq-res-lbl">Weighted (500 Hz):</span>
             <span class="eq-res-val"><span id="eq12Val">0.18</span> <span style="font-size:0.75rem; font-weight:normal;">α</span></span>
           </div>
         </div>
@@ -856,8 +856,8 @@
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 6: SPL vs Distancia (Directo vs Difuso)</span>
-            <span class="chart-desc">Decaimiento de la fuente y punto de Distancia Crítica (campo total)</span>
+            <span class="chart-title">Chart 6: SPL vs Distance (Direct vs Diffuse)</span>
+            <span class="chart-desc">Source decay and Critical Distance point (total field)</span>
           </div>
           <div class="canvas-container">
             <canvas id="splFieldChart"></canvas>
@@ -866,8 +866,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 7: Frecuencia de Schroeder vs RT60</span>
-            <span class="chart-desc">Evolución del límite modal barriendo el tiempo de reverberación</span>
+            <span class="chart-title">Chart 7: Schroeder Frequency vs RT60</span>
+            <span class="chart-desc">Modal limit evolution across reverberation time sweep</span>
           </div>
           <div class="canvas-container">
             <canvas id="schroederSweepChart"></canvas>
@@ -883,30 +883,30 @@
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 8: Simulador de Reflexiones Tempranas 2D</span>
-            <span class="chart-desc">Reflexiones de 1er Orden. Arrastra la Fuente (S) o Receptor (L)</span>
+            <span class="chart-title">Chart 8: 2D Early Reflections Simulator</span>
+            <span class="chart-desc">1st Order Reflections. Drag Source (S) or Receiver (L)</span>
           </div>
           <div class="canvas-container">
             <canvas id="reflectionsCanvas"></canvas>
           </div>
-          <div class="interactive-hint">💡 Arrastra con el cursor el punto S o L para calcular reflexiones.</div>
+          <div class="interactive-hint">💡 Drag point S or L with the cursor to calculate reflections.</div>
           <div class="info-block">
-            <h3>Tiempos de Vuelo y Delay</h3>
+            <h3>Flight Times and Delay</h3>
             <div id="reflPathsList"></div>
           </div>
         </div>
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 9: Cascada de Decaimiento Modal (Waterfall)</span>
-            <span class="chart-desc">Espectro de resonancia de sala en intervalos de 50ms</span>
+            <span class="chart-title">Chart 9: Modal Decay Waterfall</span>
+            <span class="chart-desc">Room resonance spectrum in 50ms intervals</span>
           </div>
           <div class="canvas-container">
             <canvas id="waterfallCanvas"></canvas>
           </div>
           <div class="info-block" style="background: rgba(0, 229, 255, 0.02); border-left-color: var(--border-cyan);">
-            <h3>Física del Decaimiento Espectral</h3>
-            <p style="font-size:0.8rem; color:var(--text-dim);">Cada curva representa el decaimiento modal a un tiempo $t$. Los picos corresponden a los modos propios calculados. La atenuación de cada modo depende de la absorción de los materiales en su banda y su amortiguamiento $e^{-6.91 t / RT60}$.</p>
+            <h3>Spectral Decay Physics</h3>
+            <p style="font-size:0.8rem; color:var(--text-dim);">Each curve represents the modal decay at a time $t$. The peaks correspond to the calculated normal modes. The attenuation of each mode depends on the absorption of the materials in its band and its damping $e^{-6.91 t / RT60}$.</p>
           </div>
         </div>
       </div>
@@ -918,16 +918,16 @@
 <script>
   // Paleta de materiales y coeficientes
   const materials = {
-    brick: { name: "Ladrillo sin pintar", coeffs: [0.02, 0.02, 0.03, 0.03, 0.04, 0.05], color: '#f06292' },
-    concrete: { name: "Hormigón pulido", coeffs: [0.01, 0.01, 0.02, 0.02, 0.02, 0.02], color: '#90a4ae' },
-    carpet: { name: "Alfombra gruesa s/hormigón", coeffs: [0.02, 0.06, 0.14, 0.37, 0.60, 0.65], color: '#81c784' },
-    acoustic_tile: { name: "Placa acústica (Techo)", coeffs: [0.40, 0.60, 0.80, 0.90, 0.85, 0.80], color: '#4dd0e1' },
-    glass: { name: "Vidrio (Ventanas grandes)", coeffs: [0.18, 0.06, 0.04, 0.03, 0.02, 0.02], color: '#ba68c8' },
-    plywood: { name: "Madera contrachapada (12mm)", coeffs: [0.15, 0.18, 0.10, 0.07, 0.06, 0.07], color: '#ffb74d' },
-    curtains: { name: "Cortina pesada pliegues", coeffs: [0.07, 0.31, 0.49, 0.81, 0.66, 0.54], color: '#e57373' },
-    plaster: { name: "Yeso / Placa cartón-yeso", coeffs: [0.29, 0.10, 0.05, 0.04, 0.07, 0.09], color: '#a1887f' },
-    anechoic: { name: "Absorbente Perfecto (1.0)", coeffs: [1.00, 1.00, 1.00, 1.00, 1.00, 1.00], color: '#00e5ff' },
-    reflective: { name: "Reflector Perfecto (0.0)", coeffs: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00], color: '#ff5722' }
+    brick: { name: "Unpainted brick", coeffs: [0.02, 0.02, 0.03, 0.03, 0.04, 0.05], color: '#f06292' },
+    concrete: { name: "Polished concrete", coeffs: [0.01, 0.01, 0.02, 0.02, 0.02, 0.02], color: '#90a4ae' },
+    carpet: { name: "Thick carpet on concrete", coeffs: [0.02, 0.06, 0.14, 0.37, 0.60, 0.65], color: '#81c784' },
+    acoustic_tile: { name: "Acoustic tile (Ceiling)", coeffs: [0.40, 0.60, 0.80, 0.90, 0.85, 0.80], color: '#4dd0e1' },
+    glass: { name: "Glass (Large windows)", coeffs: [0.18, 0.06, 0.04, 0.03, 0.02, 0.02], color: '#ba68c8' },
+    plywood: { name: "Plywood (12mm)", coeffs: [0.15, 0.18, 0.10, 0.07, 0.06, 0.07], color: '#ffb74d' },
+    curtains: { name: "Heavy draped curtains", coeffs: [0.07, 0.31, 0.49, 0.81, 0.66, 0.54], color: '#e57373' },
+    plaster: { name: "Gypsum board / Plasterboard", coeffs: [0.29, 0.10, 0.05, 0.04, 0.07, 0.09], color: '#a1887f' },
+    anechoic: { name: "Perfect Absorber (1.0)", coeffs: [1.00, 1.00, 1.00, 1.00, 1.00, 1.00], color: '#00e5ff' },
+    reflective: { name: "Perfect Reflector (0.0)", coeffs: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00], color: '#ff5722' }
   };
 
   // Coeficientes estándar de atenuación del aire a 20C y 50% HR por banda (m en nepers/m)
@@ -1261,9 +1261,9 @@
         labels: ['125 Hz', '250 Hz', '500 Hz', '1 kHz', '2 kHz', '4 kHz'],
         datasets: [
           { label: 'Sabine', data: [], borderColor: '#ff9100', borderWidth: 2, fill: false, tension: 0.3 },
-          { label: 'Sabine + Aire', data: [], borderColor: '#ffb74d', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.3 },
+          { label: 'Sabine + Air', data: [], borderColor: '#ffb74d', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.3 },
           { label: 'Eyring', data: [], borderColor: '#00e5ff', borderWidth: 2, fill: false, tension: 0.3 },
-          { label: 'Eyring + Aire', data: [], borderColor: '#4dd0e1', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.3 },
+          { label: 'Eyring + Air', data: [], borderColor: '#4dd0e1', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.3 },
           { label: 'Fitzroy (Dir)', data: [], borderColor: '#ffea00', borderWidth: 2, fill: false, tension: 0.3 },
           { label: 'Arau-Puchades (Dir)', data: [], borderColor: '#ab47bc', borderWidth: 2, fill: false, tension: 0.3 }
         ]
@@ -1272,7 +1272,7 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { title: { display: true, text: 'Tiempo de Reverberación RT60 (s)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { title: { display: true, text: 'Reverberation Time RT60 (s)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
           x: { grid: { color: 'rgba(255,255,255,0.05)' } }
         },
         plugins: { legend: { position: 'top', labels: { boxWidth: 15 } } }
@@ -1291,7 +1291,7 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { min: 0, max: 1.1, title: { display: true, text: 'Coeficiente de Absorción (α)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { min: 0, max: 1.1, title: { display: true, text: 'Absorption Coefficient (α)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
           x: { grid: { color: 'rgba(255,255,255,0.05)' } }
         },
         plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }
@@ -1310,7 +1310,7 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { title: { display: true, text: 'Área Equivalente A (m²)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { title: { display: true, text: 'Equivalent Area A (m²)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
           x: { grid: { color: 'rgba(255,255,255,0.05)' } }
         }
       }
@@ -1322,14 +1322,14 @@
       type: 'bar',
       data: {
         labels: ['20', '25', '31.5', '40', '50', '63', '80', '100', '125', '160', '200', '250'],
-        datasets: [{ label: 'Conteo de Modos', data: [], backgroundColor: [] }]
+        datasets: [{ label: 'Mode Count', data: [], backgroundColor: [] }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { ticks: { stepSize: 1 }, title: { display: true, text: 'Cantidad de Modos' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { title: { display: true, text: 'Frecuencia Central 1/3 Octava (Hz)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { ticks: { stepSize: 1 }, title: { display: true, text: 'Number of Modes' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { title: { display: true, text: '1/3 Octave Center Frequency (Hz)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
         },
         plugins: { legend: { display: false } }
       }
@@ -1342,18 +1342,18 @@
       data: {
         labels: [],
         datasets: [
-          { label: 'Campo Directo (-6dB/dupl)', data: [], borderColor: '#ff9100', borderWidth: 1.5, fill: false, pointRadius: 0 },
-          { label: 'Campo Difuso (Reverberante)', data: [], borderColor: '#00e5ff', borderWidth: 1.5, fill: false, pointRadius: 0 },
-          { label: 'Nivel Total SPL', data: [], borderColor: '#fff', borderWidth: 2, fill: false, pointRadius: 0 },
-          { label: 'Distancia Crítica (Dc)', data: [], borderColor: '#f0c040', borderWidth: 1.5, borderDash: [6, 3], pointRadius: 6, pointBackgroundColor: '#f0c040', showLine: true }
+          { label: 'Direct Field (-6dB/doubling)', data: [], borderColor: '#ff9100', borderWidth: 1.5, fill: false, pointRadius: 0 },
+          { label: 'Diffuse Field (Reverberant)', data: [], borderColor: '#00e5ff', borderWidth: 1.5, fill: false, pointRadius: 0 },
+          { label: 'Total SPL Level', data: [], borderColor: '#fff', borderWidth: 2, fill: false, pointRadius: 0 },
+          { label: 'Critical Distance (Dc)', data: [], borderColor: '#f0c040', borderWidth: 1.5, borderDash: [6, 3], pointRadius: 6, pointBackgroundColor: '#f0c040', showLine: true }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { title: { display: true, text: 'Nivel de Presión Sonora (dB SPL)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { type: 'linear', min: 0.5, max: 20, title: { display: true, text: 'Distancia a la fuente (m)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { title: { display: true, text: 'Sound Pressure Level (dB SPL)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { type: 'linear', min: 0.5, max: 20, title: { display: true, text: 'Distance to source (m)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
         }
       }
     });
@@ -1364,16 +1364,16 @@
       type: 'line',
       data: {
         datasets: [
-          { label: 'Frecuencia Schroeder (fs)', data: [], borderColor: '#00e5ff', borderWidth: 2, pointRadius: 0, fill: false },
-          { label: 'Estado Actual', data: [], borderColor: '#f0c040', backgroundColor: '#f0c040', pointRadius: 8, showLine: false }
+          { label: 'Schroeder Frequency (fs)', data: [], borderColor: '#00e5ff', borderWidth: 2, pointRadius: 0, fill: false },
+          { label: 'Current State', data: [], borderColor: '#f0c040', backgroundColor: '#f0c040', pointRadius: 8, showLine: false }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { title: { display: true, text: 'Frecuencia de Schroeder (Hz)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { type: 'linear', title: { display: true, text: 'Tiempo de Reverberación RT60 (s)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { title: { display: true, text: 'Schroeder Frequency (Hz)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { type: 'linear', title: { display: true, text: 'Reverberation Time RT60 (s)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
         }
       }
     });
@@ -1399,7 +1399,7 @@
 
     // 5. Materials Absorption
     const selects = ['matFloor', 'matCeiling', 'matLeft', 'matRight', 'matFront', 'matBack'];
-    const names = ["Suelo", "Techo", "Pared Izq", "Pared Der", "Pared Frontal", "Pared Trasera"];
+    const names = ["Floor", "Ceiling", "Left Wall", "Right Wall", "Front Wall", "Back Wall"];
     const datasets = [];
     selects.forEach((id, idx) => {
       const matKey = document.getElementById(id).value;
@@ -1700,9 +1700,9 @@
     // Textos informativos en el gráfico
     ctx.font = '11px Rajdhani, sans-serif';
     ctx.fillStyle = '#fff';
-    ctx.fillText(`Sala actual: ${ratioW.toFixed(2)} : ${ratioL.toFixed(2)} : 1`, 48, 30);
+    ctx.fillText(`Current room: ${ratioW.toFixed(2)} : ${ratioL.toFixed(2)} : 1`, 48, 30);
     ctx.fillStyle = compliant ? 'var(--tangential-color)' : 'var(--axial-color)';
-    ctx.fillText(compliant ? "PROPORCIÓN ÓPTIMA (BOLT)" : "PROPORCIÓN FUERA DE RANGO", 48, 44);
+    ctx.fillText(compliant ? "OPTIMAL PROPORTION (BOLT)" : "PROPORTION OUT OF RANGE", 48, 44);
   }
 
   // SIMULADOR INTERACTIVO DE REFLEXIONES TEMPRANAS 2D (CHART 8)
@@ -1867,10 +1867,10 @@
 
     // Dibujar reflejos
     const reflections = [
-      { px: pxTop, py: pyTop, color: '#f06292', lbl: 'Techo' },
-      { px: pxBot, py: pyBot, color: '#81c784', lbl: 'Suelo' },
-      { px: pxLeft, py: pyLeft, color: '#a1887f', lbl: 'Pared Izq' },
-      { px: pxRight, py: pyRight, color: '#ffb74d', lbl: 'Pared Der' }
+      { px: pxTop, py: pyTop, color: '#f06292', lbl: 'Ceiling' },
+      { px: pxBot, py: pyBot, color: '#81c784', lbl: 'Floor' },
+      { px: pxLeft, py: pyLeft, color: '#a1887f', lbl: 'Left Wall' },
+      { px: pxRight, py: pyRight, color: '#ffb74d', lbl: 'Right Wall' }
     ];
 
     ctx.lineWidth = 1;
@@ -1910,11 +1910,11 @@
 
     // Actualizar lista textual de delays en el DOM
     document.getElementById('reflPathsList').innerHTML = `
-      <div class="eq-sub-row"><span>Rayo Directo (S → L):</span><span class="sub-val">${d0.toFixed(2)} m (${t0.toFixed(1)} ms) [Ref]</span></div>
-      <div class="eq-sub-row"><span>Reflexión Suelo (Piso):</span><span class="sub-val" style="color:#81c784">${dBot.toFixed(2)} m (${tBot.toFixed(1)} ms) [Δt: +${(tBot - t0).toFixed(1)} ms]</span></div>
-      <div class="eq-sub-row"><span>Reflexión Techo:</span><span class="sub-val" style="color:#4dd0e1">${dTop.toFixed(2)} m (${tTop.toFixed(1)} ms) [Δt: +${(tTop - t0).toFixed(1)} ms]</span></div>
-      <div class="eq-sub-row"><span>Reflexión Pared Izquierda:</span><span class="sub-val" style="color:#a1887f">${dLeft.toFixed(2)} m (${tLeft.toFixed(1)} ms) [Δt: +${(tLeft - t0).toFixed(1)} ms]</span></div>
-      <div class="eq-sub-row"><span>Reflexión Pared Derecha:</span><span class="sub-val" style="color:#ffb74d">${dRight.toFixed(2)} m (${tRight.toFixed(1)} ms) [Δt: +${(tRight - t0).toFixed(1)} ms]</span></div>
+      <div class="eq-sub-row"><span>Direct Ray (S → L):</span><span class="sub-val">${d0.toFixed(2)} m (${t0.toFixed(1)} ms) [Ref]</span></div>
+      <div class="eq-sub-row"><span>Floor Reflection:</span><span class="sub-val" style="color:#81c784">${dBot.toFixed(2)} m (${tBot.toFixed(1)} ms) [Δt: +${(tBot - t0).toFixed(1)} ms]</span></div>
+      <div class="eq-sub-row"><span>Ceiling Reflection:</span><span class="sub-val" style="color:#4dd0e1">${dTop.toFixed(2)} m (${tTop.toFixed(1)} ms) [Δt: +${(tTop - t0).toFixed(1)} ms]</span></div>
+      <div class="eq-sub-row"><span>Left Wall Reflection:</span><span class="sub-val" style="color:#a1887f">${dLeft.toFixed(2)} m (${tLeft.toFixed(1)} ms) [Δt: +${(tLeft - t0).toFixed(1)} ms]</span></div>
+      <div class="eq-sub-row"><span>Right Wall Reflection:</span><span class="sub-val" style="color:#ffb74d">${dRight.toFixed(2)} m (${tRight.toFixed(1)} ms) [Δt: +${(tRight - t0).toFixed(1)} ms]</span></div>
     `;
   }
 

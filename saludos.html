@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>La Gaceta de los Chistes del Fleet</title>
-  <meta name="description" content="La mejor gaceta humorística sobre la gran flota digital, naval y de IA. Chistes premium servidos con estilo cyberpunk.">
+  <title>The Fleet Jokes Gazette</title>
+  <meta name="description" content="The ultimate humor gazette about the great digital, naval, and AI fleet. Premium jokes served with cyberpunk style.">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -399,80 +399,80 @@
       <div class="floating-accent" style="display:inline-block;">
         <span style="font-size: 3rem; filter: drop-shadow(0 0 10px var(--accent-glow));">⚓</span>
       </div>
-      <h1>La Gaceta del Fleet</h1>
-      <div class="subtitle">Edición Especial: Humor de Alta Mar y Código</div>
+      <h1>The Fleet Gazette</h1>
+      <div class="subtitle">Special Edition: High Seas & Code Humor</div>
       <div class="decor-line"></div>
     </header>
 
     <main class="gaceta-panel">
       <!-- Cards list -->
       <div class="joke-container" id="joke-container">
-        <!-- Chistes precargados -->
+        <!-- Preloaded jokes -->
         <div class="joke-card active" data-id="1">
-          <div class="joke-meta">Chiste 01 // Ataque en el Puerto</div>
-          <div class="joke-text">— ¡Capitán, nos atacan!
-— ¿Cuántos barcos son, grumete?
-— Veo 10 fragatas, 8 destructores y 4 acorazados...
-— ¡Mala señal! ¿Es una flota?
-— ¡Ojalá, mi capitán! Lo malo es que flotan todas y vienen derecho a embestirnos.</div>
+          <div class="joke-meta">Joke 01 // Attack in the Port</div>
+          <div class="joke-text">— Captain, we are under attack!
+— How many ships are there, cabin boy?
+— I see 10 frigates, 8 destroyers, and 4 battleships...
+— Oh no! Is it a fleet?
+— I wish, Captain! The bad thing is they all float and they are coming straight to ram us.</div>
         </div>
 
         <div class="joke-card" data-id="2">
-          <div class="joke-meta">Chiste 02 // El Puerto Bloqueado</div>
-          <div class="joke-text">¿Por qué los buques de la flota de inteligencia artificial nunca pueden soltar amarras?
-Porque siempre se quedan congelados en el puerto `localhost:8085` esperando respuesta del servidor principal.</div>
+          <div class="joke-meta">Joke 02 // The Blocked Port</div>
+          <div class="joke-text">Why can the ships of the artificial intelligence fleet never cast off?
+Because they always get frozen in port `localhost:8085` waiting for a response from the main server.</div>
         </div>
 
         <div class="joke-card" data-id="3">
-          <div class="joke-meta">Chiste 03 // Navegación Aérea</div>
-          <div class="joke-text">¿Qué hace un programador de sistemas cuando el barco de la flota empieza a hundirse?
-No se preocupa. Dice que es un problema de hardware y que él solo trabaja en la nube (Cloud).</div>
+          <div class="joke-meta">Joke 03 // Cloud Navigation</div>
+          <div class="joke-text">What does a systems programmer do when the fleet's ship starts to sink?
+They don't worry. They say it's a hardware issue and that they only work in the cloud.</div>
         </div>
 
         <div class="joke-card" data-id="4">
-          <div class="joke-meta">Chiste 04 // Carga Digital</div>
-          <div class="joke-text">¿Por qué los capitanes de la marina moderna están obsesionados con aprender Docker?
-Porque les dijeron que para manejar la flota del futuro necesitaban empaquetar todo en contenedores que floten perfectamente en producción.</div>
+          <div class="joke-meta">Joke 04 // Digital Cargo</div>
+          <div class="joke-text">Why are modern navy captains obsessed with learning Docker?
+Because they were told that to manage the fleet of the future they needed to package everything in containers that float perfectly in production.</div>
         </div>
 
         <div class="joke-card" data-id="5">
-          <div class="joke-meta">Chiste 05 // El Faro de la Flota</div>
-          <div class="joke-text">— Aquí la flota del Almirante. Desvíen su curso 15 grados al norte inmediatamente para evitar una colisión catastrófica.
-— Aquí un faro en tierra firme. Desvíen su curso ustedes 15 grados al sur. ¡Nosotros no flotamos ni nos movemos!</div>
+          <div class="joke-meta">Joke 05 // The Fleet's Lighthouse</div>
+          <div class="joke-text">— Admiral's fleet here. Divert your course 15 degrees north immediately to avoid a catastrophic collision.
+— Lighthouse on solid ground here. Divert your course 15 degrees south instead. We don't float and we don't move!</div>
         </div>
       </div>
 
       <!-- User Interactions -->
       <div class="interaction-bar">
         <button class="rate-btn" id="like-btn" onclick="toggleLike()">
-          <span>👍</span> Me hace gracia
+          <span>👍</span> Funny!
         </button>
         <button class="rate-btn" onclick="shareJoke()">
-          <span>🔗</span> Compartir Bitácora
+          <span>🔗</span> Share Log
         </button>
       </div>
 
       <!-- Page Controls -->
       <div class="controls">
-        <button class="btn btn-secondary" id="prev-btn" onclick="prevJoke()">Anterior</button>
+        <button class="btn btn-secondary" id="prev-btn" onclick="prevJoke()">Previous</button>
         <span class="page-indicator" id="page-indicator">1 / 5</span>
-        <button class="btn" id="next-btn" onclick="nextJoke()">Siguiente ➔</button>
+        <button class="btn" id="next-btn" onclick="nextJoke()">Next ➔</button>
       </div>
     </main>
 
     <!-- Custom Joke Form -->
     <section class="add-joke-section">
-      <h3 class="add-joke-title">✍️ Registrar nuevo chiste en la Bitácora</h3>
-      <textarea id="custom-joke-input" placeholder="Escribe aquí tu chiste sobre barcos, flotas, capitanes o código..."></textarea>
+      <h3 class="add-joke-title">✍️ Log new joke in the Logbook</h3>
+      <textarea id="custom-joke-input" placeholder="Write your joke about ships, fleets, captains or code here..."></textarea>
       <div class="form-footer">
-        <button class="btn" onclick="addCustomJoke()">Guardar en la Flota</button>
+        <button class="btn" onclick="addCustomJoke()">Save to Fleet</button>
       </div>
     </section>
 
     <footer>
-      <p>Diseñado para el <strong>Jefe Lenovo</strong> y su flota de desarrollo.</p>
-      <p>Desarrollado con ❤️ por <strong>Antigravity</strong> en honor al gran Tom Danley.</p>
-      <p><a href="index.html">➔ Regresar al Calculador Principal</a></p>
+      <p>Designed for <strong>Chief Lenovo</strong> and his development fleet.</p>
+      <p>Developed with ❤️ by <strong>Antigravity</strong> in honor of the great Tom Danley.</p>
+      <p><a href="index.html">➔ Back to Main Calculator</a></p>
     </footer>
   </div>
 
@@ -520,10 +520,10 @@ Porque les dijeron que para manejar la flota del futuro necesitaban empaquetar t
       
       if (likesState[jokeId]) {
         likeBtn.classList.add('liked');
-        likeBtn.innerHTML = '<span>⭐</span> ¡Favorito!';
+        likeBtn.innerHTML = '<span>⭐</span> Favorite!';
       } else {
         likeBtn.classList.remove('liked');
-        likeBtn.innerHTML = '<span>👍</span> Me hace gracia';
+        likeBtn.innerHTML = '<span>👍</span> Funny!';
       }
     }
 
@@ -554,7 +554,7 @@ Porque les dijeron que para manejar la flota del futuro necesitaban empaquetar t
       const currentCard = jokeCards[currentIdx];
       const text = currentCard.querySelector('.joke-text').textContent;
       navigator.clipboard.writeText(text).then(() => {
-        alert('¡Chiste copiado a la bitácora del portapapeles!');
+        alert('Joke copied to the clipboard log!');
       });
     }
 
@@ -582,12 +582,13 @@ Porque les dijeron que para manejar la flota del futuro necesitaban empaquetar t
     }
 
     // Add custom jokes
+    // Add custom jokes
     function addCustomJoke() {
       const input = document.getElementById('custom-joke-input');
       const jokeText = input.value.trim();
       
       if (!jokeText) {
-        alert('Escribe algo divertido antes de guardar.');
+        alert('Write something funny before saving.');
         return;
       }
       
@@ -602,7 +603,7 @@ Porque les dijeron que para manejar la flota del futuro necesitaban empaquetar t
       const displayNum = count < 10 ? `0${count}` : count;
       
       newCard.innerHTML = `
-        <div class="joke-meta">Chiste ${displayNum} // Bitácora de Usuario</div>
+        <div class="joke-meta">Joke ${displayNum} // User Logbook</div>
         <div class="joke-text">${escapeHtml(jokeText)}</div>
       `;
       

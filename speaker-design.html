@@ -363,7 +363,7 @@
   <div class="panel">
     <h2>Control Center</h2>
     
-    <div class="input-section-title">Gabinete / Carga</div>
+    <div class="input-section-title">Enclosure / Load</div>
     <div class="toggle-container">
       <button id="btnSealed" class="toggle-btn active" onclick="setEnclosureType('sealed')">SEALED</button>
       <button id="btnPorted" class="toggle-btn" onclick="setEnclosureType('ported')">PORTED</button>
@@ -374,7 +374,7 @@
       <button id="btnCustom" class="toggle-btn" onclick="setAlignmentMode('custom')">CUSTOM DESIGN</button>
     </div>
 
-    <div class="input-section-title">Parámetros Thiele-Small</div>
+    <div class="input-section-title">Thiele-Small Parameters</div>
     
     <div class="input-group">
       <label>Fs (Resonance Freq) <span id="lblFs">35.0 Hz</span></label>
@@ -484,7 +484,7 @@
       </div>
     </div>
 
-    <h2>10 Ecuaciones Físicas</h2>
+    <h2>10 Physical Equations</h2>
     <div class="equations-panel">
       <!-- 1 -->
       <div class="eq-card">
@@ -555,61 +555,61 @@
     <div class="chart-card">
       <h3>1. Magnitude Response</h3>
       <div class="chart-wrapper"><canvas id="chartMag"></canvas></div>
-      <div class="chart-desc">Filtro paso alto del sistema (2º orden en sellada, 4º orden en bass-reflex con pérdidas QL=7.0).</div>
+      <div class="chart-desc">System high-pass filter (2nd order in sealed, 4th order in bass-reflex with losses QL=7.0).</div>
     </div>
     <!-- Chart 2 -->
     <div class="chart-card">
       <h3>2. Acoustic Phase Response</h3>
       <div class="chart-wrapper"><canvas id="chartPhase"></canvas></div>
-      <div class="chart-desc">Fase acústica de la presión sonora emitida, mostrando el retraso del puerto en baja frecuencia.</div>
+      <div class="chart-desc">Acoustic phase of the emitted sound pressure, showing port delay at low frequencies.</div>
     </div>
     <!-- Chart 3 -->
     <div class="chart-card">
       <h3>3. Acoustic Group Delay</h3>
       <div class="chart-wrapper"><canvas id="chartGD"></canvas></div>
-      <div class="chart-desc">Retraso de grupo acústico (ms) derivado de la fase, crítico para evaluar la precisión del transitorio de graves.</div>
+      <div class="chart-desc">Acoustic group delay (ms) derived from phase, critical for evaluating bass transient accuracy.</div>
     </div>
     <!-- Chart 4 -->
     <div class="chart-card">
       <h3>4. Electrical Impedance Magnitude</h3>
       <div class="chart-wrapper"><canvas id="chartImp"></canvas></div>
-      <div class="chart-desc">Impedancia eléctrica total en bornes de la bobina (pico simple en sellada, doble pico simétrico en bass-reflex).</div>
+      <div class="chart-desc">Total electrical impedance at voice coil terminals (single peak in sealed, double symmetric peak in bass-reflex).</div>
     </div>
     <!-- Chart 5 -->
     <div class="chart-card">
       <h3>5. Electrical Impedance Phase</h3>
       <div class="chart-wrapper"><canvas id="chartImpPhase"></canvas></div>
-      <div class="chart-desc">Fase eléctrica de la impedancia, ilustrando transiciones entre comportamiento inductivo, capacitivo y puramente resistivo.</div>
+      <div class="chart-desc">Electrical phase of impedance, illustrating transitions between inductive, capacitive, and purely resistive behavior.</div>
     </div>
     <!-- Chart 6 -->
     <div class="chart-card">
       <h3>6. Driver Cone Excursion</h3>
       <div class="chart-wrapper"><canvas id="chartExc"></canvas></div>
-      <div class="chart-desc">Desplazamiento pico a pico del cono (mm) a la potencia nominal Pe (se observa el notch de descarga en Fb).</div>
+      <div class="chart-desc">Driver cone peak-to-peak displacement (mm) at nominal power Pe (unloaded notch observed at Fb).</div>
     </div>
     <!-- Chart 7 -->
     <div class="chart-card">
       <h3>7. Vent Air Velocity</h3>
       <div class="chart-wrapper"><canvas id="chartVel"></canvas></div>
-      <div class="chart-desc">Velocidad del aire dentro del puerto reflex (m/s). Si supera 15 m/s, se activa riesgo de turbulencia (Chuffing).</div>
+      <div class="chart-desc">Air velocity inside the reflex port (m/s). If exceeding 15 m/s, turbulence risk (chuffing) is triggered.</div>
     </div>
     <!-- Chart 8 -->
     <div class="chart-card">
       <h3>8. Sound Pressure Level (SPL)</h3>
       <div class="chart-wrapper"><canvas id="chartSPL"></canvas></div>
-      <div class="chart-desc">Nivel de presión sonora absoluto (dB SPL) a 1 metro para la potencia de entrada configurada.</div>
+      <div class="chart-desc">Absolute sound pressure level (dB SPL) at 1 meter for the configured input power.</div>
     </div>
     <!-- Chart 9 -->
     <div class="chart-card">
       <h3>9. Excursion-Limited Max Acoustic Power</h3>
       <div class="chart-wrapper"><canvas id="chartPwr"></canvas></div>
-      <div class="chart-desc">Límite absoluto de potencia acústica máxima (W) que el transductor puede entregar antes de exceder Xmax.</div>
+      <div class="chart-desc">Absolute limit of maximum acoustic power (W) that the transducer can deliver before exceeding Xmax.</div>
     </div>
     <!-- Chart 10 -->
     <div class="chart-card">
       <h3>10. Real System Efficiency</h3>
       <div class="chart-wrapper"><canvas id="chartEff"></canvas></div>
-      <div class="chart-desc">Eficiencia real (%) del sistema en función de la impedancia dinámica y respuesta acústica.</div>
+      <div class="chart-desc">Real system efficiency (%) based on dynamic impedance and acoustic response.</div>
     </div>
   </div>
 </div>
@@ -620,7 +620,7 @@ const speakerDesignModule = {
   meta: {
     id: "speaker-design",
     title: "High Density Speaker Design Dashboard",
-    desc: "Simulación electroacústica avanzada de 10 curvas físicas para diseño de bafles profesionales."
+    desc: "Advanced electroacoustic simulation of 10 physical curves for professional enclosure design."
   },
   inputs: {
     fs: 35.0,

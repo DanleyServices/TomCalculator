@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Consola Científica de Electroacústica — Tom Danley Calculator</title>
-<meta name="description" content="Dashboard de análisis acústico y eléctrico de alta densidad basado en el estándar adversarial de ingeniería.">
+<title>Electroacoustics Scientific Console — Tom Danley Calculator</title>
+<meta name="description" content="High-density acoustical and electrical analysis dashboard based on adversarial engineering standards.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -396,23 +396,23 @@
 <body>
 
 <div class="top-bar">
-  <a href="index.html" class="back-btn">← MENU PRINCIPAL</a>
+  <a href="index.html" class="back-btn">← MAIN MENU</a>
   <div class="brand-title">STANDARDS OF ACCOUSTICAL ENGINEERING</div>
 </div>
 
-<h1 class="main-title">Consola de Análisis de Sistemas</h1>
-<div class="subtitle">Ecuaciones Físicas y Modelos de Interferencia</div>
+<h1 class="main-title">System Analysis Console</h1>
+<div class="subtitle">Physical Equations and Interference Models</div>
 
 <div class="dashboard">
   
   <!-- PANEL IZQUIERDO DE ENTRADAS -->
   <div class="inputs-panel">
-    <h2>Variables de Control</h2>
+    <h2>Control Variables</h2>
     
-    <div class="group-title">Entorno de Propagación</div>
+    <div class="group-title">Propagation Environment</div>
     
     <div class="input-control">
-      <label>Frecuencia de Test <span class="val" id="freqVal">1000 Hz</span></label>
+      <label>Test Frequency <span class="val" id="freqVal">1000 Hz</span></label>
       <div class="ctrl-row">
         <input type="range" id="freqS" min="100" max="10000" step="50" value="1000">
         <input type="number" id="freqN" min="20" max="20000" step="10" value="1000">
@@ -421,7 +421,7 @@
     </div>
 
     <div class="input-control">
-      <label>Temperatura Aire <span class="val" id="tempVal">20.0 °C</span></label>
+      <label>Air Temperature <span class="val" id="tempVal">20.0 °C</span></label>
       <div class="ctrl-row">
         <input type="range" id="tempS" min="-10" max="40" step="0.5" value="20.0">
         <input type="number" id="tempN" min="-50" max="60" step="0.5" value="20.0">
@@ -430,7 +430,7 @@
     </div>
 
     <div class="input-control">
-      <label>Humedad Relativa <span class="val" id="humVal">50 %</span></label>
+      <label>Relative Humidity <span class="val" id="humVal">50 %</span></label>
       <div class="ctrl-row">
         <input type="range" id="humS" min="0" max="100" step="1" value="50">
         <input type="number" id="humN" min="0" max="100" step="1" value="50">
@@ -439,7 +439,7 @@
     </div>
 
     <div class="input-control">
-      <label>Presión Atmosférica <span class="val" id="presVal">101.3 kPa</span></label>
+      <label>Atmospheric Pressure <span class="val" id="presVal">101.3 kPa</span></label>
       <div class="ctrl-row">
         <input type="range" id="presS" min="80" max="120" step="0.1" value="101.3">
         <input type="number" id="presN" min="50" max="150" step="0.1" value="101.3">
@@ -447,10 +447,10 @@
       </div>
     </div>
 
-    <div class="group-title">Interferencia de Fase</div>
+    <div class="group-title">Phase Interference</div>
     
     <div class="input-control">
-      <label>Diferencia de Nivel <span class="val" id="levDiffVal">0.0 dB</span></label>
+      <label>Level Difference <span class="val" id="levDiffVal">0.0 dB</span></label>
       <div class="ctrl-row">
         <input type="range" id="levDiffS" min="0" max="24" step="0.1" value="0.0">
         <input type="number" id="levDiffN" min="0" max="40" step="0.1" value="0.0">
@@ -459,7 +459,7 @@
     </div>
 
     <div class="input-control">
-      <label>Diferencia de Tiempo <span class="val" id="timeDiffVal">1.00 ms</span></label>
+      <label>Time Difference <span class="val" id="timeDiffVal">1.00 ms</span></label>
       <div class="ctrl-row">
         <input type="range" id="timeDiffS" min="0.05" max="20" step="0.05" value="1.00">
         <input type="number" id="timeDiffN" min="0" max="100" step="0.01" value="1.00">
@@ -467,19 +467,19 @@
       </div>
     </div>
 
-    <div class="group-title">Arreglos y Cobertura</div>
+    <div class="group-title">Arrays and Coverage</div>
 
     <div class="input-control">
-      <label>Tipo de Emisor</label>
+      <label>Source Type</label>
       <div class="toggle-group">
-        <button id="btnPoint" class="toggle-btn active" onclick="setSourceType('point')">Puntual</button>
-        <button id="btnLine" class="toggle-btn" onclick="setSourceType('line')">Lineal</button>
+        <button id="btnPoint" class="toggle-btn active" onclick="setSourceType('point')">Point</button>
+        <button id="btnLine" class="toggle-btn" onclick="setSourceType('line')">Line</button>
       </div>
     </div>
 
     <div id="lineFields" class="conditional-field hidden">
       <div class="input-control">
-        <label>Altura Line Array <span class="val" id="arrayHVal">2.0 m</span></label>
+        <label>Line Array Height <span class="val" id="arrayHVal">2.0 m</span></label>
         <div class="ctrl-row">
           <input type="range" id="arrayHS" min="0.5" max="12" step="0.1" value="2.0">
           <input type="number" id="arrayHN" min="0.1" max="40" step="0.1" value="2.0">
@@ -489,7 +489,7 @@
     </div>
 
     <div class="input-control">
-      <label>Ángulo Cobertura Altavoz <span class="val" id="covAngleVal">90°</span></label>
+      <label>Speaker Coverage Angle <span class="val" id="covAngleVal">90°</span></label>
       <div class="ctrl-row">
         <input type="range" id="covAngleS" min="10" max="160" step="5" value="90">
         <input type="number" id="covAngleN" min="5" max="180" step="1" value="90">
@@ -498,7 +498,7 @@
     </div>
 
     <div class="input-control">
-      <label>Frecuencia Central Sub <span class="val" id="subFreqVal">80 Hz</span></label>
+      <label>Sub Central Frequency <span class="val" id="subFreqVal">80 Hz</span></label>
       <div class="ctrl-row">
         <input type="range" id="subFreqS" min="30" max="150" step="1" value="80">
         <input type="number" id="subFreqN" min="20" max="250" step="1" value="80">
@@ -507,7 +507,7 @@
     </div>
 
     <div class="input-control">
-      <label>Distancia de Análisis <span class="val" id="distVal">10.0 m</span></label>
+      <label>Analysis Distance <span class="val" id="distVal">10.0 m</span></label>
       <div class="ctrl-row">
         <input type="range" id="distS" min="1" max="150" step="0.5" value="10.0">
         <input type="number" id="distN" min="0.5" max="500" step="0.1" value="10.0">
@@ -515,10 +515,10 @@
       </div>
     </div>
 
-    <div class="group-title">Transductor y Potencia</div>
+    <div class="group-title">Transducer and Power</div>
 
     <div class="input-control">
-      <label>Sensibilidad (1W / 1m) <span class="val" id="sensVal">95.0 dB</span></label>
+      <label>Sensitivity (1W / 1m) <span class="val" id="sensVal">95.0 dB</span></label>
       <div class="ctrl-row">
         <input type="range" id="sensS" min="70" max="115" step="0.5" value="95.0">
         <input type="number" id="sensN" min="50" max="130" step="0.1" value="95.0">
@@ -527,7 +527,7 @@
     </div>
 
     <div class="input-control">
-      <label>Potencia RMS Aplicada <span class="val" id="pwrVal">250 W</span></label>
+      <label>Applied RMS Power <span class="val" id="pwrVal">250 W</span></label>
       <div class="ctrl-row">
         <input type="range" id="pwrS" min="1" max="2000" step="10" value="250">
         <input type="number" id="pwrN" min="1" max="50000" step="1" value="250">
@@ -540,10 +540,10 @@
   <div class="content-panel">
     
     <div class="tabs-bar">
-      <button id="tabBtnA" class="tab-btn active" onclick="setTab('A')">Propagación y Aire</button>
-      <button id="tabBtnB" class="tab-btn" onclick="setTab('B')">Interferencia y Peine</button>
-      <button id="tabBtnC" class="tab-btn" onclick="setTab('C')">Arreglos y Cobertura</button>
-      <button id="tabBtnD" class="tab-btn" onclick="setTab('D')">Electrónica y 3D</button>
+      <button id="tabBtnA" class="tab-btn active" onclick="setTab('A')">Propagation & Air</button>
+      <button id="tabBtnB" class="tab-btn" onclick="setTab('B')">Interference & Comb</button>
+      <button id="tabBtnC" class="tab-btn" onclick="setTab('C')">Arrays & Coverage</button>
+      <button id="tabBtnD" class="tab-btn" onclick="setTab('D')">Electronics & 3D</button>
     </div>
 
     <!-- PESTAÑA A: PROPAGACIÓN Y AIRE -->
@@ -552,28 +552,28 @@
       <!-- Fila de Ecuaciones (3) -->
       <div class="eq-grid">
         <div class="eq-card">
-          <div class="eq-title">Ecuación 1: Velocidad del Sonido</div>
+          <div class="eq-title">Equation 1: Speed of Sound</div>
           <div class="eq-math">$$c = 331.3 \sqrt{1 + \frac{T}{273.15}} + 0.6 \left(\frac{H}{100}\right) 1.2$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Resultado (c):</span>
+            <span class="eq-res-lbl">Result (c):</span>
             <span class="eq-res-val"><span id="eq1Val">344.0</span> <span style="font-size:0.75rem; font-weight:normal;">m/s</span></span>
           </div>
         </div>
         
         <div class="eq-card">
-          <div class="eq-title">Ecuación 2: Longitud de Onda y Periodo</div>
+          <div class="eq-title">Equation 2: Wavelength & Period</div>
           <div class="eq-math">$$\lambda = \frac{c}{f} \quad \Big| \quad T_{\text{period}} = \frac{1000}{f}\text{ ms}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Longitud (λ):</span>
+            <span class="eq-res-lbl">Wavelength (λ):</span>
             <span class="eq-res-val"><span id="eq2ValL">0.34</span> <span style="font-size:0.75rem; font-weight:normal;">m</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 3: Tiempo de Tránsito</div>
+          <div class="eq-title">Equation 3: Transit Time</div>
           <div class="eq-math">$$t = \frac{d}{c} \cdot 1000$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Tiempo de Vuelo:</span>
+            <span class="eq-res-lbl">Time of Flight:</span>
             <span class="eq-res-val"><span id="eq3Val">29.1</span> <span style="font-size:0.75rem; font-weight:normal;">ms</span></span>
           </div>
         </div>
@@ -583,8 +583,8 @@
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 1: Caída de SPL vs Distancia</span>
-            <span class="chart-desc">Puntual vs. Line Array e ISO 9613-1</span>
+            <span class="chart-title">Chart 1: SPL Drop vs Distance</span>
+            <span class="chart-desc">Point vs. Line Array & ISO 9613-1</span>
           </div>
           <div class="canvas-container">
             <canvas id="splChart"></canvas>
@@ -593,8 +593,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 5: Deriva de Retraso vs Temperatura</span>
-            <span class="chart-desc">Cambio de tiempo de arribo (ms)</span>
+            <span class="chart-title">Chart 5: Delay Drift vs Temperature</span>
+            <span class="chart-desc">Arrival time deviation (ms)</span>
           </div>
           <div class="canvas-container">
             <canvas id="delayTempChart"></canvas>
@@ -603,8 +603,8 @@
 
         <div class="chart-card span-2">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 6: Atenuación del Aire vs Humedad</span>
-            <span class="chart-desc">Pérdida atmosférica (dB/km) en barrido de humedad relativa</span>
+            <span class="chart-title">Chart 6: Air Attenuation vs Humidity</span>
+            <span class="chart-desc">Atmospheric loss (dB/km) across relative humidity sweep</span>
           </div>
           <div class="canvas-container">
             <canvas id="airAbsHumChart"></canvas>
@@ -620,28 +620,28 @@
       <!-- Fila de Ecuaciones (3) -->
       <div class="eq-grid">
         <div class="eq-card">
-          <div class="eq-title">Ecuación 4: Diferencia de Fase Angular</div>
+          <div class="eq-title">Equation 4: Angular Phase Difference</div>
           <div class="eq-math">$$\Delta\theta = (360 \cdot f \cdot \Delta t_{\text{sec}}) \pmod{360}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Desfase (Δθ):</span>
+            <span class="eq-res-lbl">Phase shift (Δθ):</span>
             <span class="eq-res-val"><span id="eq4Val">360°</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 8: Suma Vectorial de 2 Señales</div>
+          <div class="eq-title">Equation 8: Vector Sum of 2 Signals</div>
           <div class="eq-math">$$L_{\text{sum}} = 10 \log_{10}\left(10^{\frac{L_1}{10}} + 10^{\frac{L_2}{10}} + 2 \cdot 10^{\frac{L_1+L_2}{20}}\cos(\Delta\theta)\right)$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Nivel Sumado:</span>
+            <span class="eq-res-lbl">Summed Level:</span>
             <span class="eq-res-val"><span id="eq8Val">0.0</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 9: Límites de Filtro de Peine</div>
+          <div class="eq-title">Equation 9: Comb Filter Limits</div>
           <div class="eq-math">$$\text{Peak} = 20\log_{10}(1+a) \ \Big| \ \text{Valley} = 20\log_{10}|1-a|$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Pico / Valle:</span>
+            <span class="eq-res-lbl">Peak / Valley:</span>
             <span class="eq-res-val" style="font-size:1.1rem;"><span id="eq9ValP">+6.0</span> / <span id="eq9ValV">-inf</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
           </div>
         </div>
@@ -651,8 +651,8 @@
       <div class="charts-grid">
         <div class="chart-card span-2">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 2: Respuesta en Frecuencia del Filtro de Peine</span>
-            <span class="chart-desc">Respuesta combinada en escala logarítmica (20 Hz - 20 kHz)</span>
+            <span class="chart-title">Chart 2: Comb Filter Frequency Response</span>
+            <span class="chart-desc">Combined response on logarithmic scale (20 Hz - 20 kHz)</span>
           </div>
           <div class="canvas-container">
             <canvas id="combChart"></canvas>
@@ -661,8 +661,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 3: Suma Acústica vs Ángulo de Fase</span>
-            <span class="chart-desc">Ganancia resultante desde 0° a 360°</span>
+            <span class="chart-title">Chart 3: Acoustic Summation vs Phase Angle</span>
+            <span class="chart-desc">Resulting gain from 0° to 360°</span>
           </div>
           <div class="canvas-container">
             <canvas id="phaseSumChart"></canvas>
@@ -671,8 +671,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 4: Respuesta de Fase vs Frecuencia</span>
-            <span class="chart-desc">Fase enrollada (Wrapped Phase Angle)</span>
+            <span class="chart-title">Chart 4: Phase Response vs Frequency</span>
+            <span class="chart-desc">Wrapped phase angle</span>
           </div>
           <div class="canvas-container">
             <canvas id="phaseFreqChart"></canvas>
@@ -688,28 +688,28 @@
       <!-- Fila de Ecuaciones (3) -->
       <div class="eq-grid">
         <div class="eq-card">
-          <div class="eq-title">Ecuación 6: Transición de Campo de Line Array</div>
+          <div class="eq-title">Equation 6: Line Array Field Transition</div>
           <div class="eq-math">$$d_{\text{trans}} = \frac{H^2 \cdot f}{2c}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Distancia Límite:</span>
+            <span class="eq-res-lbl">Limit Distance:</span>
             <span class="eq-res-val"><span id="eq6Val">5.8</span> <span style="font-size:0.75rem; font-weight:normal;">m</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 7: Atenuación Line Array</div>
+          <div class="eq-title">Equation 7: Line Array Attenuation</div>
           <div class="eq-math">$$Att = \begin{cases} 10\log_{10}(d) & d \le d_{\text{trans}} \\ 10\log_{10}(d_{\text{trans}}) + 20\log_{10}(d/d_{\text{trans}}) & d \gt d_{\text{trans}} \end{cases}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Pérdida por Distancia:</span>
+            <span class="eq-res-lbl">Distance Loss:</span>
             <span class="eq-res-val"><span id="eq7Val">-20.0</span> <span style="font-size:0.75rem; font-weight:normal;">dB</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 10: Alineación End-Fire de Subs</div>
+          <div class="eq-title">Equation 10: Sub End-Fire Alignment</div>
           <div class="eq-math">$$d_{\text{ef}} = \frac{c}{4f_0} \quad \Big| \quad \tau_{\text{ef}} = \frac{d_{\text{ef}}}{c} \cdot 1000\text{ ms}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Retraso Trasero:</span>
+            <span class="eq-res-lbl">Rear Delay:</span>
             <span class="eq-res-val" style="font-size:1.15rem;"><span id="eq10ValD">1.07</span>m / <span id="eq10ValT">3.1</span>ms</span>
           </div>
         </div>
@@ -719,8 +719,8 @@
       <div class="charts-grid">
         <div class="chart-card span-2">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 7: Visualizador 2D del Patrón de Cobertura</span>
-            <span class="chart-desc">Arrastra el marcador amarillo del oyente para actualizar los cálculos en vivo</span>
+            <span class="chart-title">Chart 7: 2D Coverage Pattern Visualizer</span>
+            <span class="chart-desc">Drag the yellow listener marker to update calculations in real-time</span>
           </div>
           <div class="canvas-container large">
             <canvas id="coverageCanvas"></canvas>
@@ -729,8 +729,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 8: Respuesta de Suma Frontal End-Fire</span>
-            <span class="chart-desc">Suma acústica en el eje de radiación frontal</span>
+            <span class="chart-title">Chart 8: End-Fire Frontal Sum Response</span>
+            <span class="chart-desc">Acoustic summation along the frontal radiation axis</span>
           </div>
           <div class="canvas-container">
             <canvas id="efFrontChart"></canvas>
@@ -739,8 +739,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 9: Atenuación Polar Trasera End-Fire</span>
-            <span class="chart-desc">Rechazo trasero (cancelación en fase)</span>
+            <span class="chart-title">Chart 9: End-Fire Rear Polar Attenuation</span>
+            <span class="chart-desc">Rear rejection (out-of-phase cancellation)</span>
           </div>
           <div class="canvas-container">
             <canvas id="efRearChart"></canvas>
@@ -756,28 +756,28 @@
       <!-- Fila de Ecuaciones (3) -->
       <div class="eq-grid">
         <div class="eq-card">
-          <div class="eq-title">Ecuación 11: Eficiencia del Altavoz</div>
+          <div class="eq-title">Equation 11: Speaker Efficiency</div>
           <div class="eq-math">$$\eta = 10^{\frac{\text{Sens} - 109}{10}} \cdot 100\%$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Eficiencia (η):</span>
+            <span class="eq-res-lbl">Efficiency (η):</span>
             <span class="eq-res-val"><span id="eq11Val">3.98</span> <span style="font-size:0.75rem; font-weight:normal;">%</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Ecuación 12: Voltaje RMS y Pico Requeridos</div>
+          <div class="eq-title">Equation 12: Required RMS & Peak Voltage</div>
           <div class="eq-math">$$V_{\text{rms}} = \sqrt{P \cdot Z} \quad \Big| \quad V_{\text{pico}} = V_{\text{rms}}\sqrt{2}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Voltajes RMS / Pico:</span>
+            <span class="eq-res-lbl">RMS / Peak Voltages:</span>
             <span class="eq-res-val" style="font-size:1.15rem;"><span id="eq12ValV">44.7</span> / <span id="eq12ValVP">63.2</span> <span style="font-size:0.75rem; font-weight:normal;">V</span></span>
           </div>
         </div>
 
         <div class="eq-card">
-          <div class="eq-title">Impedancia / Corriente Amplificador</div>
+          <div class="eq-title">Impedance / Amplifier Current</div>
           <div class="eq-math">$$I_{\text{rms}} = \frac{V_{\text{rms}}}{Z}$$</div>
           <div class="eq-res-row">
-            <span class="eq-res-lbl">Corriente Requerida:</span>
+            <span class="eq-res-lbl">Required Current:</span>
             <span class="eq-res-val"><span id="eq12ValI">5.59</span> <span style="font-size:0.75rem; font-weight:normal;">A</span></span>
           </div>
         </div>
@@ -787,8 +787,8 @@
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 10: Voltaje y Corriente RMS vs Impedancia (Z)</span>
-            <span class="chart-desc">Carga nominal para 2, 4, 8 y 16 Ohmios</span>
+            <span class="chart-title">Chart 10: RMS Voltage & Current vs Impedance (Z)</span>
+            <span class="chart-desc">Nominal load for 2, 4, 8 and 16 Ohms</span>
           </div>
           <div class="canvas-container">
             <canvas id="ampZChart"></canvas>
@@ -797,8 +797,8 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <span class="chart-title">Gráfico 11: Simulación de Frente de Onda 3D</span>
-            <span class="chart-desc">Frentes de onda en expansión en tiempo real (Three.js)</span>
+            <span class="chart-title">Chart 11: 3D Wavefront Simulation</span>
+            <span class="chart-desc">Expanding wavefronts in real-time (Three.js)</span>
           </div>
           <div class="canvas-container" id="threeContainer">
             <!-- Three.js renderer goes here -->
@@ -817,8 +817,8 @@
 const electroacousticsModule = {
   meta: {
     id: "electroacoustics",
-    title: "Consola Científica de Electroacústica",
-    desc: "Análisis acústico y eléctrico de alta densidad basado en el estándar adversarial de ingeniería."
+    title: "Electroacoustics Scientific Console",
+    desc: "High-density acoustical and electrical analysis based on adversarial engineering standards."
   },
   inputs: {
     freq: 1000.0,
@@ -1010,7 +1010,7 @@ const splChart = new Chart(document.getElementById('splChart').getContext('2d'),
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { type: 'logarithmic', title: { display: true, text: 'Distancia (m)' }, min: 1, max: 200, grid: { color: gridColor } },
+      x: { type: 'logarithmic', title: { display: true, text: 'Distance (m)' }, min: 1, max: 200, grid: { color: gridColor } },
       y: { title: { display: true, text: 'SPL (dB)' }, grid: { color: gridColor } }
     },
     plugins: { legend: { display: true, labels: { boxWidth: 15 } } }
@@ -1025,15 +1025,15 @@ const combChart = new Chart(document.getElementById('combChart').getContext('2d'
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { type: 'logarithmic', title: { display: true, text: 'Frecuencia (Hz)' }, min: 20, max: 20000, grid: { color: gridColor } },
-      y: { title: { display: true, text: 'Nivel Relativo (dB)' }, min: -35, max: 8, grid: { color: gridColor } }
+      x: { type: 'logarithmic', title: { display: true, text: 'Frequency (Hz)' }, min: 20, max: 20000, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'Relative Level (dB)' }, min: -35, max: 8, grid: { color: gridColor } }
     },
     plugins: { legend: { display: false } }
   }
 });
 
 // 3. Suma Fase vs Nivel
-const phaseSumChart = createLineChart('phaseSumChart', 'Desfase (grados)', 'Suma Acústica (dB)', 'rgba(0, 229, 255, 0.85)');
+const phaseSumChart = createLineChart('phaseSumChart', 'Phase shift (degrees)', 'Acoustic Sum (dB)', 'rgba(0, 229, 255, 0.85)');
 phaseSumChart.options.scales.x.min = 0;
 phaseSumChart.options.scales.x.max = 360;
 
@@ -1045,18 +1045,18 @@ const phaseFreqChart = new Chart(document.getElementById('phaseFreqChart').getCo
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { type: 'logarithmic', title: { display: true, text: 'Frecuencia (Hz)' }, min: 20, max: 20000, grid: { color: gridColor } },
-      y: { title: { display: true, text: 'Fase (grados)' }, min: -180, max: 180, grid: { color: gridColor } }
+      x: { type: 'logarithmic', title: { display: true, text: 'Frequency (Hz)' }, min: 20, max: 20000, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'Phase (degrees)' }, min: -180, max: 180, grid: { color: gridColor } }
     },
     plugins: { legend: { display: false } }
   }
 });
 
 // 5. Deriva vs Temperatura
-const delayTempChart = createLineChart('delayTempChart', 'Temperatura (°C)', 'Desviación de Tiempo (ms)', 'rgba(240, 192, 64, 0.85)');
+const delayTempChart = createLineChart('delayTempChart', 'Temperature (°C)', 'Time Deviation (ms)', 'rgba(240, 192, 64, 0.85)');
 
 // 6. Absorción Aire vs Humedad
-const airAbsHumChart = createLineChart('airAbsHumChart', 'Humedad Relativa (%)', 'Atenuación del Aire (dB/km)', 'rgba(0, 229, 255, 0.85)');
+const airAbsHumChart = createLineChart('airAbsHumChart', 'Relative Humidity (%)', 'Air Attenuation (dB/km)', 'rgba(0, 229, 255, 0.85)');
 airAbsHumChart.options.scales.x.min = 0;
 airAbsHumChart.options.scales.x.max = 100;
 
@@ -1068,8 +1068,8 @@ const efFrontChart = new Chart(document.getElementById('efFrontChart').getContex
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { type: 'linear', title: { display: true, text: 'Frecuencia (Hz)' }, min: 20, max: 250, grid: { color: gridColor } },
-      y: { title: { display: true, text: 'Respuesta Frontal (dB)' }, min: -30, max: 10, grid: { color: gridColor } }
+      x: { type: 'linear', title: { display: true, text: 'Frequency (Hz)' }, min: 20, max: 250, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'Frontal Response (dB)' }, min: -30, max: 10, grid: { color: gridColor } }
     },
     plugins: { legend: { display: false } }
   }
@@ -1083,8 +1083,8 @@ const efRearChart = new Chart(document.getElementById('efRearChart').getContext(
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { type: 'linear', title: { display: true, text: 'Frecuencia (Hz)' }, min: 20, max: 250, grid: { color: gridColor } },
-      y: { title: { display: true, text: 'Rechazo Trasero (dB)' }, min: -40, max: 0, grid: { color: gridColor } }
+      x: { type: 'linear', title: { display: true, text: 'Frequency (Hz)' }, min: 20, max: 250, grid: { color: gridColor } },
+      y: { title: { display: true, text: 'Rear Rejection (dB)' }, min: -40, max: 0, grid: { color: gridColor } }
     },
     plugins: { legend: { display: false } }
   }
@@ -1096,16 +1096,16 @@ const ampZChart = new Chart(document.getElementById('ampZChart').getContext('2d'
   data: {
     labels: ['2 Ω', '4 Ω', '8 Ω', '16 Ω'],
     datasets: [
-      { label: 'Voltaje RMS (V)', data: [], backgroundColor: 'rgba(0, 229, 255, 0.45)', borderColor: 'var(--border-cyan)', borderWidth: 1.5, yAxisID: 'yV' },
-      { label: 'Corriente RMS (A)', data: [], backgroundColor: 'rgba(240, 192, 64, 0.45)', borderColor: 'var(--border-gold)', borderWidth: 1.5, yAxisID: 'yI' }
+      { label: 'RMS Voltage (V)', data: [], backgroundColor: 'rgba(0, 229, 255, 0.45)', borderColor: 'var(--border-cyan)', borderWidth: 1.5, yAxisID: 'yV' },
+      { label: 'RMS Current (A)', data: [], backgroundColor: 'rgba(240, 192, 64, 0.45)', borderColor: 'var(--border-gold)', borderWidth: 1.5, yAxisID: 'yI' }
     ]
   },
   options: {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      yV: { type: 'linear', position: 'left', title: { display: true, text: 'Voltaje (V)', color: 'var(--border-cyan)' }, grid: { color: gridColor } },
-      yI: { type: 'linear', position: 'right', title: { display: true, text: 'Corriente (A)', color: 'var(--border-gold)' }, grid: { drawOnChartArea: false } }
+      yV: { type: 'linear', position: 'left', title: { display: true, text: 'Voltage (V)', color: 'var(--border-cyan)' }, grid: { color: gridColor } },
+      yI: { type: 'linear', position: 'right', title: { display: true, text: 'Current (A)', color: 'var(--border-gold)' }, grid: { drawOnChartArea: false } }
     }
   }
 });
@@ -1235,9 +1235,9 @@ function calculateAll() {
   }
   
   splChart.data.datasets = [
-    { label: 'Fuente Puntual', data: ptCurve, borderColor: 'rgba(240, 192, 64, 0.7)', pointRadius: 0, borderWidth: 2 },
-    { label: 'Fuente Lineal (Array)', data: lnCurve, borderColor: 'rgba(0, 229, 255, 0.7)', pointRadius: 0, borderWidth: 2 },
-    { label: 'Oyente', data: [{ x: d, y: listenerSPL }], backgroundColor: '#fff', borderColor: '#fff', pointRadius: 6, showLine: false }
+    { label: 'Point Source', data: ptCurve, borderColor: 'rgba(240, 192, 64, 0.7)', pointRadius: 0, borderWidth: 2 },
+    { label: 'Line Source (Array)', data: lnCurve, borderColor: 'rgba(0, 229, 255, 0.7)', pointRadius: 0, borderWidth: 2 },
+    { label: 'Listener', data: [{ x: d, y: listenerSPL }], backgroundColor: '#fff', borderColor: '#fff', pointRadius: 6, showLine: false }
   ];
   splChart.update();
 
@@ -1434,7 +1434,7 @@ function drawCoverageCone() {
   // Texto indicativo del oyente
   ctxCov.fillStyle = '#fff';
   ctxCov.font = '11px Fira Code';
-  ctxCov.fillText('OYENTE (' + d.toFixed(1) + 'm)', targetX - 50, targetY - 18);
+  ctxCov.fillText('LISTENER (' + d.toFixed(1) + 'm)', targetX - 50, targetY - 18);
   
   // Dibujar ancho de haz en el punto del oyente
   const beamYHalf = Math.min(d, 120) * scale * Math.sin(angleRad / 2);
@@ -1456,7 +1456,7 @@ function drawCoverageCone() {
   const covWidth = 2 * d * Math.tan((angleDeg / 2) * Math.PI / 180);
   ctxCov.fillStyle = '#f0c040';
   ctxCov.font = '12px Rajdhani';
-  ctxCov.fillText('Ancho: ' + covWidth.toFixed(1) + ' m', targetX + 12, targetY + 4);
+  ctxCov.fillText('Width: ' + covWidth.toFixed(1) + ' m', targetX + 12, targetY + 4);
   
   // Simulación de fuente
   ctxCov.fillStyle = 'var(--border-cyan)';
