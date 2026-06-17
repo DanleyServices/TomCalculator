@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Speaker Design & Enclosure Alignment — Tom Danley Calculator</title>
-<meta name="description" content="Calculador y simulador electroacústico de recintos para altavoces (sellados y ventilados) con alineaciones Thiele-Small de 2º y 4º orden.">
+<title>Acoustic Engineering Dashboard — Tom Danley Calculator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
-  
+
   :root {
     --accent: #1de9b6;
     --accent-dim: rgba(29, 233, 182, 0.15);
@@ -17,11 +25,12 @@
     --gold: #f0c040;
     --gold-dim: rgba(240, 192, 64, 0.15);
     --gold-glow: rgba(240, 192, 64, 0.45);
-    --blue-deep: #050e18;
-    --cyan: #00e5ff;
+    --blue-deep: #020813;
     --text: #c8daf0;
-    --bg-panel: rgba(10, 22, 40, 0.65);
+    --bg-panel: rgba(7, 18, 33, 0.8);
     --border-glass: rgba(29, 233, 182, 0.25);
+    --red: #ff5252;
+    --red-glow: rgba(255, 82, 82, 0.45);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,7 +60,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(5, 14, 24, 0.95), transparent);
+    background: linear-gradient(to bottom, rgba(2, 8, 19, 0.95), transparent);
   }
 
   .back-btn {
@@ -97,13 +106,13 @@
     text-align: center;
   }
 
-  .calculator-container {
+  .dashboard-container {
     position: relative;
     z-index: 10;
-    width: 95%;
-    max-width: 1300px;
+    width: 98%;
+    max-width: 1750px;
     display: grid;
-    grid-template-columns: 450px 1fr;
+    grid-template-columns: 480px 1fr;
     gap: 25px;
     margin-bottom: 50px;
   }
@@ -114,25 +123,35 @@
     border-radius: 16px;
     padding: 25px;
     backdrop-filter: blur(15px);
-    box-shadow: 0 20px 45px rgba(0,0,0,0.65), inset 0 0 25px rgba(29, 233, 182, 0.03);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.65);
     display: flex;
     flex-direction: column;
+    gap: 20px;
   }
 
   .panel h2 {
     font-family: 'Orbitron', monospace;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     color: #fff;
-    margin-bottom: 20px;
     border-bottom: 1px solid var(--border-glass);
     padding-bottom: 10px;
     letter-spacing: 2px;
   }
 
+  .input-section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    padding-left: 8px;
+    border-left: 2px solid var(--gold);
+  }
+
   .toggle-container {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
   }
   .toggle-btn {
     flex: 1;
@@ -145,63 +164,46 @@
     border: 1px solid var(--border-glass);
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     letter-spacing: 1px;
   }
   .toggle-btn.active {
     background: var(--accent-dim);
     color: var(--accent);
-    box-shadow: 0 0 15px rgba(29, 233, 182, 0.15), inset 0 0 10px rgba(29, 233, 182, 0.1);
+    box-shadow: 0 0 15px rgba(29, 233, 182, 0.15);
     border-color: var(--accent);
-  }
-  .toggle-btn:hover:not(.active) {
-    color: #fff;
-    background: rgba(29, 233, 182, 0.08);
-  }
-
-  .input-section-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    color: var(--gold);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin: 10px 0 15px 0;
-    padding-left: 5px;
-    border-left: 2px solid var(--gold);
   }
 
   .input-group {
-    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     transition: all 0.3s ease;
   }
   .input-group.hidden {
     display: none;
     opacity: 0;
     height: 0;
-    margin: 0;
     overflow: hidden;
   }
   .input-group label {
     display: flex;
     justify-content: space-between;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--accent);
-    margin-bottom: 6px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
   .input-group label span {
     font-family: 'Orbitron', monospace;
     color: var(--gold);
-    font-size: 0.9rem;
   }
-  
+
   .control-row {
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  
   input[type=range] {
     flex: 1;
     -webkit-appearance: none;
@@ -223,7 +225,6 @@
   input[type=range]::-webkit-slider-thumb:hover {
     transform: scale(1.2);
   }
-
   input[type=number] {
     width: 85px;
     background: rgba(0, 0, 0, 0.6);
@@ -235,87 +236,116 @@
     border-radius: 6px;
     text-align: right;
     outline: none;
-    transition: all 0.3s;
-  }
-  input[type=number]:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 10px var(--accent-glow);
   }
   .unit {
     font-family: 'Orbitron', monospace;
     color: var(--gold);
     font-size: 0.9rem;
-    min-width: 32px;
+    min-width: 35px;
   }
 
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+  /* Equations list styling */
+  .equations-panel {
+    display: flex;
+    flex-direction: column;
     gap: 15px;
+    max-height: 650px;
+    overflow-y: auto;
+    padding-right: 5px;
   }
-  .result-box {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(29, 233, 182, 0.2);
+  .equations-panel::-webkit-scrollbar {
+    width: 6px;
+  }
+  .equations-panel::-webkit-scrollbar-thumb {
+    background: var(--accent-dim);
+    border-radius: 3px;
+  }
+  .eq-card {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
     border-radius: 10px;
     padding: 15px;
-    text-align: center;
-    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-  .result-box:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 15px rgba(29, 233, 182, 0.08);
-  }
-  .result-box .label {
-    font-size: 0.8rem;
-    color: rgba(200, 218, 240, 0.6);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .result-box .value {
+  .eq-title {
     font-family: 'Orbitron', monospace;
-    font-size: 1.5rem;
-    color: var(--accent);
-    margin-top: 5px;
-  }
-  .result-box .value.gold { color: var(--gold); }
-  .result-box .value.cyan { color: var(--cyan); }
-
-  .formulas {
-    margin-top: 15px;
-    padding: 12px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 8px;
-    border-left: 3px solid var(--accent);
     font-size: 0.9rem;
-    color: rgba(200, 218, 240, 0.8);
-    line-height: 1.6;
+    color: #fff;
+    font-weight: 700;
   }
-  .formulas strong {
+  .eq-math {
+    background: rgba(0,0,0,0.4);
+    padding: 10px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+  }
+  .eq-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
     color: var(--accent);
-    font-family: 'Orbitron', sans-serif;
   }
-  .formulas span {
-    display: block;
-    margin-top: 4px;
-    font-family: monospace;
-    color: var(--cyan);
+  .eq-result span {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    color: var(--gold);
   }
 
-  .chart-container {
+  /* Charts Grid styling */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .chart-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .chart-card h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    color: #fff;
+    letter-spacing: 1px;
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
+  }
+  .chart-wrapper {
     position: relative;
     width: 100%;
-    height: 340px;
-    margin-top: 15px;
+    height: 220px;
     background: rgba(0,0,0,0.3);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 10px;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+  .chart-desc {
+    font-size: 0.85rem;
+    color: rgba(200,218,240,0.5);
+    line-height: 1.4;
   }
 
-  @media(max-width:950px) {
-    .calculator-container { grid-template-columns: 1fr; }
-    h1 { font-size: 1.7rem; }
-    .top-bar { padding: 15px 20px; }
+  @keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; text-shadow: 0 0 10px var(--red); }
+    100% { opacity: 0.6; }
+  }
+  .pulse-warning {
+    animation: pulse 1.2s infinite ease-in-out;
+  }
+
+  @media(max-width: 1200px) {
+    .dashboard-container { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -325,12 +355,13 @@
   <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
 </div>
 
-<h1 id="main-title">Speaker Design</h1>
-<div class="page-subtitle">Enclosure Volume &amp; Tuning Alignment</div>
+<h1>Speaker Design Suite</h1>
+<div class="page-subtitle">Acoustic Engineering Analysis Dashboard (High Density)</div>
 
-<div class="calculator-container">
+<div class="dashboard-container">
+  <!-- Left column: inputs and equations -->
   <div class="panel">
-    <h2>Enclosure Parameters</h2>
+    <h2>Control Center</h2>
     
     <div class="input-section-title">Gabinete / Carga</div>
     <div class="toggle-container">
@@ -343,7 +374,8 @@
       <button id="btnCustom" class="toggle-btn" onclick="setAlignmentMode('custom')">CUSTOM DESIGN</button>
     </div>
 
-    <div class="input-section-title">Driver Thiele-Small</div>
+    <div class="input-section-title">Parámetros Thiele-Small</div>
+    
     <div class="input-group">
       <label>Fs (Resonance Freq) <span id="lblFs">35.0 Hz</span></label>
       <div class="control-row">
@@ -354,10 +386,19 @@
     </div>
 
     <div class="input-group">
-      <label>Qts (Total Q) <span id="lblQts">0.38</span></label>
+      <label>Qes (Electrical Q) <span id="lblQes">0.40</span></label>
       <div class="control-row">
-        <input type="range" id="qtsS" min="0.10" max="1.50" step="0.01" value="0.38">
-        <input type="number" id="qtsN" min="0.05" max="3.00" step="0.01" value="0.38">
+        <input type="range" id="qesS" min="0.10" max="2.00" step="0.01" value="0.40">
+        <input type="number" id="qesN" min="0.05" max="5.00" step="0.01" value="0.40">
+        <span class="unit">Q</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Qms (Mechanical Q) <span id="lblQms">5.00</span></label>
+      <div class="control-row">
+        <input type="range" id="qmsS" min="1.00" max="15.00" step="0.05" value="5.00">
+        <input type="number" id="qmsN" min="0.50" max="25.00" step="0.05" value="5.00">
         <span class="unit">Q</span>
       </div>
     </div>
@@ -368,6 +409,42 @@
         <input type="range" id="vasS" min="1" max="500" step="1" value="80">
         <input type="number" id="vasN" min="0.5" max="2000" step="1" value="80">
         <span class="unit">L</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Sd (Effective Cone Area) <span id="lblSd">220 cm²</span></label>
+      <div class="control-row">
+        <input type="range" id="sdS" min="50" max="1200" step="10" value="220">
+        <input type="number" id="sdN" min="10" max="2500" step="10" value="220">
+        <span class="unit">cm²</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Xmax (Peak Excursion) <span id="lblXmax">5.0 mm</span></label>
+      <div class="control-row">
+        <input type="range" id="xmaxS" min="1.0" max="30.0" step="0.5" value="5.0">
+        <input type="number" id="xmaxN" min="0.1" max="100.0" step="0.5" value="5.0">
+        <span class="unit">mm</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Re (Voice Coil Resistance) <span id="lblRe">6.0 Ω</span></label>
+      <div class="control-row">
+        <input type="range" id="reS" min="2.0" max="16.0" step="0.1" value="6.0">
+        <input type="number" id="reN" min="1.0" max="32.0" step="0.1" value="6.0">
+        <span class="unit">Ω</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Pe (Input Power) <span id="lblPe">50.0 W</span></label>
+      <div class="control-row">
+        <input type="range" id="peS" min="1.0" max="1000.0" step="5.0" value="50.0">
+        <input type="number" id="peN" min="0.1" max="5000.0" step="1.0" value="50.0">
+        <span class="unit">W</span>
       </div>
     </div>
 
@@ -407,45 +484,132 @@
       </div>
     </div>
 
-    <div class="formulas" id="formulaText">
-      <strong>Modelos Acústicos:</strong>
-      <span id="formulaEq1">Vb = Vas / ((Qtc/Qts)² - 1)</span>
-      <span id="formulaEq2">F3 = Ftc · [ (1 - 1/(2Qtc²)) + √((1 - 1/(2Qtc²))² + 1) ]^(1/2)</span>
+    <h2>10 Ecuaciones Físicas</h2>
+    <div class="equations-panel">
+      <!-- 1 -->
+      <div class="eq-card">
+        <div class="eq-title">1. Mechanical Suspension Compliance ($C_{ms}$)</div>
+        <div class="eq-math">$$C_{ms} = \frac{V_{as}}{\rho_0 c^2 S_d^2}$$</div>
+        <div class="eq-result">Result: <span id="valCms">—</span> mm/N</div>
+      </div>
+      <!-- 2 -->
+      <div class="eq-card">
+        <div class="eq-title">2. Acoustic Box Compliance ($C_{ab}$)</div>
+        <div class="eq-math">$$C_{ab} = \frac{V_b}{\rho_0 c^2}$$</div>
+        <div class="eq-result">Result: <span id="valCab">—</span> m³/N</div>
+      </div>
+      <!-- 3 -->
+      <div class="eq-card">
+        <div class="eq-title">3. Resonance Frequency of Closed System ($F_c$)</div>
+        <div class="eq-math">$$F_c = F_s \sqrt{\frac{V_{as}}{V_b} + 1}$$</div>
+        <div class="eq-result">Result: <span id="valFc">—</span> Hz</div>
+      </div>
+      <!-- 4 -->
+      <div class="eq-card">
+        <div class="eq-title">4. Quality Factor of Closed System ($Q_{tc}$)</div>
+        <div class="eq-math">$$Q_{tc} = Q_{ts} \sqrt{\frac{V_{as}}{V_b} + 1}$$</div>
+        <div class="eq-result">Result: <span id="valQtc">—</span></div>
+      </div>
+      <!-- 5 -->
+      <div class="eq-card">
+        <div class="eq-title">5. Reference Electroacoustic Efficiency ($\eta_0$)</div>
+        <div class="eq-math">$$\eta_0 = \frac{4 \pi^2 F_s^3 V_{as}}{c^3 Q_{es}}$$</div>
+        <div class="eq-result">Result: <span id="valEta">—</span> %</div>
+      </div>
+      <!-- 6 -->
+      <div class="eq-card">
+        <div class="eq-title">6. Reference SPL at 1m ($SPL_{2.83V}$)</div>
+        <div class="eq-math">$$\text{SPL}_{2.83V} = 112.2 + 10 \log_{10}\left(\frac{F_s^3 \cdot V_{as\_m3}}{Q_{es}}\right)$$</div>
+        <div class="eq-result">Result: <span id="valSpl283">—</span> dB @ 2.83V</div>
+      </div>
+      <!-- 7 -->
+      <div class="eq-card" id="eqCardPortLength">
+        <div class="eq-title">7. Required Vent Physical Length ($L_p$)</div>
+        <div class="eq-math">$$L_p = \frac{c^2 D_p^2}{16 \pi F_b^2 V_b} - 0.732 D_p$$</div>
+        <div class="eq-result">Result: <span id="valLp">—</span> cm</div>
+      </div>
+      <!-- 8 -->
+      <div class="eq-card" id="eqCardPortPipe">
+        <div class="eq-title">8. First Port Standing Wave Resonance ($F_{pipe}$)</div>
+        <div class="eq-math">$$F_{pipe} = \frac{c}{2(L_p + 0.613 D_p)}$$</div>
+        <div class="eq-result">Result: <span id="valFpipe">—</span> Hz</div>
+      </div>
+      <!-- 9 -->
+      <div class="eq-card" id="eqCardPortVel">
+        <div class="eq-title">9. Peak Vent Air Velocity at Tuning ($v_p$)</div>
+        <div class="eq-math">$$v_p \approx \frac{\sqrt{2} \cdot 2 \pi F_b \cdot X_{max} \cdot S_d \cdot \sqrt{P_e / R_e}}{S_p}$$</div>
+        <div class="eq-result">Result: <span id="valVp">—</span> m/s</div>
+      </div>
+      <!-- 10 -->
+      <div class="eq-card">
+        <div class="eq-title">10. Excursion-Limited Max Acoustic Power ($W_{max}$)</div>
+        <div class="eq-math">$$W_{max} = \frac{\rho_0 \pi^3 F_s^4 (S_d \cdot X_{max})^2}{c}$$</div>
+        <div class="eq-result">Result: <span id="valWmax">—</span> Watts</div>
+      </div>
     </div>
   </div>
 
-  <div class="panel">
-    <h2>Enclosure Results</h2>
-    <div class="results-grid">
-      <div class="result-box">
-        <div class="label">Box Volume (Vb)</div>
-        <div class="value"><span id="outVb">23.1</span> <span style="font-size:0.9rem">L</span></div>
-      </div>
-      <div class="result-box">
-        <div class="label">F3 (-3dB Cutoff)</div>
-        <div class="value gold"><span id="outF3">65.2</span> <span style="font-size:0.9rem">Hz</span></div>
-      </div>
-      <div class="result-box">
-        <div class="label" id="lblResultCol3">System Qtc</div>
-        <div class="value cyan"><span id="outCol3">0.707</span></div>
-      </div>
-      <div class="result-box">
-        <div class="label">Alignment / Info</div>
-        <div class="value" style="font-size:1.1rem; line-height: 1.6;"><span id="outAlignment">Sealed (Target Q = 0.707)</span></div>
-      </div>
-      <div class="result-box">
-        <div class="label">Box Volume (ft³)</div>
-        <div class="value"><span id="outVbFt">0.82</span> <span style="font-size:0.9rem">ft³</span></div>
-      </div>
-      <div class="result-box">
-        <div class="label" id="lblResultCol6">Port Length (Lp)</div>
-        <div class="value gold"><span id="outCol6">—</span></div>
-      </div>
+  <!-- Right column: 10 analytical charts -->
+  <div class="charts-grid">
+    <!-- Chart 1 -->
+    <div class="chart-card">
+      <h3>1. Magnitude Response</h3>
+      <div class="chart-wrapper"><canvas id="chartMag"></canvas></div>
+      <div class="chart-desc">Filtro paso alto del sistema (2º orden en sellada, 4º orden en bass-reflex con pérdidas QL=7.0).</div>
     </div>
-
-    <h2 style="margin-top:25px;">System Frequency Response</h2>
-    <div class="chart-container">
-      <canvas id="frChart"></canvas>
+    <!-- Chart 2 -->
+    <div class="chart-card">
+      <h3>2. Acoustic Phase Response</h3>
+      <div class="chart-wrapper"><canvas id="chartPhase"></canvas></div>
+      <div class="chart-desc">Fase acústica de la presión sonora emitida, mostrando el retraso del puerto en baja frecuencia.</div>
+    </div>
+    <!-- Chart 3 -->
+    <div class="chart-card">
+      <h3>3. Acoustic Group Delay</h3>
+      <div class="chart-wrapper"><canvas id="chartGD"></canvas></div>
+      <div class="chart-desc">Retraso de grupo acústico (ms) derivado de la fase, crítico para evaluar la precisión del transitorio de graves.</div>
+    </div>
+    <!-- Chart 4 -->
+    <div class="chart-card">
+      <h3>4. Electrical Impedance Magnitude</h3>
+      <div class="chart-wrapper"><canvas id="chartImp"></canvas></div>
+      <div class="chart-desc">Impedancia eléctrica total en bornes de la bobina (pico simple en sellada, doble pico simétrico en bass-reflex).</div>
+    </div>
+    <!-- Chart 5 -->
+    <div class="chart-card">
+      <h3>5. Electrical Impedance Phase</h3>
+      <div class="chart-wrapper"><canvas id="chartImpPhase"></canvas></div>
+      <div class="chart-desc">Fase eléctrica de la impedancia, ilustrando transiciones entre comportamiento inductivo, capacitivo y puramente resistivo.</div>
+    </div>
+    <!-- Chart 6 -->
+    <div class="chart-card">
+      <h3>6. Driver Cone Excursion</h3>
+      <div class="chart-wrapper"><canvas id="chartExc"></canvas></div>
+      <div class="chart-desc">Desplazamiento pico a pico del cono (mm) a la potencia nominal Pe (se observa el notch de descarga en Fb).</div>
+    </div>
+    <!-- Chart 7 -->
+    <div class="chart-card">
+      <h3>7. Vent Air Velocity</h3>
+      <div class="chart-wrapper"><canvas id="chartVel"></canvas></div>
+      <div class="chart-desc">Velocidad del aire dentro del puerto reflex (m/s). Si supera 15 m/s, se activa riesgo de turbulencia (Chuffing).</div>
+    </div>
+    <!-- Chart 8 -->
+    <div class="chart-card">
+      <h3>8. Sound Pressure Level (SPL)</h3>
+      <div class="chart-wrapper"><canvas id="chartSPL"></canvas></div>
+      <div class="chart-desc">Nivel de presión sonora absoluto (dB SPL) a 1 metro para la potencia de entrada configurada.</div>
+    </div>
+    <!-- Chart 9 -->
+    <div class="chart-card">
+      <h3>9. Excursion-Limited Max Acoustic Power</h3>
+      <div class="chart-wrapper"><canvas id="chartPwr"></canvas></div>
+      <div class="chart-desc">Límite absoluto de potencia acústica máxima (W) que el transductor puede entregar antes de exceder Xmax.</div>
+    </div>
+    <!-- Chart 10 -->
+    <div class="chart-card">
+      <h3>10. Real System Efficiency</h3>
+      <div class="chart-wrapper"><canvas id="chartEff"></canvas></div>
+      <div class="chart-desc">Eficiencia real (%) del sistema en función de la impedancia dinámica y respuesta acústica.</div>
     </div>
   </div>
 </div>
@@ -455,13 +619,18 @@
 const speakerDesignModule = {
   meta: {
     id: "speaker-design",
-    title: "Speaker Design & Enclosure Alignment",
-    desc: "Simulación precisa de recintos sellados y ventilados (2º y 4º orden) usando parámetros Thiele-Small."
+    title: "High Density Speaker Design Dashboard",
+    desc: "Simulación electroacústica avanzada de 10 curvas físicas para diseño de bafles profesionales."
   },
   inputs: {
     fs: 35.0,
-    qts: 0.38,
+    qes: 0.40,
+    qms: 5.00,
     vas: 80.0,
+    sd: 220.0,
+    xmax: 5.0,
+    re: 6.0,
+    pe: 50.0,
     qtc: 0.707,
     type: "sealed",
     alignmentMode: "auto",
@@ -470,18 +639,36 @@ const speakerDesignModule = {
     portDiameter: 7.5
   },
   compute: function(inputs) {
-    const { fs, qts, vas, qtc, type, alignmentMode, customVb, customFb, portDiameter } = inputs;
+    const { fs, qes, qms, vas, sd, xmax, re, pe, qtc, type, alignmentMode, customVb, customFb, portDiameter } = inputs;
     
-    if (fs <= 0 || qts <= 0 || vas <= 0 || qtc <= 0 || portDiameter <= 0) {
+    if (fs <= 0 || qes <= 0 || qms <= 0 || vas <= 0 || sd <= 0 || xmax <= 0 || re <= 0 || pe <= 0 || qtc <= 0 || portDiameter <= 0) {
       return null;
     }
-    
-    let vb, fb, finalQtc, f3, alignmentName, portLength;
-    let curve = [];
+
+    const qts = 1 / (1 / qes + 1 / qms);
+    const rho0 = 1.204;
+    const c = 343;
+    const sdM2 = sd * 1e-4;
+    const vasM3 = vas * 1e-3;
+    const xmaxM = xmax * 1e-3;
+    const dpM = portDiameter * 1e-2;
+    const spM2 = Math.PI * Math.pow(dpM / 2, 2);
+    const vg = Math.sqrt(pe * re);
+
+    // 1. Mechanical Compliance (Cms)
+    const cms = vasM3 / (rho0 * c * c * sdM2 * sdM2);
+    const cmsMmN = cms * 1e3;
+
+    // Driver moving mass Mms
+    const omega_s = 2 * Math.PI * fs;
+    const mms = 1 / (omega_s * omega_s * cms);
+    const bl = Math.sqrt((omega_s * re * mms) / qes);
+
+    let vb, fb, finalQtc, f3, alignmentName, portLength = 0, dmin = 0;
     
     if (type === 'sealed') {
       fb = null;
-      portLength = null;
+      portLength = 0;
       
       if (alignmentMode === 'auto') {
         finalQtc = qtc;
@@ -496,26 +683,12 @@ const speakerDesignModule = {
       }
       
       const ftc = fs * (finalQtc / qts);
-      // F3 calculation exact formula
       const g2_num = (1 / (finalQtc * finalQtc)) - 2;
       const g2 = (g2_num + Math.sqrt(g2_num * g2_num + 4)) / 2;
       f3 = ftc * Math.sqrt(g2);
-      
-      // Calculate curve
-      for (let f = 10; f <= 1000; f *= 1.025) {
-        const g = f / ftc;
-        const g2_val = g * g;
-        const num = g2_val * g2_val;
-        const den = (1 - g2_val) * (1 - g2_val) + (g2_val / (finalQtc * finalQtc));
-        const mag = Math.sqrt(num / den);
-        const dB = 20 * Math.log10(mag);
-        curve.push({ x: f, y: Math.max(dB, -30) });
-      }
     } else {
-      // Ported (4th order Butterworth/Chebyshev/Quasi-Butterworth alignments)
+      // Ported
       finalQtc = null;
-      const QL = 7.0; // Box leakage losses
-      
       if (alignmentMode === 'auto') {
         if (qts < 0.38) {
           // QB3
@@ -542,44 +715,227 @@ const speakerDesignModule = {
         alignmentName = `Ported (Custom Vb/Fb)`;
       }
       
-      // Port length
       portLength = (23540 * portDiameter * portDiameter) / (vb * fb * fb) - 0.732 * portDiameter;
-      if (portLength < 0.1) portLength = 0;
+      if (portLength < 0) portLength = 0;
       
-      // Coefficients of 4th order highpass function
-      const ws = 2 * Math.PI * fs;
-      const wb = 2 * Math.PI * fb;
-      const alpha = vas / vb;
-      
-      const a3 = (ws / qts) + (wb / QL);
-      const a2 = ws * ws + wb * wb * (1 + alpha) + (ws * wb) / (qts * QL);
-      const a1 = (ws * wb * wb) / qts + (ws * ws * wb) / QL;
-      const a0 = ws * ws * wb * wb;
-      
-      let tempF3 = null;
-      for (let f = 10; f <= 1000; f *= 1.025) {
-        const w = 2 * Math.PI * f;
-        const w2 = w * w;
-        const w4 = w2 * w2;
-        
-        const realDen = w4 - a2 * w2 + a0;
-        const imagDen = a1 * w - a3 * w2 * w;
-        const mag = w4 / Math.sqrt(realDen * realDen + imagDen * imagDen);
-        const dB = 20 * Math.log10(mag);
-        curve.push({ x: f, y: Math.max(dB, -30) });
-        
-        if (tempF3 === null && dB >= -3.0 && f > 15) {
-          tempF3 = f;
-        }
-      }
-      
-      if (alignmentMode === 'auto') {
-        // use analytical F3
-      } else {
-        f3 = tempF3 || 0;
+      if (sd > 0 && xmax > 0 && fb > 0) {
+        dmin = 0.1 * Math.sqrt(sd * xmax * fb);
       }
     }
+
+    // 2. Acoustic Box Compliance (Cab)
+    const cab = (vb * 1e-3) / (rho0 * c * c);
+
+    // 3 & 4. Fc & Qtc
+    const systemFc = type === 'sealed' ? fs * Math.sqrt(vas / vb + 1) : 0;
+    const systemQtc = type === 'sealed' ? qts * Math.sqrt(vas / vb + 1) : 0;
+
+    // 5. Reference Efficiency (eta0)
+    const eta0 = (4 * Math.PI * Math.PI * Math.pow(fs, 3) * vasM3) / (Math.pow(c, 3) * qes);
+    const eta0Percent = eta0 * 100;
+
+    // 6. Reference SPL
+    const spl283 = 112.2 + 10 * Math.log10((fs * fs * fs * (vas / 1000)) / qes);
     
+    // 8. Pipe organ standing wave resonance
+    const lpM = portLength * 1e-2;
+    const fpipe = portLength > 0 ? c / (2 * (lpM + 0.613 * dpM)) : 0;
+
+    // 9. Peak Vent Air Velocity (vp)
+    const vp = portLength > 0 ? (Math.sqrt(2) * 2 * Math.PI * fb * xmaxM * sdM2 * Math.sqrt(pe / re)) / spM2 : 0;
+
+    // 10. Excursion-Limited Max Acoustic Power (Wmax)
+    const wmax = (rho0 * Math.pow(Math.PI, 3) * Math.pow(fs, 4) * Math.pow(sdM2 * xmaxM, 2)) / c;
+
+    // System compliance and box compliance for sealed or ported calculations
+    const qmc = type === 'sealed' ? qms * Math.sqrt(vas / vb + 1) : qms;
+    const qec = type === 'sealed' ? qes * Math.sqrt(vas / vb + 1) : qes;
+
+    // Helper function to calculate phase and magnitude at frequency f
+    const getSystemResponse = (f_hz) => {
+      const w_val = 2 * Math.PI * f_hz;
+      const w2_val = w_val * w_val;
+      const w4_val = w2_val * w2_val;
+      if (type === 'sealed') {
+        const ftc = systemFc;
+        const g = f_hz / ftc;
+        const g2 = g * g;
+        const num = g2 * g2;
+        const den = (1 - g2) * (1 - g2) + (g2 / (systemQtc * systemQtc));
+        const mag = Math.sqrt(num / den);
+        const phase = (Math.PI - Math.atan2(f_hz * ftc / systemQtc, ftc * ftc - f_hz * f_hz)) * (180 / Math.PI);
+        return { mag, phase };
+      } else {
+        const QL = 7.0;
+        const ws = 2 * Math.PI * fs;
+        const wb = 2 * Math.PI * fb;
+        const alpha = vas / vb;
+        
+        const a3 = (ws / qts) + (wb / QL);
+        const a2 = ws * ws + wb * wb * (1 + alpha) + (ws * wb) / (qts * QL);
+        const a1 = (ws * wb * wb) / qts + (ws * ws * wb) / QL;
+        const a0 = ws * ws * wb * wb;
+        
+        const realDen = w4_val - a2 * w2_val + a0;
+        const imagDen = a1 * w_val - a3 * w2_val * w_val;
+        
+        const mag = w4_val / Math.sqrt(realDen * realDen + imagDen * imagDen || 1e-6);
+        const phase = (2 * Math.PI - Math.atan2(imagDen, realDen)) * (180 / Math.PI);
+        return { mag, phase };
+      }
+    };
+
+    // Generate response curve data
+    let curves = {
+      freqs: [],
+      mag: [],
+      phase: [],
+      gd: [],
+      imp: [],
+      impPhase: [],
+      excursion: [],
+      velocity: [],
+      spl: [],
+      pwrLimit: [],
+      efficiency: []
+    };
+
+    // Generate values from 10Hz to 1000Hz (logarithmic)
+    const pointsCount = 100;
+    const startF = 10;
+    const endF = 1000;
+    const factor = Math.pow(endF / startF, 1 / (pointsCount - 1));
+    let f = startF;
+
+    const QL = 7.0;
+    const ws = 2 * Math.PI * fs;
+    const wb = type === 'ported' ? 2 * Math.PI * fb : 0;
+    const alpha = vas / vb;
+    const a3 = (ws / qts) + (wb / QL);
+    const a2 = ws * ws + wb * wb * (1 + alpha) + (ws * wb) / (qts * QL);
+    const a1 = (ws * wb * wb) / qts + (ws * ws * wb) / QL;
+    const a0 = ws * ws * wb * wb;
+
+    for (let i = 0; i < pointsCount; i++) {
+      const w = 2 * Math.PI * f;
+      const w2 = w * w;
+      const w4 = w2 * w2;
+
+      // 1 & 2. Mag & Phase
+      const { mag, phase } = getSystemResponse(f);
+      const db = 20 * Math.log10(mag || 1e-6);
+
+      // 3. Group Delay (numerical derivative)
+      const fDelta = 0.05;
+      const p1 = getSystemResponse(f - fDelta).phase;
+      const p2 = getSystemResponse(f + fDelta).phase;
+      let diff = p2 - p1;
+      if (diff > 180) diff -= 360;
+      if (diff < -180) diff += 360;
+      const gdMs = (-diff / (2 * fDelta * 360)) * 1000;
+
+      // 4 & 5. Impedance and Impedance Phase
+      let zMag = re;
+      let zPhaseDeg = 0;
+      let realZ = 1;
+      let imagZ = 0;
+      
+      if (type === 'sealed') {
+        const x_fc = f / systemFc;
+        realZ = 1 + (x_fc * x_fc / (qec * qmc)) / (Math.pow(1 - x_fc * x_fc, 2) + Math.pow(x_fc / qmc, 2));
+        imagZ = ((x_fc / qec) * (1 - x_fc * x_fc)) / (Math.pow(1 - x_fc * x_fc, 2) + Math.pow(x_fc / qmc, 2));
+      } else {
+        const nReal = -w2 * wb / (ws * qes * QL);
+        const nImag = w * (wb * wb - w2) / (ws * qes);
+        const dReal = w4 - a2 * w2 + a0;
+        const dImag = a1 * w - a3 * w2 * w;
+        const denom = dReal * dReal + dImag * dImag;
+        
+        const fReal = (nReal * dReal + nImag * dImag) / (denom || 1e-6);
+        const fImag = (nImag * dReal - nReal * dImag) / (denom || 1e-6);
+        
+        realZ = 1 + fReal;
+        imagZ = fImag;
+      }
+      zMag = re * Math.sqrt(realZ * realZ + imagZ * imagZ);
+      zPhaseDeg = Math.atan2(imagZ, realZ) * (180 / Math.PI);
+
+      // 6. Cone Excursion
+      let excursionMm = 0;
+      const c_mc = type === 'sealed' ? cms / (vas / vb + 1) : cms;
+      const x_dc_box = c_mc * (bl * vg / re) * 1e3; // mm
+      
+      if (type === 'sealed') {
+        const x_fc = f / systemFc;
+        const H_disp = 1 / Math.sqrt(Math.pow(1 - x_fc * x_fc, 2) + Math.pow(x_fc / systemQtc, 2));
+        excursionMm = x_dc_box * H_disp;
+      } else {
+        const dReal = w4 - a2 * w2 + a0;
+        const dImag = a1 * w - a3 * w2 * w;
+        const numDisp = w2 * Math.sqrt(Math.pow(wb * wb - w2, 2) + Math.pow(w * wb / QL, 2));
+        const denDisp = Math.sqrt(dReal * dReal + dImag * dImag);
+        excursionMm = x_dc_box * (numDisp / (denDisp || 1e-6));
+      }
+
+      // 7. Vent Air Velocity
+      let ventVel = 0;
+      if (type === 'ported' && portLength > 0) {
+        const dReal = w4 - a2 * w2 + a0;
+        const dImag = a1 * w - a3 * w2 * w;
+        const denDisp = Math.sqrt(dReal * dReal + dImag * dImag);
+        const x_dc_m = cms * (bl * vg / re); // meters
+        ventVel = (x_dc_m * sdM2 * wb * wb * alpha * w2) / (spM2 * (denDisp || 1e-6));
+      }
+
+      // 8. SPL Output
+      const splVal = spl283 + 10 * Math.log10(pe * re / 8) + db;
+
+      // 9. Excursion-Limited Max Acoustic Power
+      let H_disp = 1;
+      if (type === 'sealed') {
+        const x_fc = f / systemFc;
+        H_disp = 1 / Math.sqrt(Math.pow(1 - x_fc * x_fc, 2) + Math.pow(x_fc / systemQtc, 2));
+      } else {
+        const dReal = w4 - a2 * w2 + a0;
+        const dImag = a1 * w - a3 * w2 * w;
+        const numDisp = w2 * Math.sqrt(Math.pow(wb * wb - w2, 2) + Math.pow(w * wb / QL, 2));
+        const denDisp = Math.sqrt(dReal * dReal + dImag * dImag);
+        H_disp = numDisp / (denDisp || 1e-6);
+      }
+      const pwrLimitVal = wmax * Math.pow((f / fs), 4) / (H_disp * H_disp || 1e-6);
+
+      // 10. Real Efficiency (%)
+      const effVal = eta0Percent * mag * mag * (re / zMag);
+
+      curves.freqs.push(f);
+      curves.mag.push({ x: f, y: Math.max(db, -40) });
+      curves.phase.push({ x: f, y: phase });
+      curves.gd.push({ x: f, y: Math.max(gdMs, 0) });
+      curves.imp.push({ x: f, y: zMag });
+      curves.impPhase.push({ x: f, y: zPhaseDeg });
+      curves.excursion.push({ x: f, y: excursionMm });
+      curves.velocity.push({ x: f, y: ventVel });
+      curves.spl.push({ x: f, y: Math.max(splVal, 30) });
+      curves.pwrLimit.push({ x: f, y: Math.min(pwrLimitVal, 1000) });
+      curves.efficiency.push({ x: f, y: effVal });
+
+      f *= factor;
+    }
+
+    if (type === 'ported' && alignmentMode === 'auto') {
+      // Keep f3 as computed by Keele QB3/B4/C4
+    } else if (type === 'ported' && alignmentMode === 'custom') {
+      // search for exact F3 in curves
+      let tempF3 = null;
+      for (let i = 0; i < curves.spl.length; i++) {
+        if (tempF3 === null && curves.mag[i].y >= -3.0 && curves.freqs[i] > 15) {
+          tempF3 = curves.freqs[i];
+          break;
+        }
+      }
+      f3 = tempF3 || 0;
+    }
+
     return {
       vb,
       vbFt3: vb * 0.0353147,
@@ -588,7 +944,16 @@ const speakerDesignModule = {
       portLength,
       qtc: finalQtc,
       alignment: alignmentName,
-      curve
+      cms: cmsMmN,
+      cab,
+      fc: systemFc,
+      qts,
+      eta0: eta0Percent,
+      spl283,
+      fpipe,
+      vp,
+      wmax,
+      curves
     };
   }
 };
@@ -596,11 +961,17 @@ const speakerDesignModule = {
 // --- INTERACTIVE UI BINDINGS ---
 let encType = 'sealed';
 let alignMode = 'auto';
+let charts = {};
 
 const ids = [
   ['fsS', 'fsN', 'lblFs', ' Hz'],
-  ['qtsS', 'qtsN', 'lblQts', ''],
+  ['qesS', 'qesN', 'lblQes', ''],
+  ['qmsS', 'qmsN', 'lblQms', ''],
   ['vasS', 'vasN', 'lblVas', ' L'],
+  ['sdS', 'sdN', 'lblSd', ' cm²'],
+  ['xmaxS', 'xmaxN', 'lblXmax', ' mm'],
+  ['reS', 'reN', 'lblRe', ' Ω'],
+  ['peS', 'peN', 'lblPe', ' W'],
   ['qtcS', 'qtcN', 'lblQtc', ''],
   ['customVbS', 'customVbN', 'lblCustomVb', ' L'],
   ['customFbS', 'customFbN', 'lblCustomFb', ' Hz'],
@@ -615,8 +986,8 @@ ids.forEach(([s, n, l, suffix]) => {
   const updateLabel = (val) => {
     if (!le) return;
     let decimals = 2;
-    if (suffix === ' L') decimals = 0;
-    else if (suffix === ' Hz' || suffix === ' cm') decimals = 1;
+    if (suffix === ' L' || suffix === ' cm²' || suffix === ' W') decimals = 0;
+    else if (suffix === ' Hz' || suffix === ' cm' || suffix === ' mm' || suffix === ' Ω') decimals = 1;
     le.innerText = parseFloat(val).toFixed(decimals) + suffix;
   };
   
@@ -637,7 +1008,6 @@ function setEnclosureType(type) {
   document.getElementById('btnSealed').classList.toggle('active', type === 'sealed');
   document.getElementById('btnPorted').classList.toggle('active', type === 'ported');
   
-  // Toggle form layout and visibility
   updateInputsVisibility();
   update3DScene(type);
   calc();
@@ -656,153 +1026,183 @@ function updateInputsVisibility() {
   const isCustom = alignMode === 'custom';
   const isPorted = encType === 'ported';
   
-  // Target Qtc only visible for Sealed + Auto
+  // Show / hide inputs
   document.getElementById('groupQtc').classList.toggle('hidden', isCustom || isPorted);
-  
-  // Custom Vb only visible for Custom
   document.getElementById('groupCustomVb').classList.toggle('hidden', !isCustom);
-  
-  // Custom Fb only visible for Custom + Ported
   document.getElementById('groupCustomFb').classList.toggle('hidden', !isCustom || !isPorted);
-  
-  // Port Diameter only visible for Ported
   document.getElementById('groupPortDia').classList.toggle('hidden', !isPorted);
   
-  // Update Formulas Display
-  const formula1 = document.getElementById('formulaEq1');
-  const formula2 = document.getElementById('formulaEq2');
-  if (isPorted) {
-    formula1.innerText = "QB3 / B4 / C4 alignment polynomials (Small)";
-    formula2.innerText = "Lp = (23540·Dp²) / (Vb·Fb²) - 0.732·Dp";
-  } else {
-    formula1.innerText = "Vb = Vas / ((Qtc/Qts)² - 1)";
-    formula2.innerText = "F3 = Ftc · [ (1 - 1/(2Qtc²)) + √((1 - 1/(2Qtc²))² + 1) ]^(1/2)";
-  }
+  // Show / hide equations cards
+  document.getElementById('eqCardPortLength').classList.toggle('hidden', !isPorted);
+  document.getElementById('eqCardPortPipe').classList.toggle('hidden', !isPorted);
+  document.getElementById('eqCardPortVel').classList.toggle('hidden', !isPorted);
 }
 
-// Initialize Chart
-const ctx = document.getElementById('frChart').getContext('2d');
-Chart.defaults.color = '#c8daf0';
-Chart.defaults.font.family = 'Rajdhani';
+// Chart creation helper
+function createChart(canvasId, yTitle, yMin, yMax, color, fill = false) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  
+  let scaleY = {
+    title: { display: true, text: yTitle, color: '#f0c040', font: { size: 10 } },
+    grid: { color: 'rgba(255, 255, 255, 0.05)' }
+  };
+  
+  if (yMin !== null) scaleY.min = yMin;
+  if (yMax !== null) scaleY.max = yMax;
 
-let chart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    datasets: [
-      {
-        label: 'Frequency Response (dB)',
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [{
         data: [],
-        borderColor: '#1de9b6',
-        backgroundColor: 'rgba(29, 233, 182, 0.08)',
-        borderWidth: 2.5,
-        fill: true,
+        borderColor: color,
+        backgroundColor: color + '14',
+        borderWidth: 2,
+        fill: fill,
         pointRadius: 0,
-        tension: 0.35
-      },
-      {
-        label: 'F3 Cutoff Point',
-        data: [],
-        backgroundColor: '#f0c040',
-        borderColor: '#f0c040',
-        pointRadius: 8,
-        pointHoverRadius: 10,
-        showLine: false
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => ` ${ctx.raw.y.toFixed(1)} dB @ ${ctx.raw.x.toFixed(0)} Hz`
-        }
-      }
+        tension: 0.2
+      }]
     },
-    scales: {
-      x: {
-        type: 'logarithmic',
-        title: { display: true, text: 'Frequency (Hz)', color: '#1de9b6', font: { size: 12 } },
-        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-        min: 10,
-        max: 1000,
-        ticks: {
-          callback: function(val, index) {
-            const ticks = [10, 20, 50, 100, 200, 500, 1000];
-            return ticks.includes(val) ? val : null;
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` ${ctx.raw.y.toFixed(2)} ${yTitle} @ ${ctx.raw.x.toFixed(1)} Hz`
           }
         }
       },
-      y: {
-        title: { display: true, text: 'Magnitude (dB)', color: '#f0c040', font: { size: 12 } },
-        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-        min: -24,
-        max: 6
+      scales: {
+        x: {
+          type: 'logarithmic',
+          grid: { color: 'rgba(255, 255, 255, 0.05)' },
+          min: 10,
+          max: 1000,
+          ticks: {
+            callback: (val) => [10, 20, 50, 100, 200, 500, 1000].includes(val) ? val : null
+          }
+        },
+        y: scaleY
       }
     }
-  }
-});
+  });
+}
+
+// Initialize the 10 Charts
+function initCharts() {
+  Chart.defaults.color = '#c8daf0';
+  Chart.defaults.font.family = 'Rajdhani';
+
+  charts.mag = createChart('chartMag', 'dB', -36, 6, '#1de9b6', true);
+  charts.phase = createChart('chartPhase', 'Deg', 0, 360, '#00e5ff');
+  charts.gd = createChart('chartGD', 'ms', 0, null, '#ffb300');
+  charts.imp = createChart('chartImp', 'Ω', 0, null, '#e040fb');
+  charts.impPhase = createChart('chartImpPhase', 'Deg', -90, 90, '#2979ff');
+  charts.excursion = createChart('chartExc', 'mm', 0, null, '#ff5252', true);
+  charts.velocity = createChart('chartVel', 'm/s', 0, null, '#ff6e40', true);
+  charts.spl = createChart('chartSPL', 'dB SPL', 50, null, '#00e676', true);
+  charts.pwrLimit = createChart('chartPwr', 'Watts', 0, null, '#ffff00', true);
+  charts.efficiency = createChart('chartEff', '%', 0, null, '#b2ff59', true);
+}
 
 function calc() {
   const fs = parseFloat(document.getElementById('fsN').value);
-  const qts = parseFloat(document.getElementById('qtsN').value);
+  const qes = parseFloat(document.getElementById('qesN').value);
+  const qms = parseFloat(document.getElementById('qmsN').value);
   const vas = parseFloat(document.getElementById('vasN').value);
+  const sd = parseFloat(document.getElementById('sdN').value);
+  const xmax = parseFloat(document.getElementById('xmaxN').value);
+  const re = parseFloat(document.getElementById('reN').value);
+  const pe = parseFloat(document.getElementById('peN').value);
   const qtc = parseFloat(document.getElementById('qtcN').value);
   const customVb = parseFloat(document.getElementById('customVbN').value);
   const customFb = parseFloat(document.getElementById('customFbN').value);
   const portDiameter = parseFloat(document.getElementById('portDiaN').value);
 
-  // Invoke modular compute contract
   const inputs = {
-    fs,
-    qts,
-    vas,
-    qtc,
+    fs, qes, qms, vas, sd, xmax, re, pe, qtc,
     type: encType,
     alignmentMode: alignMode,
-    customVb,
-    customFb,
-    portDiameter
+    customVb, customFb, portDiameter
   };
-  
+
   const res = speakerDesignModule.compute(inputs);
   if (!res) return;
 
-  // Update UI Elements
-  document.getElementById('outVb').innerText = res.vb > 9998 ? '∞' : res.vb.toFixed(1);
-  document.getElementById('outVbFt').innerText = res.vb > 9998 ? '∞' : res.vbFt3.toFixed(2);
-  document.getElementById('outF3').innerText = res.f3.toFixed(1);
-  document.getElementById('outAlignment').innerText = res.alignment;
+  // 1. Mechanical compliance (Cms)
+  document.getElementById('valCms').innerText = res.cms.toFixed(3);
+  
+  // 2. Acoustic Box Compliance (Cab)
+  document.getElementById('valCab').innerText = res.cab.toExponential(4);
 
-  const lblCol3 = document.getElementById('lblResultCol3');
-  const outCol3 = document.getElementById('outCol3');
-  const lblCol6 = document.getElementById('lblResultCol6');
-  const outCol6 = document.getElementById('outCol6');
+  // 3. Resonance Frequency (Fc)
+  document.getElementById('valFc').innerText = encType === 'sealed' ? res.fc.toFixed(1) : '—';
 
-  if (encType === 'sealed') {
-    lblCol3.innerText = "System Qtc";
-    outCol3.innerText = res.qtc.toFixed(3);
+  // 4. Quality Factor (Qtc)
+  document.getElementById('valQtc').innerText = encType === 'sealed' ? res.qtc.toFixed(3) : '—';
+
+  // 5. Reference Efficiency (eta0)
+  document.getElementById('valEta').innerText = res.eta0.toFixed(3);
+
+  // 6. Reference SPL
+  document.getElementById('valSpl283').innerText = res.spl283.toFixed(1);
+
+  // Ported specific equations
+  if (encType === 'ported') {
+    document.getElementById('valLp').innerText = res.portLength > 0 ? res.portLength.toFixed(1) : 'Too short / N/A';
+    document.getElementById('valFpipe').innerText = res.fpipe > 0 ? res.fpipe.toFixed(1) : 'N/A';
     
-    lblCol6.innerText = "Port Length (Lp)";
-    outCol6.innerText = "—";
-  } else {
-    lblCol3.innerText = "Fb (Port Tuning)";
-    outCol3.innerText = res.fb.toFixed(1) + " Hz";
-    
-    lblCol6.innerText = "Port Length (Lp)";
-    outCol6.innerText = res.portLength > 0 ? res.portLength.toFixed(1) + " cm" : "Too short / N/A";
+    const vpSpan = document.getElementById('valVp');
+    vpSpan.innerText = res.vp.toFixed(1);
+    if (res.vp > 15.0) {
+      vpSpan.className = "pulse-warning";
+      vpSpan.style.color = "var(--red)";
+    } else {
+      vpSpan.className = "";
+      vpSpan.style.color = "var(--gold)";
+    }
   }
 
-  // Update Chart
-  chart.data.datasets[0].data = res.curve;
-  chart.data.datasets[1].data = [{ x: res.f3, y: -3 }];
-  chart.update();
+  // 10. Max Acoustic Power
+  document.getElementById('valWmax').innerText = res.wmax.toFixed(3);
+
+  // Update all 10 Charts
+  charts.mag.data.datasets[0].data = res.curves.mag;
+  charts.mag.update();
+
+  charts.phase.data.datasets[0].data = res.curves.phase;
+  charts.phase.update();
+
+  charts.gd.data.datasets[0].data = res.curves.gd;
+  charts.gd.update();
+
+  charts.imp.data.datasets[0].data = res.curves.imp;
+  charts.imp.update();
+
+  charts.impPhase.data.datasets[0].data = res.curves.impPhase;
+  charts.impPhase.update();
+
+  charts.excursion.data.datasets[0].data = res.curves.excursion;
+  // Dynamic scale limit for excursion chart
+  charts.excursion.options.scales.y.max = xmax * 1.5;
+  charts.excursion.update();
+
+  charts.velocity.data.datasets[0].data = res.curves.velocity;
+  charts.velocity.update();
+
+  charts.spl.data.datasets[0].data = res.curves.spl;
+  charts.spl.update();
+
+  charts.pwrLimit.data.datasets[0].data = res.curves.pwrLimit;
+  charts.pwrLimit.update();
+
+  charts.efficiency.data.datasets[0].data = res.curves.efficiency;
+  charts.efficiency.update();
 
   // Dynamic Scale update in 3D Scene
   if (box) {
-    // scale box 3d wireframe visual size based on volume Vb
     const scaleFactor = Math.min(Math.max(res.vb / 120, 0.4), 2.2);
     box.scale.set(scaleFactor, scaleFactor * 1.2, scaleFactor * 0.85);
   }
@@ -818,7 +1218,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 20;
 
-// Speaker cone wireframe representing the driver
+// Speaker cone wireframe
 const coneGeo = new THREE.ConeGeometry(2.5, 1.3, 24, 1, true);
 const coneMat = new THREE.MeshBasicMaterial({ color: 0x1de9b6, wireframe: true, transparent: true, opacity: 0.08 });
 const cone = new THREE.Mesh(coneGeo, coneMat);
@@ -826,14 +1226,13 @@ cone.position.set(-6, 0, -8);
 cone.rotation.x = Math.PI / 2;
 scene.add(cone);
 
-// Box wireframe representing the enclosure
+// Box wireframe
 const boxGeo = new THREE.BoxGeometry(4.5, 5.5, 3.5);
 const boxMat = new THREE.MeshBasicMaterial({ color: 0x1de9b6, wireframe: true, transparent: true, opacity: 0.05 });
 const box = new THREE.Mesh(boxGeo, boxMat);
 box.position.set(5, 0, -10);
 scene.add(box);
 
-// Port cylinder visual representation in 3D
 let portTube = null;
 function update3DScene(type) {
   if (type === 'ported') {
@@ -853,7 +1252,7 @@ function update3DScene(type) {
   }
 }
 
-// Background starfield/particles
+// Background particles
 const pG = new THREE.BufferGeometry();
 const pP = new Float32Array(350 * 3);
 for (let i = 0; i < 1050; i++) pP[i] = (Math.random() - 0.5) * 60;
@@ -861,13 +1260,11 @@ pG.setAttribute('position', new THREE.BufferAttribute(pP, 3));
 const particles = new THREE.Points(pG, new THREE.PointsMaterial({ color: 0x1de9b6, size: 0.05, transparent: true, opacity: 0.2 }));
 scene.add(particles);
 
-// Animation Loop
 let frameCount = 0;
 function animBg(t) {
   requestAnimationFrame(animBg);
   frameCount++;
   
-  // Rotate elements slowly
   cone.rotation.z = t * 0.00025;
   box.rotation.y = t * 0.00012;
   box.rotation.x = Math.sin(t * 0.00018) * 0.08;
@@ -875,11 +1272,9 @@ function animBg(t) {
   if (portTube) {
     portTube.rotation.y = t * 0.00012;
     portTube.rotation.x = Math.sin(t * 0.00018) * 0.08;
-    // Small position adjustments to keep sync with box rotation
     portTube.position.x = 5 + Math.sin(t * 0.00012) * 0.3;
   }
   
-  // Subtle driver vibration effect
   const vib = Math.sin(frameCount * 0.4) * 0.03;
   cone.position.z = -8 + vib;
 
@@ -893,12 +1288,12 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Run initial calculation and view update
+// Initialization
 updateInputsVisibility();
+initCharts();
 calc();
 
-// Numerical verification log in console
-console.log("Speaker Design Module successfully initialized with T-S Equations.");
+console.log("Speaker Design Suite successfully redeveloped to standard-hd.");
 </script>
 </body>
 </html>
