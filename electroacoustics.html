@@ -24,15 +24,15 @@
   @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
   :root {
-    --bg-dark: #060c13;
-    --bg-panel: #0b141f;
-    --bg-card: #101c2b;
-    --border-cyan: #00e5ff;
-    --border-cyan-dim: rgba(0, 229, 255, 0.2);
-    --border-gold: #f0c040;
-    --border-gold-dim: rgba(240, 192, 64, 0.25);
-    --text-primary: #e2efff;
-    --text-dim: #8ba0b8;
+    --bg-dark: #f3f6fc;
+    --bg-panel: rgba(255, 255, 255, 0.85);
+    --bg-card: #ffffff;
+    --border-cyan: #0066cc;
+    --border-cyan-dim: rgba(0, 102, 204, 0.15);
+    --border-gold: #b45309;
+    --border-gold-dim: rgba(180, 83, 9, 0.2);
+    --text-primary: #0f172a;
+    --text-dim: #475569;
     --font-mono: 'Fira Code', monospace;
   }
 
@@ -48,7 +48,7 @@
   .top-bar {
     width: 100%;
     padding: 12px 30px;
-    background: #02070c;
+    background: #e0e7ff;
     border-bottom: 1px solid var(--border-cyan-dim);
     display: flex;
     justify-content: space-between;
@@ -83,7 +83,7 @@
   h1.main-title {
     font-family: var(--font-mono);
     font-size: 1.6rem;
-    color: #fff;
+    color: var(--text);
     text-align: center;
     margin: 20px 0 2px 0;
     text-transform: uppercase;
@@ -161,7 +161,7 @@
   input[type=range] {
     flex: 1;
     -webkit-appearance: none;
-    background: #02070c;
+    background: #e0e7ff;
     height: 4px;
     border-radius: 2px;
     outline: none;
@@ -179,9 +179,9 @@
   }
   input[type=number] {
     width: 70px;
-    background: #02070c;
+    background: #e0e7ff;
     border: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
+    color: var(--text);
     font-family: var(--font-mono);
     font-size: 0.9rem;
     padding: 4px;
@@ -202,8 +202,8 @@
   /* Toggle button styles */
   .toggle-group {
     display: flex;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(0, 229, 255, 0.2);
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0, 102, 204, 0.15);
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 5px;
@@ -222,12 +222,12 @@
     transition: all 0.2s;
   }
   .toggle-btn.active {
-    background: rgba(0, 229, 255, 0.12) !important;
+    background: rgba(0, 102, 204, 0.12) !important;
     color: var(--border-cyan) !important;
     border: 1px solid var(--border-cyan-dim) !important;
   }
   .toggle-btn:hover:not(.active) {
-    color: #fff;
+    color: var(--text);
     background: rgba(255,255,255,0.02);
   }
 
@@ -267,7 +267,7 @@
     border: 1px solid var(--border-cyan-dim);
   }
   .tab-btn:hover:not(.active) {
-    color: #fff;
+    color: var(--text);
     background: rgba(255,255,255,0.02);
   }
 
@@ -288,7 +288,7 @@
   }
   .eq-card {
     background: var(--bg-panel);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 6px;
     padding: 15px;
     display: flex;
@@ -304,7 +304,7 @@
     letter-spacing: 1px;
   }
   .eq-math {
-    background: #02070c;
+    background: #e0e7ff;
     border: 1px solid rgba(255,255,255,0.03);
     border-radius: 4px;
     padding: 8px;
@@ -328,7 +328,7 @@
     font-family: var(--font-mono);
     font-size: 1.3rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text);
   }
 
   /* CHARTS GRID */
@@ -339,7 +339,7 @@
   }
   .chart-card {
     background: var(--bg-panel);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 8px;
     padding: 16px;
     display: flex;
@@ -360,7 +360,7 @@
     font-family: var(--font-mono);
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: #fff;
+    color: var(--text);
     letter-spacing: 1px;
   }
   .chart-desc {
@@ -979,7 +979,7 @@ function setTab(tabName) {
 // -------------------------------------------------------------
 // INICIALIZACIÓN DE LOS 9 GRÁFICOS CHART.JS
 // -------------------------------------------------------------
-Chart.defaults.color = '#8ba0b8';
+Chart.defaults.color = '#475569';
 Chart.defaults.font.family = 'Fira Code';
 Chart.defaults.font.size = 10;
 const gridColor = '#142538';
@@ -1097,7 +1097,7 @@ const ampZChart = new Chart(document.getElementById('ampZChart').getContext('2d'
     labels: ['2 Ω', '4 Ω', '8 Ω', '16 Ω'],
     datasets: [
       { label: 'RMS Voltage (V)', data: [], backgroundColor: 'rgba(0, 229, 255, 0.45)', borderColor: 'var(--border-cyan)', borderWidth: 1.5, yAxisID: 'yV' },
-      { label: 'RMS Current (A)', data: [], backgroundColor: 'rgba(240, 192, 64, 0.45)', borderColor: 'var(--border-gold)', borderWidth: 1.5, yAxisID: 'yI' }
+      { label: 'RMS Current (A)', data: [], backgroundColor: 'rgba(180, 83, 9, 0.25)', borderColor: 'var(--border-gold)', borderWidth: 1.5, yAxisID: 'yI' }
     ]
   },
   options: {
@@ -1392,7 +1392,7 @@ function drawCoverageCone() {
   // Degradado radial
   const grad = ctxCov.createRadialGradient(ox, oy, 10, ox, oy, coneLength);
   grad.addColorStop(0, 'rgba(0, 229, 255, 0.25)');
-  grad.addColorStop(0.3, 'rgba(0, 229, 255, 0.12)');
+  grad.addColorStop(0.3, 'rgba(0, 102, 204, 0.12)');
   grad.addColorStop(0.7, 'rgba(0, 229, 255, 0.03)');
   grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
   
@@ -1419,13 +1419,13 @@ function drawCoverageCone() {
   const targetX = ox + Math.min(d, 120) * scale;
   const targetY = oy;
   
-  ctxCov.fillStyle = '#f0c040';
+  ctxCov.fillStyle = '#b45309';
   ctxCov.beginPath();
   ctxCov.arc(targetX, targetY, 6, 0, 2*Math.PI);
   ctxCov.fill();
   
   // Brillo dorado
-  ctxCov.strokeStyle = 'rgba(240, 192, 64, 0.45)';
+  ctxCov.strokeStyle = 'rgba(180, 83, 9, 0.25)';
   ctxCov.lineWidth = 2;
   ctxCov.beginPath();
   ctxCov.arc(targetX, targetY, 11, 0, 2*Math.PI);
@@ -1438,7 +1438,7 @@ function drawCoverageCone() {
   
   // Dibujar ancho de haz en el punto del oyente
   const beamYHalf = Math.min(d, 120) * scale * Math.sin(angleRad / 2);
-  ctxCov.strokeStyle = '#f0c040';
+  ctxCov.strokeStyle = '#b45309';
   ctxCov.lineWidth = 1.5;
   ctxCov.beginPath();
   ctxCov.moveTo(targetX, targetY - beamYHalf);
@@ -1446,7 +1446,7 @@ function drawCoverageCone() {
   ctxCov.stroke();
   
   // Flechas en extremos
-  ctxCov.fillStyle = '#f0c040';
+  ctxCov.fillStyle = '#b45309';
   ctxCov.beginPath();
   ctxCov.moveTo(targetX, targetY - beamYHalf); ctxCov.lineTo(targetX-4, targetY - beamYHalf + 6); ctxCov.lineTo(targetX+4, targetY - beamYHalf + 6); ctxCov.fill();
   ctxCov.beginPath();
@@ -1454,7 +1454,7 @@ function drawCoverageCone() {
   
   // Texto del ancho de cobertura
   const covWidth = 2 * d * Math.tan((angleDeg / 2) * Math.PI / 180);
-  ctxCov.fillStyle = '#f0c040';
+  ctxCov.fillStyle = '#b45309';
   ctxCov.font = '12px Rajdhani';
   ctxCov.fillText('Width: ' + covWidth.toFixed(1) + ' m', targetX + 12, targetY + 4);
   
@@ -1627,7 +1627,7 @@ function initThree() {
   
   // Onda esférica animada en 3D
   const waveGeo = new THREE.SphereGeometry(1, 32, 32);
-  waveMaterial = new THREE.MeshBasicMaterial({ color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.1 });
+  waveMaterial = new THREE.MeshBasicMaterial({ color: 0x0066cc, wireframe: true, transparent: true, opacity: 0.1 });
   waveMesh = new THREE.Mesh(waveGeo, waveMaterial);
   scene.add(waveMesh);
   
@@ -1645,7 +1645,7 @@ function initThree() {
   pGeometry.setAttribute('position', new THREE.BufferAttribute(particlesPositions, 3));
   
   const pMaterial = new THREE.PointsMaterial({
-    color: 0xf0c040,
+    color: 0xb45309,
     size: 0.12,
     transparent: true,
     opacity: 0.5

@@ -24,18 +24,18 @@
   @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
   :root {
-    --bg-dark: #060c13;
-    --bg-panel: #0b141f;
-    --bg-card: #101c2b;
-    --border-cyan: #00e5ff;
-    --border-cyan-dim: rgba(0, 229, 255, 0.2);
-    --border-gold: #f0c040;
-    --border-gold-dim: rgba(240, 192, 64, 0.25);
-    --text-primary: #e2efff;
-    --text-dim: #8ba0b8;
+    --bg-dark: #f3f6fc;
+    --bg-panel: rgba(255, 255, 255, 0.85);
+    --bg-card: #ffffff;
+    --border-cyan: #0066cc;
+    --border-cyan-dim: rgba(0, 102, 204, 0.15);
+    --border-gold: #b45309;
+    --border-gold-dim: rgba(180, 83, 9, 0.2);
+    --text-primary: #0f172a;
+    --text-dim: #475569;
     --font-mono: 'Fira Code', monospace;
-    --axial-color: #ff4444;
-    --tangential-color: #44ff44;
+    --axial-color: #d01750;
+    --tangential-color: #0d9488;
     --oblique-color: #ab47bc;
   }
 
@@ -51,7 +51,7 @@
   .top-bar {
     width: 100%;
     padding: 12px 30px;
-    background: #02070c;
+    background: #e0e7ff;
     border-bottom: 1px solid var(--border-cyan-dim);
     display: flex;
     justify-content: space-between;
@@ -86,7 +86,7 @@
   h1.main-title {
     font-family: var(--font-mono);
     font-size: 1.6rem;
-    color: #fff;
+    color: var(--text);
     text-align: center;
     margin: 20px 0 2px 0;
     text-transform: uppercase;
@@ -163,9 +163,9 @@
   }
   select {
     width: 100%;
-    background: #02070c;
+    background: #e0e7ff;
     border: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
+    color: var(--text);
     font-family: var(--font-mono);
     font-size: 0.85rem;
     padding: 6px;
@@ -179,7 +179,7 @@
   input[type=range] {
     flex: 1;
     -webkit-appearance: none;
-    background: #02070c;
+    background: #e0e7ff;
     height: 4px;
     border-radius: 2px;
     outline: none;
@@ -197,9 +197,9 @@
   }
   input[type=number] {
     width: 70px;
-    background: #02070c;
+    background: #e0e7ff;
     border: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
+    color: var(--text);
     font-family: var(--font-mono);
     font-size: 0.9rem;
     padding: 4px;
@@ -252,7 +252,7 @@
     border: 1px solid var(--border-cyan-dim);
   }
   .tab-btn:hover:not(.active) {
-    color: #fff;
+    color: var(--text);
     background: rgba(255,255,255,0.02);
   }
 
@@ -273,7 +273,7 @@
   }
   .eq-card {
     background: var(--bg-panel);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 6px;
     padding: 15px;
     display: flex;
@@ -292,7 +292,7 @@
     letter-spacing: 1px;
   }
   .eq-math {
-    background: #02070c;
+    background: #e0e7ff;
     border: 1px solid rgba(255,255,255,0.03);
     border-radius: 4px;
     padding: 8px;
@@ -316,7 +316,7 @@
     font-family: var(--font-mono);
     font-size: 1.25rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text);
   }
   .eq-res-multi {
     display: flex;
@@ -344,7 +344,7 @@
   }
   .chart-card {
     background: var(--bg-panel);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 8px;
     padding: 16px;
     display: flex;
@@ -365,7 +365,7 @@
     font-family: var(--font-mono);
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: #fff;
+    color: var(--text);
     letter-spacing: 1px;
   }
   .chart-desc {
@@ -389,7 +389,7 @@
   /* TABLES */
   .modes-table-container {
     background: var(--bg-panel);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 8px;
     padding: 16px;
     margin-top: 10px;
@@ -397,8 +397,8 @@
   .table-header {
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    color: #fff;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--text);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.06);
     padding-bottom: 8px;
     margin-bottom: 12px;
     text-transform: uppercase;
@@ -926,7 +926,7 @@
     plywood: { name: "Plywood (12mm)", coeffs: [0.15, 0.18, 0.10, 0.07, 0.06, 0.07], color: '#ffb74d' },
     curtains: { name: "Heavy draped curtains", coeffs: [0.07, 0.31, 0.49, 0.81, 0.66, 0.54], color: '#e57373' },
     plaster: { name: "Gypsum board / Plasterboard", coeffs: [0.29, 0.10, 0.05, 0.04, 0.07, 0.09], color: '#a1887f' },
-    anechoic: { name: "Perfect Absorber (1.0)", coeffs: [1.00, 1.00, 1.00, 1.00, 1.00, 1.00], color: '#00e5ff' },
+    anechoic: { name: "Perfect Absorber (1.0)", coeffs: [1.00, 1.00, 1.00, 1.00, 1.00, 1.00], color: '#0066cc' },
     reflective: { name: "Perfect Reflector (0.0)", coeffs: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00], color: '#ff5722' }
   };
 
@@ -1249,7 +1249,7 @@
   let rt60BandsChart, materialsChart, sabinesChart, bonelloChart, splFieldChart, schroederSweepChart;
 
   function initCharts() {
-    Chart.defaults.color = '#8ba0b8';
+    Chart.defaults.color = '#475569';
     Chart.defaults.font.family = 'Rajdhani';
     Chart.defaults.font.size = 11;
 
@@ -1262,7 +1262,7 @@
         datasets: [
           { label: 'Sabine', data: [], borderColor: '#ff9100', borderWidth: 2, fill: false, tension: 0.3 },
           { label: 'Sabine + Air', data: [], borderColor: '#ffb74d', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.3 },
-          { label: 'Eyring', data: [], borderColor: '#00e5ff', borderWidth: 2, fill: false, tension: 0.3 },
+          { label: 'Eyring', data: [], borderColor: '#0066cc', borderWidth: 2, fill: false, tension: 0.3 },
           { label: 'Eyring + Air', data: [], borderColor: '#4dd0e1', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.3 },
           { label: 'Fitzroy (Dir)', data: [], borderColor: '#ffea00', borderWidth: 2, fill: false, tension: 0.3 },
           { label: 'Arau-Puchades (Dir)', data: [], borderColor: '#ab47bc', borderWidth: 2, fill: false, tension: 0.3 }
@@ -1272,8 +1272,8 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { title: { display: true, text: 'Reverberation Time RT60 (s)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { title: { display: true, text: 'Reverberation Time RT60 (s)' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+          x: { grid: { color: 'rgba(0, 102, 204, 0.06)' } }
         },
         plugins: { legend: { position: 'top', labels: { boxWidth: 15 } } }
       }
@@ -1291,8 +1291,8 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { min: 0, max: 1.1, title: { display: true, text: 'Absorption Coefficient (α)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { min: 0, max: 1.1, title: { display: true, text: 'Absorption Coefficient (α)' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+          x: { grid: { color: 'rgba(0, 102, 204, 0.06)' } }
         },
         plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }
       }
@@ -1304,14 +1304,14 @@
       type: 'bar',
       data: {
         labels: ['125 Hz', '250 Hz', '500 Hz', '1 kHz', '2 kHz', '4 kHz'],
-        datasets: [{ label: 'Sabines (m²)', data: [], backgroundColor: 'rgba(240, 192, 64, 0.4)', borderColor: '#f0c040', borderWidth: 1 }]
+        datasets: [{ label: 'Sabines (m²)', data: [], backgroundColor: 'rgba(240, 192, 64, 0.4)', borderColor: '#b45309', borderWidth: 1 }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { title: { display: true, text: 'Equivalent Area A (m²)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { title: { display: true, text: 'Equivalent Area A (m²)' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+          x: { grid: { color: 'rgba(0, 102, 204, 0.06)' } }
         }
       }
     });
@@ -1328,8 +1328,8 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { ticks: { stepSize: 1 }, title: { display: true, text: 'Number of Modes' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { title: { display: true, text: '1/3 Octave Center Frequency (Hz)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { ticks: { stepSize: 1 }, title: { display: true, text: 'Number of Modes' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+          x: { title: { display: true, text: '1/3 Octave Center Frequency (Hz)' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } }
         },
         plugins: { legend: { display: false } }
       }
@@ -1343,17 +1343,17 @@
         labels: [],
         datasets: [
           { label: 'Direct Field (-6dB/doubling)', data: [], borderColor: '#ff9100', borderWidth: 1.5, fill: false, pointRadius: 0 },
-          { label: 'Diffuse Field (Reverberant)', data: [], borderColor: '#00e5ff', borderWidth: 1.5, fill: false, pointRadius: 0 },
+          { label: 'Diffuse Field (Reverberant)', data: [], borderColor: '#0066cc', borderWidth: 1.5, fill: false, pointRadius: 0 },
           { label: 'Total SPL Level', data: [], borderColor: '#fff', borderWidth: 2, fill: false, pointRadius: 0 },
-          { label: 'Critical Distance (Dc)', data: [], borderColor: '#f0c040', borderWidth: 1.5, borderDash: [6, 3], pointRadius: 6, pointBackgroundColor: '#f0c040', showLine: true }
+          { label: 'Critical Distance (Dc)', data: [], borderColor: '#b45309', borderWidth: 1.5, borderDash: [6, 3], pointRadius: 6, pointBackgroundColor: '#b45309', showLine: true }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { title: { display: true, text: 'Sound Pressure Level (dB SPL)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { type: 'linear', min: 0.5, max: 20, title: { display: true, text: 'Distance to source (m)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { title: { display: true, text: 'Sound Pressure Level (dB SPL)' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+          x: { type: 'linear', min: 0.5, max: 20, title: { display: true, text: 'Distance to source (m)' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } }
         }
       }
     });
@@ -1364,16 +1364,16 @@
       type: 'line',
       data: {
         datasets: [
-          { label: 'Schroeder Frequency (fs)', data: [], borderColor: '#00e5ff', borderWidth: 2, pointRadius: 0, fill: false },
-          { label: 'Current State', data: [], borderColor: '#f0c040', backgroundColor: '#f0c040', pointRadius: 8, showLine: false }
+          { label: 'Schroeder Frequency (fs)', data: [], borderColor: '#0066cc', borderWidth: 2, pointRadius: 0, fill: false },
+          { label: 'Current State', data: [], borderColor: '#b45309', backgroundColor: '#b45309', pointRadius: 8, showLine: false }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { title: { display: true, text: 'Schroeder Frequency (Hz)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          x: { type: 'linear', title: { display: true, text: 'Reverberation Time RT60 (s)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          y: { title: { display: true, text: 'Schroeder Frequency (Hz)' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+          x: { type: 'linear', title: { display: true, text: 'Reverberation Time RT60 (s)' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } }
         }
       }
     });
@@ -1515,13 +1515,13 @@
     const h = rect.height;
 
     // Clear
-    ctx.fillStyle = '#02070c';
+    ctx.fillStyle = '#e0e7ff';
     ctx.fillRect(0, 0, w, h);
 
     // Dibujar cuadrícula y frecuencias indicadas
     ctx.strokeStyle = 'rgba(255,255,255,0.06)';
     ctx.lineWidth = 1;
-    ctx.fillStyle = '#8ba0b8';
+    ctx.fillStyle = '#475569';
     ctx.font = '10px Fira Code, monospace';
 
     const fMin = 20;
@@ -1595,7 +1595,7 @@
     const h = rect.height;
 
     // Clear
-    ctx.fillStyle = '#02070c';
+    ctx.fillStyle = '#e0e7ff';
     ctx.fillRect(0, 0, w, h);
 
     // Rango de diagramas Bolt: Ancho/Alto (X) 1.0 a 3.0, Largo/Alto (Y) 1.0 a 3.0
@@ -1612,7 +1612,7 @@
     // Dibujar cuadrícula
     ctx.strokeStyle = 'rgba(255,255,255,0.06)';
     ctx.lineWidth = 1;
-    ctx.fillStyle = '#8ba0b8';
+    ctx.fillStyle = '#475569';
     ctx.font = '10px Fira Code, monospace';
 
     for (let v = 1.0; v <= 3.0; v += 0.5) {
@@ -1647,7 +1647,7 @@
       [1.8, 1.9], [1.5, 1.45], [1.3, 1.3]
     ];
 
-    ctx.fillStyle = 'rgba(0, 229, 255, 0.12)';
+    ctx.fillStyle = 'rgba(0, 102, 204, 0.12)';
     ctx.strokeStyle = 'var(--border-cyan)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -1791,7 +1791,7 @@
     const h = rect.height;
 
     // Clear
-    ctx.fillStyle = '#02070c';
+    ctx.fillStyle = '#e0e7ff';
     ctx.fillRect(0, 0, w, h);
 
     const L = computedResults.L;
@@ -1901,7 +1901,7 @@
     // Dibujar receptor (L)
     ctx.beginPath();
     ctx.arc(rx, ry, 7, 0, 2 * Math.PI);
-    ctx.fillStyle = '#00e5ff';
+    ctx.fillStyle = '#0066cc';
     ctx.fill();
     ctx.strokeStyle = '#fff';
     ctx.stroke();
@@ -1932,7 +1932,7 @@
     const h = rect.height;
 
     // Clear
-    ctx.fillStyle = '#02070c';
+    ctx.fillStyle = '#e0e7ff';
     ctx.fillRect(0, 0, w, h);
 
     const rtVal = computedResults.sabineAirRT ? computedResults.sabineAirRT[2] : 1.2;
@@ -1979,7 +1979,7 @@
       }
 
       // Relleno de fondo de la rebanada para ocultar las de atrás
-      ctx.fillStyle = '#0b141f'; // color del panel
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)'; // color del panel
       ctx.beginPath();
       ctx.moveTo(points[0][0], h - 10);
       for (let i = 0; i < points.length; i++) {
@@ -2001,21 +2001,21 @@
 
       // Etiqueta de tiempo
       if (k % 2 === 0) {
-        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.5)';
         ctx.font = '9px Fira Code';
         ctx.fillText(`${k*50}ms`, points[points.length - 1][0] + 5, points[points.length - 1][1] + 4);
       }
     }
 
     // Eje de frecuencias base
-    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.strokeStyle = 'rgba(15, 23, 42, 0.12)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(40, h - 35);
     ctx.lineTo(w - 60, h - 35);
     ctx.stroke();
 
-    ctx.fillStyle = '#8ba0b8';
+    ctx.fillStyle = '#475569';
     ctx.font = '10px Fira Code';
     const baseGuides = [20, 50, 100, 150, 200];
     baseGuides.forEach(f => {
@@ -2053,7 +2053,7 @@
     // Contorno del Cuarto (Cube 1, 1, 1 scaled dynamically to keep proportions)
     const boxGeom = new THREE.BoxGeometry(1, 1, 1);
     const boxMat = new THREE.MeshBasicMaterial({ 
-      color: '#00e5ff', 
+      color: '#0066cc', 
       transparent: true, 
       opacity: 0.05, 
       side: THREE.DoubleSide 
@@ -2063,7 +2063,7 @@
     // Edges (glowing wireframe borders)
     const edges = new THREE.EdgesGeometry(boxGeom);
     const lineMat = new THREE.LineBasicMaterial({ 
-      color: '#00e5ff', 
+      color: '#0066cc', 
       transparent: true, 
       opacity: 0.65 
     });
@@ -2071,7 +2071,7 @@
     roomOutline3D.add(lineSegments);
 
     // Floor Grid Helper (1 unit wide/deep, scaled with the room)
-    const gridHelper = new THREE.GridHelper(1, 10, 0x00e5ff, 0x004455);
+    const gridHelper = new THREE.GridHelper(1, 10, 0x0066cc, 0x004455);
     gridHelper.material.transparent = true;
     gridHelper.material.opacity = 0.45;
     gridHelper.position.y = -0.5; // aligned to bottom floor
@@ -2081,10 +2081,10 @@
 
     // Create 3D Source (red sphere representing speaker)
     const srcGeom = new THREE.SphereGeometry(0.12, 16, 16);
-    const srcMat = new THREE.MeshBasicMaterial({ color: '#ff4444' });
+    const srcMat = new THREE.MeshBasicMaterial({ color: '#d01750' });
     sourceMesh3D = new THREE.Mesh(srcGeom, srcMat);
     const srcRingGeom = new THREE.TorusGeometry(0.18, 0.015, 4, 32);
-    const srcRingMat = new THREE.MeshBasicMaterial({ color: '#ff4444', transparent: true, opacity: 0.5 });
+    const srcRingMat = new THREE.MeshBasicMaterial({ color: '#d01750', transparent: true, opacity: 0.5 });
     const srcRing = new THREE.Mesh(srcRingGeom, srcRingMat);
     srcRing.rotation.x = Math.PI / 2;
     sourceMesh3D.add(srcRing);
@@ -2092,10 +2092,10 @@
 
     // Create 3D Receiver (gold sphere representing listener)
     const recGeom = new THREE.SphereGeometry(0.12, 16, 16);
-    const recMat = new THREE.MeshBasicMaterial({ color: '#f0c040' });
+    const recMat = new THREE.MeshBasicMaterial({ color: '#b45309' });
     receiverMesh3D = new THREE.Mesh(recGeom, recMat);
     const recRingGeom = new THREE.TorusGeometry(0.18, 0.015, 4, 32);
-    const recRingMat = new THREE.MeshBasicMaterial({ color: '#f0c040', transparent: true, opacity: 0.5 });
+    const recRingMat = new THREE.MeshBasicMaterial({ color: '#b45309', transparent: true, opacity: 0.5 });
     const recRing = new THREE.Mesh(recRingGeom, recRingMat);
     recRing.rotation.x = Math.PI / 2;
     receiverMesh3D.add(recRing);

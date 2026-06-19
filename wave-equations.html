@@ -10,13 +10,13 @@
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
   :root {
-    --cyan: #00e5ff;
-    --blue-deep: #020813;
-    --gold: #f0c040;
-    --pink: #ff4081;
-    --text: #c8daf0;
-    --bg-panel: rgba(7, 18, 33, 0.8);
-    --border-glass: rgba(0, 229, 255, 0.2);
+    --cyan: #0066cc;
+    --blue-deep: #f3f6fc;
+    --gold: #b45309;
+    --pink: #d01750;
+    --text: #0f172a;
+    --bg-panel: rgba(255, 255, 255, 0.85);
+    --border-glass: rgba(0, 102, 204, 0.15);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -46,7 +46,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(2, 8, 19, 0.95), transparent);
+    background: linear-gradient(to bottom, rgba(224, 231, 255, 0.95), transparent);
   }
 
   .back-btn {
@@ -84,7 +84,7 @@
   }
   .page-subtitle {
     font-size: 1.05rem;
-    color: rgba(200, 218, 240, 0.6);
+    color: #475569;
     letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 25px;
@@ -100,7 +100,7 @@
     z-index: 10;
   }
   .tab-btn {
-    background: rgba(10, 22, 40, 0.6);
+    background: rgba(255, 255, 255, 0.85);
     border: 1px solid rgba(0, 229, 255, 0.3);
     color: var(--cyan);
     font-family: 'Orbitron', monospace;
@@ -113,12 +113,12 @@
     text-transform: uppercase;
   }
   .tab-btn:hover, .tab-btn.active {
-    background: rgba(0, 229, 255, 0.15);
+    background: rgba(0, 102, 204, 0.15);
     border-color: var(--cyan);
     box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
   }
   .tab-btn.active {
-    color: #fff;
+    color: var(--text);
     font-weight: 700;
   }
 
@@ -141,7 +141,7 @@
 
   .panel {
     background: var(--bg-panel);
-    border: 1px solid var(--border-glass);
+    border: 1px solid rgba(0, 102, 204, 0.15);
     border-radius: 16px;
     padding: 25px;
     backdrop-filter: blur(15px);
@@ -154,8 +154,8 @@
   .panel h2 {
     font-family: 'Orbitron', monospace;
     font-size: 1.25rem;
-    color: #fff;
-    border-bottom: 1px solid var(--border-glass);
+    color: var(--text);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.15);
     padding-bottom: 10px;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -195,7 +195,7 @@
   input[type=range] {
     flex: 1;
     -webkit-appearance: none;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.08);
     height: 6px;
     border-radius: 3px;
     outline: none;
@@ -211,9 +211,9 @@
   }
 
   input[type=number], select {
-    background: rgba(0,0,0,0.6);
+    background: rgba(255,255,255,0.85);
     border: 1px solid var(--cyan);
-    color: #fff;
+    color: var(--text);
     font-family: 'Orbitron', monospace;
     font-size: 1.1rem;
     padding: 8px;
@@ -245,8 +245,8 @@
     gap: 15px;
   }
   .result-box {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(0, 229, 255, 0.15);
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0, 102, 204, 0.15);
     border-radius: 10px;
     padding: 15px;
     text-align: center;
@@ -256,7 +256,7 @@
   }
   .result-box .label {
     font-size: 0.85rem;
-    color: rgba(200,218,240,0.6);
+    color: #475569;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 5px;
@@ -295,7 +295,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.6);
     border: 1px solid rgba(0, 229, 255, 0.1);
     border-radius: 10px;
     overflow: hidden;
@@ -310,7 +310,7 @@
     padding: 10px 15px;
     background: rgba(255, 82, 82, 0.1);
     border: 1px solid rgba(255, 82, 82, 0.3);
-    color: #ff5252;
+    color: #d01750;
     border-radius: 8px;
     font-size: 0.95rem;
     display: none;
@@ -647,7 +647,7 @@ const pGeo = new THREE.BufferGeometry();
 const pPos = new Float32Array(300 * 3);
 for (let i = 0; i < 900; i++) pPos[i] = (Math.random()-0.5)*60;
 pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x40c4ff, size: 0.08, transparent: true, opacity: 0.18 }));
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x0066cc, size: 0.08, transparent: true, opacity: 0.18 }));
 scene.add(particles);
 
 function animateBg(t) {
@@ -837,8 +837,8 @@ let dopplerChart = new Chart(ctxDop, {
       {
         label: 'Current State',
         data: [],
-        backgroundColor: '#ff4081',
-        borderColor: '#ff4081',
+        backgroundColor: '#d01750',
+        borderColor: '#d01750',
         pointRadius: 6,
         showLine: false
       }
@@ -849,8 +849,8 @@ let dopplerChart = new Chart(ctxDop, {
     maintainAspectRatio: false,
     animation: { duration: 150 },
     scales: {
-      x: { title: { display: true, text: 'Source Speed (v_s, m/s)', color: '#00e5ff' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-      y: { title: { display: true, text: 'Frequency (Hz)', color: '#f0c040' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      x: { title: { display: true, text: 'Source Speed (v_s, m/s)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+      y: { title: { display: true, text: 'Frequency (Hz)', color: '#b45309' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } }
     },
     plugins: { legend: { display: false } }
   }
@@ -949,13 +949,13 @@ function startVisualizer() {
     ctx.clearRect(0, 0, w, h);
 
     // Draw background columns
-    ctx.fillStyle = 'rgba(7, 18, 33, 0.4)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
     ctx.fillRect(0, 0, midX, h);
-    ctx.fillStyle = 'rgba(10, 22, 40, 0.4)';
+    ctx.fillStyle = 'rgba(240, 244, 250, 0.6)';
     ctx.fillRect(midX, 0, w - midX, h);
 
     // Grid dots
-    ctx.fillStyle = 'rgba(0, 229, 255, 0.02)';
+    ctx.fillStyle = 'rgba(0, 102, 204, 0.02)';
     for (let gx = 15; gx < w; gx += 25) {
       for (let gy = 15; gy < h; gy += 25) {
         ctx.beginPath(); ctx.arc(gx, gy, 0.8, 0, 2 * Math.PI); ctx.fill();
@@ -999,7 +999,7 @@ function startVisualizer() {
       if (x === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = '#00e5ff'; // Cyan
+    ctx.strokeStyle = '#0066cc'; // Cyan
     ctx.shadowBlur = 10; ctx.shadowColor = 'rgba(0, 229, 255, 0.5)';
     ctx.stroke();
 
@@ -1017,26 +1017,26 @@ function startVisualizer() {
       if (x === midX) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = '#ff4081'; // Pink
-    ctx.shadowColor = 'rgba(255, 64, 129, 0.5)';
+    ctx.strokeStyle = '#d01750'; // Pink
+    ctx.shadowColor = 'rgba(208, 23, 80, 0.5)';
     ctx.stroke();
 
     // Reset shadow
     ctx.shadowBlur = 0;
 
     // Interface Info Texts
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#0f172a';
     ctx.font = '700 12px Rajdhani';
     ctx.fillText('MEDIUM 1', 25, 30);
     ctx.fillText('MEDIUM 2', midX + 25, 30);
 
-    ctx.fillStyle = 'rgba(200, 218, 240, 0.5)';
+    ctx.fillStyle = '#475569';
     ctx.font = '10px Orbitron';
     ctx.fillText(`c = ${c1.toFixed(1)} m/s`, 25, 45);
     ctx.fillText(`c = ${c2.toFixed(1)} m/s`, midX + 25, 45);
 
     // Display boundary coefficients inside canvas
-    ctx.fillStyle = '#f0c040';
+    ctx.fillStyle = '#b45309';
     ctx.font = '700 11px Orbitron';
     ctx.fillText(`Reflection (r_p) = ${(rp >= 0 ? '+' : '') + rp.toFixed(3)}`, midX - 180, h - 25);
     ctx.fillText(`Transmission (t_p) = ${tp.toFixed(3)}`, midX + 20, h - 25);

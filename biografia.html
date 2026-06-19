@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tom Danley — Biografía e Hitos</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+  
+  :root {
+    --accent: #0066cc;
+    --accent-dim: rgba(64,196,255,0.15);
+    --accent-glow: rgba(64,196,255,0.4);
+    --blue-deep: #f3f6fc;
+    --gold: #b45309;
+    --gold-dim: rgba(180, 83, 9, 0.12);
+    --cyan: #0066cc;
+    --text: #0f172a;
+    --bg-panel: rgba(255, 255, 255, 0.85);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--blue-deep);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  canvas#three-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .top-bar {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding: 20px 40px;
+    display: flex;
+    background: linear-gradient(to bottom, rgba(3,10,16,0.9), transparent);
+  }
+
+  .back-btn {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    transition: all 0.3s;
+    background: var(--accent-dim);
+    letter-spacing: 1px;
+  }
+
+  .back-btn:hover {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.8rem;
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--accent-glow);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 20px 0 5px 0;
+    z-index: 10;
+    text-align: center;
+  }
+
+  .page-subtitle {
+    font-size: 1.15rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    z-index: 10;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .bio-container {
+    position: relative;
+    z-index: 10;
+    width: 90%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  .profile-section {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+  }
+
+  @media(max-width: 768px) {
+    .profile-section {
+      grid-template-columns: 1fr;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+  }
+
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--accent-dim);
+    border-radius: 16px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(64,196,255,0.02);
+  }
+
+  .image-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .bio-image {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 4/5;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.25);
+  }
+
+  .quick-facts {
+    margin-top: 20px;
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .fact-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(200, 218, 240, 0.08);
+  }
+
+  .fact-row:last-child {
+    border-bottom: none;
+  }
+
+  .fact-label {
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .fact-value {
+    color: var(--accent);
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+  }
+
+  .danley-bio h2 {
+    font-family: 'Orbitron', monospace;
+    color: var(--accent);
+    font-size: 1.5rem;
+    margin-top: 35px;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--accent-dim);
+    padding-bottom: 8px;
+    text-shadow: 0 0 15px var(--accent-glow);
+  }
+  
+  .danley-bio h2:first-of-type {
+    margin-top: 0;
+  }
+  
+  .danley-bio p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: justify;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  .danley-bio p strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  
+  .danley-bio .quote-card {
+    background: rgba(0, 229, 255, 0.03);
+    border-left: 4px solid var(--cyan);
+    padding: 20px;
+    margin: 30px 0;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .danley-bio .quote-card p {
+    font-style: italic;
+    margin-bottom: 0;
+    color: var(--cyan);
+    font-size: 1.25rem;
+    text-align: left;
+    font-family: 'Rajdhani', sans-serif;
+    line-height: 1.5;
+  }
+
+  .danley-bio .family-section {
+    background: rgba(240, 192, 64, 0.02);
+    border-left: 4px solid var(--gold);
+    padding: 25px;
+    margin-top: 35px;
+    border-radius: 0 8px 8px 0;
+    border: 1px solid rgba(240, 192, 64, 0.08);
+    border-left: 4px solid var(--gold);
+  }
+
+  .danley-bio .family-section h3 {
+    color: var(--gold);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="three-bg"></canvas>
+<div class="top-bar">
+  <a href="index.html" class="back-btn">← BACK TO CALCULATOR</a>
+</div>
+
+<h1>TOM DANLEY</h1>
+<div class="page-subtitle">El Ingeniero de lo Imposible</div>
+
+<div class="bio-container">
+  
+  <!-- Profile & Intro Section -->
+  <div class="profile-section">
+    <div class="panel image-panel">
+      <img src="tom.jpg" alt="Tom Danley" class="bio-image">
+      <div class="quick-facts">
+        <div class="fact-row">
+          <span class="fact-label">Rol</span>
+          <span class="fact-value">Inventor / Co-founder</span>
+        </div>
+        <div class="fact-row">
+          <span class="fact-label">Empresa</span>
+          <span class="fact-value">Danley Sound Labs</span>
+        </div>
+        <div class="fact-row">
+          <span class="fact-label">Ex-NASA</span>
+          <span class="fact-value">Intersonics</span>
+        </div>
+        <div class="fact-row">
+          <span class="fact-label">Patentes</span>
+          <span class="fact-value">17+ Acoustical</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="panel danley-bio">
+      <h2>Artesano de la Física</h2>
+      <p>
+        <strong>Tom Danley</strong> no es un diseñador de altavoces convencional; es un artesano de la física acústica. Como inventor estadounidense, cofundador de <strong>Danley Sound Labs</strong> y ex-contratista de la NASA, su trayectoria profesional está guiada por una premisa inquebrantable: <em>«La física no se preocupa por tu opinión; simplemente funciona»</em>. Su enfoque pragmático y empírico ha desafiado las teorías académicas rígidas, redefiniendo la manera en que experimentamos el sonido a gran escala.
+      </p>
+      
+      <div class="quote-card">
+        <p>"The physics doesn't care about your opinion. It just works."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Bio Panels -->
+  <div class="panel danley-bio">
+    <h2>La Conquista de la Gravedad Cero (1970 - 1980)</h2>
+    <p>
+      Antes de revolucionar los estadios del mundo, Danley trabajó con la mirada puesta en el cosmos. Durante las décadas de <strong>1970 y 1980</strong>, como ingeniero principal en Intersonics Corporation, colaboró estrechamente con la <strong>NASA</strong> en el desarrollo de sistemas de levitación acústica en microgravedad para las misiones del transbordador espacial (<em>Space Shuttle</em>). Esta experiencia única le enseñó a concebir la acústica no solo como un fenómeno auditivo pasivo, sino como una fuerza física pura capaz de manipular materia en ausencia de gravedad.
+    </p>
+
+    <h2>Servodrive: La Revolución del Grave Puro</h2>
+    <p>
+      Al regresar a la tierra, Danley aplicó esta mentalidad disruptiva para resolver el enemigo histórico de la fidelidad acústica en conciertos: la compresión térmica de las bobinas de voz convencionales. La solución fue su invención del <strong>Servodrive Subwoofer</strong>, un sistema que reemplazaba la bobina tradicional por un servomotor de alta velocidad acoplado a las membranas. Este avance eliminó la distorsión por calor y proporcionó una potencia sin precedentes, convirtiéndose en el motor de las giras de leyendas como <strong>Michael Jackson</strong> y <strong>U2</strong>, y en el pilar acústico de las atracciones más inmersivas de los parques temáticos de <strong>Disney</strong>.
+    </p>
+
+    <h2>Coherencia Total: Synergy Horn y Tapped Horn</h2>
+    <p>
+      La madurez de su carrera llegó con la cofundación de <strong>Danley Sound Labs</strong>, el laboratorio desde donde ha patentado tecnologías que hoy se consideran estándares de excelencia global. Su obra maestra es el <strong>Synergy Horn</strong>, una patente que permite que múltiples transductores (graves, medios y agudos) compartan una sola garganta acústica de manera coherente, emitiendo un frente de onda único libre de cancelaciones de fase. Junto con el <strong>Tapped Horn</strong>, que redefinió el rendimiento de los subwoofers en espacios optimizados, Danley demostró que la geometría acústica inteligente es infinitamente superior a la corrección digital.
+    </p>
+
+    <section class="family-section">
+      <h3>El Legado Familiar y el Modelado del Futuro</h3>
+      <p>
+        El impacto de Tom Danley trasciende las patentes; se proyecta en las personas que continúan y perfeccionan su visión. En el núcleo de su vida se encuentran sus hijas, <strong>Clare</strong> y <strong>Ali Danley</strong>.
+      </p>
+      <p>
+        Es en su hija <strong>Ali Danley</strong> donde el legado técnico encuentra un puente directo hacia el futuro. Con un talento extraordinario en el diseño asistido por computadora (CAD), Ali se ha consolidado como una pieza clave y altamente respetada en el equipo de modelado de ingeniería. Su excepcional destreza técnica para traducir las complejas ideas de física acústica de Tom a modelos virtuales ultraprecisos permite dar vida a proyectos que desafían los límites del diseño tradicional. Es la simbiosis perfecta entre la intuición del inventor y la maestría digital de la ingeniería moderna.
+      </p>
+    </section>
+  </div>
+
+</div>
+
+<script>
+// Three.js Particle System Background
+const canvas = document.getElementById('three-bg');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 30;
+
+// Nodes / Stars
+const pGeo = new THREE.BufferGeometry();
+const pCount = 300;
+const pPos = new Float32Array(pCount * 3);
+for (let i = 0; i < pCount * 3; i++) {
+  pPos[i] = (Math.random() - 0.5) * 80;
+}
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const points = new THREE.Points(pGeo, new THREE.PointsMaterial({
+  color: 0x0066cc,
+  size: 0.12,
+  transparent: true,
+  opacity: 0.45
+}));
+scene.add(points);
+
+// Torus Rings
+const ringGeo = new THREE.TorusGeometry(15, 0.05, 8, 100);
+const ringMat = new THREE.MeshBasicMaterial({ color: 0x0066cc, transparent: true, opacity: 0.04 });
+const rings = [];
+for (let i = 0; i < 4; i++) {
+  const r = new THREE.Mesh(ringGeo, ringMat.clone());
+  r.userData = { phase: i * 1.5, baseScale: 0.4 + i * 0.4 };
+  scene.add(r);
+  rings.push(r);
+}
+
+function animate(t) {
+  requestAnimationFrame(animate);
+  const time = t * 0.0008;
+  points.rotation.y = time * 0.05;
+  points.rotation.x = Math.sin(time * 0.1) * 0.05;
+  
+  rings.forEach(r => {
+    const s = r.userData.baseScale + Math.sin(time + r.userData.phase) * 0.2;
+    r.scale.setScalar(s);
+    r.material.opacity = 0.03 + Math.sin(time + r.userData.phase) * 0.015;
+    r.rotation.x = Math.sin(time * 0.1) * 0.3;
+    r.rotation.y = time * 0.08;
+  });
+  
+  renderer.render(scene, camera);
+}
+animate(0);
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>

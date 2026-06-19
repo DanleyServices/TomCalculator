@@ -24,16 +24,16 @@
   @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
   
   :root {
-    --accent: #ffb300; /* Amber for measurement-style layout */
-    --accent-dim: rgba(255, 179, 0, 0.12);
-    --accent-glow: rgba(255, 179, 0, 0.45);
-    --cyan: #00e5ff;
-    --cyan-dim: rgba(0, 229, 255, 0.12);
-    --blue-deep: #050a12;
-    --panel-bg: rgba(10, 18, 30, 0.85);
-    --border-glass: rgba(255, 179, 0, 0.2);
-    --text: #c8daf0;
-    --text-dim: rgba(200, 218, 240, 0.6);
+    --accent: #0066cc; /* Amber for measurement-style layout */
+    --accent-dim: rgba(0, 102, 204, 0.12);
+    --accent-glow: rgba(0, 102, 204, 0.25);
+    --cyan: #0066cc;
+    --cyan-dim: rgba(0, 102, 204, 0.12);
+    --blue-deep: #f3f6fc;
+    --panel-bg: rgba(255, 255, 255, 0.85);
+    --border-glass: rgba(0, 102, 204, 0.15);
+    --text: #0f172a;
+    --text-dim: #475569;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -64,7 +64,7 @@
     justify-content: space-between;
     align-items: center;
     background: linear-gradient(to bottom, rgba(5, 10, 18, 0.95), transparent);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.06);
   }
 
   .back-btn {
@@ -131,7 +131,7 @@
   /* SIDEBAR NAVIGATION */
   .sidebar {
     background: var(--panel-bg);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 12px;
     padding: 15px;
     display: flex;
@@ -149,7 +149,7 @@
     text-transform: uppercase;
     margin-bottom: 10px;
     padding-bottom: 8px;
-    border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.15);
   }
   .tab-link {
     font-family: 'Rajdhani', sans-serif;
@@ -174,7 +174,7 @@
     box-shadow: 0 0 15px rgba(255, 179, 0, 0.25);
   }
   .tab-link:hover:not(.active) {
-    color: #fff;
+    color: var(--text);
     background: rgba(255, 255, 255, 0.03);
   }
 
@@ -182,7 +182,7 @@
   .content-panel {
     display: none;
     background: var(--panel-bg);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 12px;
     padding: 25px;
     backdrop-filter: blur(10px);
@@ -194,14 +194,14 @@
   }
 
   .panel-header {
-    border-bottom: 1px solid var(--border-glass);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.15);
     padding-bottom: 10px;
     margin-bottom: 25px;
   }
   .panel-header h2 {
     font-family: 'Orbitron', monospace;
     font-size: 1.35rem;
-    color: #fff;
+    color: var(--text);
     letter-spacing: 1px;
   }
   .panel-header p {
@@ -277,7 +277,7 @@
     width: 90px;
     background: rgba(0, 0, 0, 0.65);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
+    color: var(--text);
     font-family: 'Orbitron', monospace;
     font-size: 1rem;
     padding: 6px;
@@ -322,13 +322,13 @@
     margin-bottom: 2px;
   }
   .formula-display code {
-    color: #fff;
+    color: var(--text);
   }
 
   /* OUTPUT CARD / RESULTS */
   .output-box {
     background: rgba(0, 229, 255, 0.03);
-    border: 1px solid rgba(0, 229, 255, 0.15);
+    border: 1px solid rgba(0, 102, 204, 0.15);
     border-radius: 8px;
     padding: 15px;
     margin-top: 15px;
@@ -362,8 +362,8 @@
     gap: 15px;
   }
   .canvas-wrapper {
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0,0,0,0.08);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 8px;
     padding: 10px;
     height: 230px;
@@ -377,8 +377,8 @@
   }
 
   .chart-wrapper {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 8px;
     padding: 15px;
     height: 300px;
@@ -388,12 +388,12 @@
   .modes-list {
     max-height: 180px;
     overflow-y: auto;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.08);
     border-radius: 6px;
     padding: 10px;
     font-family: 'Fira Code', monospace;
     font-size: 0.8rem;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 102, 204, 0.06);
   }
   .modes-list::-webkit-scrollbar {
     width: 6px;
@@ -408,8 +408,8 @@
     padding: 4px 6px;
     border-bottom: 1px solid rgba(255,255,255,0.02);
   }
-  .mode-item.axial { color: #00e5ff; }
-  .mode-item.tangential { color: #f0c040; }
+  .mode-item.axial { color: #0066cc; }
+  .mode-item.tangential { color: #b45309; }
   .mode-item.oblique { color: #ff5722; }
 
   @media (max-width: 1000px) {
@@ -1676,8 +1676,8 @@ function drawRoomModesChart(modesData) {
       datasets: [{
         label: 'Resonancias de Sala (Hz)',
         data: modesData.map(d => ({ x: d.f, y: 1 })),
-        backgroundColor: '#00e5ff',
-        borderColor: '#00e5ff',
+        backgroundColor: '#0066cc',
+        borderColor: '#0066cc',
         pointRadius: 6,
         showLine: false
       }]
@@ -1686,7 +1686,7 @@ function drawRoomModesChart(modesData) {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Frecuencia Modal (Hz)', color: '#00e5ff' }, grid: { color: 'rgba(255,255,255,0.05)' }, min: 20, max: 250 },
+        x: { title: { display: true, text: 'Frecuencia Modal (Hz)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: 20, max: 250 },
         y: { display: false }
       },
       plugins: { legend: { display: false } }
@@ -1713,16 +1713,16 @@ function drawHaasChart(dt, dl) {
     type: 'line',
     data: {
       datasets: [
-        { label: 'Límite Haas (dB)', data: curve, borderColor: '#ffb300', borderDash: [5, 3], pointRadius: 0, fill: false },
-        { label: 'Ajuste Actual', data: [{ x: dt, y: Math.abs(dl) }], backgroundColor: '#00e5ff', pointRadius: 8, showLine: false }
+        { label: 'Límite Haas (dB)', data: curve, borderColor: '#0066cc', borderDash: [5, 3], pointRadius: 0, fill: false },
+        { label: 'Ajuste Actual', data: [{ x: dt, y: Math.abs(dl) }], backgroundColor: '#0066cc', pointRadius: 8, showLine: false }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Retardo (ms)', color: '#fff', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' }, min: 0, max: 80 },
-        y: { title: { display: true, text: 'Nivel (dB)', color: '#fff', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' }, min: 0, max: 20 }
+        x: { title: { display: true, text: 'Retardo (ms)', color: '#fff', font: { size: 10 } }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: 0, max: 80 },
+        y: { title: { display: true, text: 'Nivel (dB)', color: '#fff', font: { size: 10 } }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: 0, max: 20 }
       },
       plugins: { legend: { display: false } }
     }
@@ -1751,7 +1751,7 @@ function drawCombChart(dtMs, dlDb) {
       datasets: [{
         label: 'Respuesta Comb Filter (dB)',
         data: curve,
-        borderColor: '#00e5ff',
+        borderColor: '#0066cc',
         borderWidth: 1.5,
         pointRadius: 0,
         fill: false
@@ -1761,8 +1761,8 @@ function drawCombChart(dtMs, dlDb) {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Frecuencia (Hz)', color: '#00e5ff' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-        y: { title: { display: true, text: 'Amplitud (dB)', color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' }, min: -25, max: 7 }
+        x: { title: { display: true, text: 'Frecuencia (Hz)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+        y: { title: { display: true, text: 'Amplitud (dB)', color: '#fff' }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: -25, max: 7 }
       },
       plugins: { legend: { display: false } }
     }
@@ -1795,8 +1795,8 @@ function drawWeightingChart() {
     type: 'line',
     data: {
       datasets: [
-        { label: 'A-Weighting', data: aCurve, borderColor: '#ffb300', borderWidth: 2.5, pointRadius: 0, tension: 0.3 },
-        { label: 'C-Weighting', data: cCurve, borderColor: '#00e5ff', borderWidth: 1.5, borderDash: [4, 2], pointRadius: 0, tension: 0.3 }
+        { label: 'A-Weighting', data: aCurve, borderColor: '#0066cc', borderWidth: 2.5, pointRadius: 0, tension: 0.3 },
+        { label: 'C-Weighting', data: cCurve, borderColor: '#0066cc', borderWidth: 1.5, borderDash: [4, 2], pointRadius: 0, tension: 0.3 }
       ]
     },
     options: {
@@ -1805,8 +1805,8 @@ function drawWeightingChart() {
       scales: {
         x: {
           type: 'logarithmic',
-          title: { display: true, text: 'Frequency (Hz)', color: '#ffb300' },
-          grid: { color: 'rgba(255,255,255,0.05)' },
+          title: { display: true, text: 'Frequency (Hz)', color: '#0066cc' },
+          grid: { color: 'rgba(0, 102, 204, 0.06)' },
           min: 10, max: 20000,
           ticks: {
             callback: function(val) {
@@ -1815,9 +1815,9 @@ function drawWeightingChart() {
             }
           }
         },
-        y: { title: { display: true, text: 'Attenuation (dB)', color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' }, min: -40, max: 2 }
+        y: { title: { display: true, text: 'Attenuation (dB)', color: '#fff' }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: -40, max: 2 }
       },
-      plugins: { legend: { display: true, labels: { color: '#c8daf0' } } }
+      plugins: { legend: { display: true, labels: { color: '#0f172a' } } }
     }
   });
 }
@@ -1848,16 +1848,16 @@ function drawLineArrayChart(dTrans, sysDist, sens) {
     type: 'line',
     data: {
       datasets: [
-        { label: 'SPL Attenuation vs Distance (dB)', data: curve, borderColor: '#ffb300', borderWidth: 2, pointRadius: 0 },
-        { label: 'Listener', data: [{ x: sysDist, y: sens + currentLoss }], backgroundColor: '#00e5ff', pointRadius: 8, showLine: false }
+        { label: 'SPL Attenuation vs Distance (dB)', data: curve, borderColor: '#0066cc', borderWidth: 2, pointRadius: 0 },
+        { label: 'Listener', data: [{ x: sysDist, y: sens + currentLoss }], backgroundColor: '#0066cc', pointRadius: 8, showLine: false }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Distance (m)', color: '#ffb300' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-        y: { title: { display: true, text: 'SPL (dB)', color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        x: { title: { display: true, text: 'Distance (m)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+        y: { title: { display: true, text: 'SPL (dB)', color: '#fff' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } }
       },
       plugins: { legend: { display: false } }
     }
@@ -1875,13 +1875,13 @@ function drawSubwooferSpacingDiagram(freq, angle) {
 
   // Draw 4 subwoofer cabinets represented as squares
   const subSpacing = 40; // visual representation
-  ctxSub.fillStyle = '#ffb300';
+  ctxSub.fillStyle = '#0066cc';
   for (let i = -1.5; i <= 1.5; i += 1.0) {
     const sx = ox + i * subSpacing;
     ctxSub.fillRect(sx - 10, oy - 10, 20, 20);
     
     // Wavefront arcs
-    ctxSub.strokeStyle = 'rgba(255, 179, 0, 0.2)';
+    ctxSub.strokeStyle = 'rgba(0, 102, 204, 0.15)';
     ctxSub.lineWidth = 1;
     ctxSub.beginPath(); ctxSub.arc(sx, oy, 30, Math.PI, 2*Math.PI); ctxSub.stroke();
     ctxSub.beginPath(); ctxSub.arc(sx, oy, 55, Math.PI, 2*Math.PI); ctxSub.stroke();
@@ -1889,7 +1889,7 @@ function drawSubwooferSpacingDiagram(freq, angle) {
 
   // Draw steer vector / coverage angle limit
   const angRad = (angle / 2) * Math.PI / 180;
-  ctxSub.strokeStyle = '#00e5ff';
+  ctxSub.strokeStyle = '#0066cc';
   ctxSub.lineWidth = 1.5;
   ctxSub.beginPath(); ctxSub.moveTo(ox, oy); ctxSub.lineTo(ox - 90 * Math.sin(angRad), oy - 90 * Math.cos(angRad)); ctxSub.stroke();
   ctxSub.beginPath(); ctxSub.moveTo(ox, oy); ctxSub.lineTo(ox + 90 * Math.sin(angRad), oy - 90 * Math.cos(angRad)); ctxSub.stroke();
@@ -1908,7 +1908,7 @@ function drawVectorSummation(l1, l2, phaseDeg) {
   const ox = w / 2; const oy = h / 2;
 
   // Draw grid axes
-  ctxVector.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+  ctxVector.strokeStyle = 'rgba(0, 102, 204, 0.06)';
   ctxVector.lineWidth = 1;
   ctxVector.beginPath(); ctxVector.moveTo(0, oy); ctxVector.lineTo(w, oy); ctxVector.stroke();
   ctxVector.beginPath(); ctxVector.moveTo(ox, 0); ctxVector.lineTo(ox, h); ctxVector.stroke();
@@ -1918,7 +1918,7 @@ function drawVectorSummation(l1, l2, phaseDeg) {
   const len2 = Math.max(10, (l2 - 60) * 2);
 
   // Vector 1 (horizontal, 0 phase)
-  ctxVector.strokeStyle = '#ffb300';
+  ctxVector.strokeStyle = '#0066cc';
   ctxVector.lineWidth = 2.5;
   drawArrow(ox, oy, ox + len1, oy);
 
@@ -1926,7 +1926,7 @@ function drawVectorSummation(l1, l2, phaseDeg) {
   const rad = (phaseDeg * Math.PI) / 180;
   const v2x = ox + len2 * Math.cos(rad);
   const v2y = oy - len2 * Math.sin(rad); // invert Y for screen space
-  ctxVector.strokeStyle = '#00e5ff';
+  ctxVector.strokeStyle = '#0066cc';
   drawArrow(ox, oy, v2x, v2y);
 
   // Resulting Sum Vector (vector addition)
@@ -1973,7 +1973,7 @@ function drawDampingChart(zSpk, ampDf, gaugeVal) {
       datasets: [{
         label: 'Net DF at Speaker',
         data: curve,
-        borderColor: '#00e5ff',
+        borderColor: '#0066cc',
         borderWidth: 2,
         pointRadius: 0
       }]
@@ -1982,8 +1982,8 @@ function drawDampingChart(zSpk, ampDf, gaugeVal) {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Cable Length (m)', color: '#00e5ff' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-        y: { title: { display: true, text: 'Damping Factor', color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        x: { title: { display: true, text: 'Cable Length (m)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+        y: { title: { display: true, text: 'Damping Factor', color: '#fff' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } }
       },
       plugins: { legend: { display: false } }
     }
@@ -2010,12 +2010,12 @@ function initThree() {
   // Room Wireframe Box. Base size corresponds to initial inputs: L=6.0m, H=3.0m, W=4.5m
   const geometry = new THREE.BoxGeometry(6, 3, 4.5);
   const edges = new THREE.EdgesGeometry(geometry);
-  const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00e5ff, linewidth: 2 });
+  const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0066cc, linewidth: 2 });
   roomWireframe = new THREE.LineSegments(edges, lineMaterial);
   scene.add(roomWireframe);
 
   // Grid floor representing space
-  const gridHelper = new THREE.GridHelper(20, 20, 0xffb300, 0x102035);
+  const gridHelper = new THREE.GridHelper(20, 20, 0xb45309, 0x102035);
   gridHelper.position.y = -2.5;
   scene.add(gridHelper);
 
@@ -2029,7 +2029,7 @@ function initThree() {
     pPos[i+2] = (Math.random() - 0.5) * 4.5;
   }
   pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  const pMat = new THREE.PointsMaterial({ color: 0xffb300, size: 0.08, transparent: true, opacity: 0.7 });
+  const pMat = new THREE.PointsMaterial({ color: 0xb45309, size: 0.08, transparent: true, opacity: 0.7 });
   particles = new THREE.Points(pGeom, pMat);
   scene.add(particles);
 

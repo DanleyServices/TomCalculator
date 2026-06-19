@@ -19,18 +19,18 @@
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
   :root {
-    --accent: #1de9b6;
-    --accent-dim: rgba(29, 233, 182, 0.15);
-    --accent-glow: rgba(29, 233, 182, 0.45);
-    --gold: #f0c040;
-    --gold-dim: rgba(240, 192, 64, 0.15);
-    --gold-glow: rgba(240, 192, 64, 0.45);
-    --blue-deep: #020813;
-    --text: #c8daf0;
-    --bg-panel: rgba(7, 18, 33, 0.8);
-    --border-glass: rgba(29, 233, 182, 0.25);
-    --red: #ff5252;
-    --red-glow: rgba(255, 82, 82, 0.45);
+    --accent: #0066cc;
+    --accent-dim: rgba(0, 102, 204, 0.12);
+    --accent-glow: rgba(0, 102, 204, 0.25);
+    --gold: #b45309;
+    --gold-dim: rgba(180, 83, 9, 0.12);
+    --gold-glow: rgba(180, 83, 9, 0.25);
+    --blue-deep: #f3f6fc;
+    --text: #0f172a;
+    --bg-panel: rgba(255, 255, 255, 0.85);
+    --border-glass: rgba(0, 102, 204, 0.15);
+    --red: #d01750;
+    --red-glow: rgba(208, 23, 80, 0.25);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -60,7 +60,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(2, 8, 19, 0.95), transparent);
+    background: linear-gradient(to bottom, rgba(224, 231, 255, 0.95), transparent);
   }
 
   .back-btn {
@@ -98,7 +98,7 @@
   }
   .page-subtitle {
     font-size: 1.05rem;
-    color: rgba(200, 218, 240, 0.6);
+    color: #475569;
     letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 25px;
@@ -119,7 +119,7 @@
 
   .panel {
     background: var(--bg-panel);
-    border: 1px solid var(--border-glass);
+    border: 1px solid rgba(0, 102, 204, 0.15);
     border-radius: 16px;
     padding: 25px;
     backdrop-filter: blur(15px);
@@ -132,8 +132,8 @@
   .panel h2 {
     font-family: 'Orbitron', monospace;
     font-size: 1.25rem;
-    color: #fff;
-    border-bottom: 1px solid var(--border-glass);
+    color: var(--text);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.15);
     padding-bottom: 10px;
     letter-spacing: 2px;
   }
@@ -159,9 +159,9 @@
     font-family: 'Orbitron', monospace;
     font-size: 0.85rem;
     font-weight: 700;
-    background: rgba(0,0,0,0.4);
-    color: rgba(200, 218, 240, 0.5);
-    border: 1px solid var(--border-glass);
+    background: rgba(255,255,255,0.5);
+    color: #475569;
+    border: 1px solid rgba(0, 102, 204, 0.15);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -170,7 +170,7 @@
   .toggle-btn.active {
     background: var(--accent-dim);
     color: var(--accent);
-    box-shadow: 0 0 15px rgba(29, 233, 182, 0.15);
+    box-shadow: 0 0 15px rgba(0, 102, 204, 0.12);
     border-color: var(--accent);
   }
 
@@ -228,8 +228,8 @@
   input[type=number] {
     width: 85px;
     background: rgba(0, 0, 0, 0.6);
-    border: 1px solid var(--border-glass);
-    color: #fff;
+    border: 1px solid rgba(0, 102, 204, 0.15);
+    color: var(--text);
     font-family: 'Orbitron', monospace;
     font-size: 1.05rem;
     padding: 6px;
@@ -261,8 +261,8 @@
     border-radius: 3px;
   }
   .eq-card {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(0, 102, 204, 0.06);
     border-radius: 10px;
     padding: 15px;
     display: flex;
@@ -272,11 +272,11 @@
   .eq-title {
     font-family: 'Orbitron', monospace;
     font-size: 0.9rem;
-    color: #fff;
+    color: var(--text);
     font-weight: 700;
   }
   .eq-math {
-    background: rgba(0,0,0,0.4);
+    background: rgba(255,255,255,0.5);
     padding: 10px;
     border-radius: 6px;
     overflow-x: auto;
@@ -303,7 +303,7 @@
   }
   .chart-card {
     background: var(--bg-panel);
-    border: 1px solid var(--border-glass);
+    border: 1px solid rgba(0, 102, 204, 0.15);
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 15px 35px rgba(0,0,0,0.5);
@@ -314,7 +314,7 @@
   .chart-card h3 {
     font-family: 'Orbitron', monospace;
     font-size: 1rem;
-    color: #fff;
+    color: var(--text);
     letter-spacing: 1px;
     border-left: 3px solid var(--accent);
     padding-left: 10px;
@@ -323,14 +323,14 @@
     position: relative;
     width: 100%;
     height: 220px;
-    background: rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.6);
     border-radius: 8px;
     padding: 10px;
     border: 1px solid rgba(255,255,255,0.03);
   }
   .chart-desc {
     font-size: 0.85rem;
-    color: rgba(200,218,240,0.5);
+    color: #475569;
     line-height: 1.4;
   }
 
@@ -1043,8 +1043,8 @@ function createChart(canvasId, yTitle, yMin, yMax, color, fill = false) {
   const ctx = document.getElementById(canvasId).getContext('2d');
   
   let scaleY = {
-    title: { display: true, text: yTitle, color: '#f0c040', font: { size: 10 } },
-    grid: { color: 'rgba(255, 255, 255, 0.05)' }
+    title: { display: true, text: yTitle, color: '#b45309', font: { size: 10 } },
+    grid: { color: 'rgba(0, 102, 204, 0.06)' }
   };
   
   if (yMin !== null) scaleY.min = yMin;
@@ -1077,7 +1077,7 @@ function createChart(canvasId, yTitle, yMin, yMax, color, fill = false) {
       scales: {
         x: {
           type: 'logarithmic',
-          grid: { color: 'rgba(255, 255, 255, 0.05)' },
+          grid: { color: 'rgba(0, 102, 204, 0.06)' },
           min: 10,
           max: 1000,
           ticks: {
@@ -1092,15 +1092,15 @@ function createChart(canvasId, yTitle, yMin, yMax, color, fill = false) {
 
 // Initialize the 10 Charts
 function initCharts() {
-  Chart.defaults.color = '#c8daf0';
+  Chart.defaults.color = '#0f172a';
   Chart.defaults.font.family = 'Rajdhani';
 
-  charts.mag = createChart('chartMag', 'dB', -36, 6, '#1de9b6', true);
-  charts.phase = createChart('chartPhase', 'Deg', 0, 360, '#00e5ff');
-  charts.gd = createChart('chartGD', 'ms', 0, null, '#ffb300');
+  charts.mag = createChart('chartMag', 'dB', -36, 6, '#0066cc', true);
+  charts.phase = createChart('chartPhase', 'Deg', 0, 360, '#0066cc');
+  charts.gd = createChart('chartGD', 'ms', 0, null, '#0066cc');
   charts.imp = createChart('chartImp', 'Ω', 0, null, '#e040fb');
   charts.impPhase = createChart('chartImpPhase', 'Deg', -90, 90, '#2979ff');
-  charts.excursion = createChart('chartExc', 'mm', 0, null, '#ff5252', true);
+  charts.excursion = createChart('chartExc', 'mm', 0, null, '#d01750', true);
   charts.velocity = createChart('chartVel', 'm/s', 0, null, '#ff6e40', true);
   charts.spl = createChart('chartSPL', 'dB SPL', 50, null, '#00e676', true);
   charts.pwrLimit = createChart('chartPwr', 'Watts', 0, null, '#ffff00', true);
@@ -1220,7 +1220,7 @@ camera.position.z = 20;
 
 // Speaker cone wireframe
 const coneGeo = new THREE.ConeGeometry(2.5, 1.3, 24, 1, true);
-const coneMat = new THREE.MeshBasicMaterial({ color: 0x1de9b6, wireframe: true, transparent: true, opacity: 0.08 });
+const coneMat = new THREE.MeshBasicMaterial({ color: 0x0066cc, wireframe: true, transparent: true, opacity: 0.08 });
 const cone = new THREE.Mesh(coneGeo, coneMat);
 cone.position.set(-6, 0, -8);
 cone.rotation.x = Math.PI / 2;
@@ -1228,7 +1228,7 @@ scene.add(cone);
 
 // Box wireframe
 const boxGeo = new THREE.BoxGeometry(4.5, 5.5, 3.5);
-const boxMat = new THREE.MeshBasicMaterial({ color: 0x1de9b6, wireframe: true, transparent: true, opacity: 0.05 });
+const boxMat = new THREE.MeshBasicMaterial({ color: 0x0066cc, wireframe: true, transparent: true, opacity: 0.05 });
 const box = new THREE.Mesh(boxGeo, boxMat);
 box.position.set(5, 0, -10);
 scene.add(box);
@@ -1238,7 +1238,7 @@ function update3DScene(type) {
   if (type === 'ported') {
     if (!portTube) {
       const portGeo = new THREE.CylinderGeometry(0.35, 0.35, 2.5, 16, 1, true);
-      const portMat = new THREE.MeshBasicMaterial({ color: 0xf0c040, wireframe: true, transparent: true, opacity: 0.12 });
+      const portMat = new THREE.MeshBasicMaterial({ color: 0xb45309, wireframe: true, transparent: true, opacity: 0.12 });
       portTube = new THREE.Mesh(portGeo, portMat);
       portTube.position.set(5, -2, -10);
       portTube.rotation.z = Math.PI / 2;
@@ -1257,7 +1257,7 @@ const pG = new THREE.BufferGeometry();
 const pP = new Float32Array(350 * 3);
 for (let i = 0; i < 1050; i++) pP[i] = (Math.random() - 0.5) * 60;
 pG.setAttribute('position', new THREE.BufferAttribute(pP, 3));
-const particles = new THREE.Points(pG, new THREE.PointsMaterial({ color: 0x1de9b6, size: 0.05, transparent: true, opacity: 0.2 }));
+const particles = new THREE.Points(pG, new THREE.PointsMaterial({ color: 0x0066cc, size: 0.05, transparent: true, opacity: 0.2 }));
 scene.add(particles);
 
 let frameCount = 0;
