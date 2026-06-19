@@ -11,7 +11,7 @@
 
   :root {
     --cyan: #0066cc;
-    --blue-deep: #f3f6fc;
+    --blue-deep: linear-gradient(135deg, #cbd5e1 0%, #f8fafc 50%, #ffffff 100%);
     --gold: #b45309;
     --pink: #d01750;
     --text: #0f172a;
@@ -22,7 +22,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Rajdhani', sans-serif;
-    background: var(--blue-deep);
+    background: var(--blue-deep) fixed;
     color: var(--text);
     overflow-x: hidden;
     min-height: 100vh;

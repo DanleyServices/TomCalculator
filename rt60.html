@@ -24,7 +24,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
   :root {
-    --bg-dark: #f3f6fc;
+    --bg-dark: linear-gradient(135deg, #cbd5e1 0%, #f8fafc 50%, #ffffff 100%);
     --bg-panel: rgba(255, 255, 255, 0.85);
     --bg-card: #ffffff;
     --border-cyan: #0066cc;
@@ -42,7 +42,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Rajdhani', sans-serif;
-    background-color: var(--bg-dark);
+    background: var(--bg-dark) fixed;
     color: var(--text-primary);
     overflow-y: scroll;
     min-height: 100vh;
