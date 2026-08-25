@@ -383,6 +383,9 @@
         }
 
         .history-btn svg {
+            /* Keep the click target on the <button>: StPageFlip only forwards clicks whose
+               target is an <a> or <button>, so clicks landing on this SVG also turned the page. */
+            pointer-events: none;
             width: 26px;
             height: 26px;
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
