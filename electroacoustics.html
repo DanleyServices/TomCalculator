@@ -912,6 +912,7 @@ const electroacousticsModule = {
       arrayLoss,
       efDist,
       efDelay,
+      f0_sub,
       eta,
       v_rms,
       v_peak,
@@ -1322,7 +1323,7 @@ function calculateAll() {
   
   efRearChart.data.datasets = [
     { data: efRearCurve, borderColor: 'rgba(240, 192, 64, 0.85)', borderWidth: 2, pointRadius: 0 },
-    { data: [{ x: f0_sub, y: -40 }], backgroundColor: '#fff', pointRadius: 4, showLine: false }
+    { data: [{ x: res.f0_sub, y: -40 }], backgroundColor: '#fff', pointRadius: 4, showLine: false }
   ];
   efRearChart.update();
 
@@ -1385,7 +1386,7 @@ function drawCoverageCone() {
   const oy = H / 2;
   
   // Draw the coverage beam (sound cone)
-  const coneLength = W - 120;
+  const coneLength = Math.max(1, W - 120);
   const edgeY1 = oy - coneLength * Math.sin(angleRad / 2);
   const endX = ox + coneLength * Math.cos(angleRad / 2);
   
@@ -1477,7 +1478,7 @@ let isDraggingListener = false;
 function getDistanceFromX(x) {
   const ox = 40;
   const W = covCanvasEl.width;
-  const coneLength = W - 120;
+  const coneLength = Math.max(1, W - 120);
   const scale = coneLength / 120;
   
   let calculatedD = (x - ox) / scale;
