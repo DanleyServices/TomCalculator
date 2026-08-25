@@ -32,13 +32,14 @@
             background-color: var(--dark-bg);
             color: var(--ink);
             font-family: 'Rajdhani', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             display: grid;
             grid-template-rows: auto 1fr;
             justify-items: center;
             align-items: start;
             padding-top: 20px;
-            height: 100vh;
+            min-height: 100vh;
             box-sizing: border-box;
             gap: 10px;
         }
@@ -475,7 +476,65 @@
             font-size: 1.2rem;
             text-align: center;
         }
-    </style>
+            /* ZOOM CONTROL */
+        .zoom-control {
+            position: fixed;
+            top: 14px;
+            right: 18px;
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 8px;
+            background: rgba(6, 14, 24, 0.85);
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+        }
+
+        .zoom-control button {
+            width: 30px;
+            height: 30px;
+            line-height: 1;
+            font-size: 1.2rem;
+            font-family: inherit;
+            color: var(--cyan, #00e5ff);
+            background: rgba(0, 229, 255, 0.08);
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .zoom-control button:hover:not(:disabled) {
+            background: rgba(0, 229, 255, 0.25);
+            color: #fff;
+        }
+
+        .zoom-control button:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .zoom-control #zoomLevel {
+            min-width: 58px;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #e8f4ff;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        @media (max-width: 700px) {
+            .zoom-control { top: 8px; right: 8px; padding: 4px 6px; }
+            .zoom-control button { width: 26px; height: 26px; font-size: 1rem; }
+            .zoom-control #zoomLevel { min-width: 46px; font-size: 0.7rem; }
+        }
+</style>
 </head>
 <body>
 
@@ -533,6 +592,12 @@
                 <button class="menu-btn" onclick="if(pageFlip) pageFlip.turnToPage(47); document.getElementById('top-menu').classList.remove('open')" style="color:var(--gold);">⬛ End</button>
             </div>
         </nav>
+    </div>
+
+    <div class="zoom-control" role="group" aria-label="Book zoom">
+        <button type="button" id="zoomOut" title="Zoom out" aria-label="Zoom out">&minus;</button>
+        <span id="zoomLevel" title="Click to reset to 100%">100%</span>
+        <button type="button" id="zoomIn" title="Zoom in" aria-label="Zoom in">+</button>
     </div>
 
     <div class="book-wrapper">
@@ -1480,6 +1545,33 @@
             });
 
             pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+            // ZOOM CONTROL: resizes the book itself (StPageFlip size:"stretch" reflows
+            // from the wrapper), so flip geometry and pointer coordinates stay exact.
+            const ZOOM_MIN = 0.5, ZOOM_MAX = 2.0, ZOOM_STEP = 0.1;
+            const bookWrapper = document.querySelector('.book-wrapper');
+            const zoomLabel = document.getElementById('zoomLevel');
+            const zoomInBtn = document.getElementById('zoomIn');
+            const zoomOutBtn = document.getElementById('zoomOut');
+            let bookZoom = parseFloat(localStorage.getItem('olsonZoom')) || 1;
+
+            function applyZoom() {
+                bookZoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round(bookZoom * 100) / 100));
+                bookWrapper.style.width = (90 * bookZoom) + 'vw';
+                bookWrapper.style.maxWidth = (1200 * bookZoom) + 'px';
+                bookWrapper.style.height = 'calc((100vh - 120px) * ' + bookZoom + ')';
+                zoomLabel.innerText = Math.round(bookZoom * 100) + '%';
+                zoomInBtn.disabled = bookZoom >= ZOOM_MAX;
+                zoomOutBtn.disabled = bookZoom <= ZOOM_MIN;
+                localStorage.setItem('olsonZoom', bookZoom);
+                if (pageFlip) { try { pageFlip.update(); } catch (e) {} }
+            }
+
+            zoomInBtn.addEventListener('click', () => { bookZoom += ZOOM_STEP; applyZoom(); });
+            zoomOutBtn.addEventListener('click', () => { bookZoom -= ZOOM_STEP; applyZoom(); });
+            zoomLabel.addEventListener('click', () => { bookZoom = 1; applyZoom(); });
+            window.addEventListener('resize', () => applyZoom());
+            applyZoom();
 
             // Prevent page-flip from stealing slider and chart drag events
             document.querySelectorAll('.controls, .graph-wrapper').forEach(elem => {
