@@ -536,7 +536,7 @@
     </div>
   </div>
 
-  <!-- PANEL DERECHO DE PESTAÑAS (DASHBOARD) -->
+  <!-- RIGHT-HAND TAB PANEL (DASHBOARD) -->
   <div class="content-panel">
     
     <div class="tabs-bar">
@@ -546,10 +546,10 @@
       <button id="tabBtnD" class="tab-btn" onclick="setTab('D')">Electronics & 3D</button>
     </div>
 
-    <!-- PESTAÑA A: PROPAGACIÓN Y AIRE -->
+    <!-- TAB A: PROPAGATION AND AIR -->
     <div id="tabContentA" class="tab-content active">
       
-      <!-- Fila de Ecuaciones (3) -->
+      <!-- Equation row (3) -->
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Equation 1: Speed of Sound</div>
@@ -579,7 +579,7 @@
         </div>
       </div>
 
-      <!-- Fila de Gráficos (3) -->
+      <!-- Chart row (3) -->
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
@@ -614,10 +614,10 @@
 
     </div>
 
-    <!-- PESTAÑA B: INTERFERENCIA Y PEINE -->
+    <!-- TAB B: INTERFERENCE AND COMB FILTERING -->
     <div id="tabContentB" class="tab-content">
       
-      <!-- Fila de Ecuaciones (3) -->
+      <!-- Equation row (3) -->
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Equation 4: Angular Phase Difference</div>
@@ -647,7 +647,7 @@
         </div>
       </div>
 
-      <!-- Fila de Gráficos (3) -->
+      <!-- Chart row (3) -->
       <div class="charts-grid">
         <div class="chart-card span-2">
           <div class="chart-header">
@@ -682,10 +682,10 @@
 
     </div>
 
-    <!-- PESTAÑA C: ARREGLOS Y COBERTURA -->
+    <!-- TAB C: ARRAYS AND COVERAGE -->
     <div id="tabContentC" class="tab-content">
       
-      <!-- Fila de Ecuaciones (3) -->
+      <!-- Equation row (3) -->
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Equation 6: Line Array Field Transition</div>
@@ -715,7 +715,7 @@
         </div>
       </div>
 
-      <!-- Fila de Gráficos (3) -->
+      <!-- Chart row (3) -->
       <div class="charts-grid">
         <div class="chart-card span-2">
           <div class="chart-header">
@@ -750,10 +750,10 @@
 
     </div>
 
-    <!-- PESTAÑA D: ELECTRÓNICA Y 3D -->
+    <!-- TAB D: ELECTRONICS AND 3D -->
     <div id="tabContentD" class="tab-content">
       
-      <!-- Fila de Ecuaciones (3) -->
+      <!-- Equation row (3) -->
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Equation 11: Speaker Efficiency</div>
@@ -783,7 +783,7 @@
         </div>
       </div>
 
-      <!-- Fila de Gráficos (2) -->
+      <!-- Chart row (2) -->
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
@@ -813,7 +813,7 @@
 </div>
 
 <script>
-// --- CONTRATO MODULAR ELECTROACÚSTICA REQUERIDO ---
+// --- REQUIRED ELECTROACOUSTICS MODULE CONTRACT ---
 const electroacousticsModule = {
   meta: {
     id: "electroacoustics",
@@ -849,35 +849,35 @@ const electroacousticsModule = {
     const sens = inputs.sens;
     const P = inputs.pwr;
 
-    // Ecuación 1: Velocidad del Sonido
+    // Equation 1: Speed of sound
     const c = 331.3 * Math.sqrt(1 + T / 273.15) + 0.6 * (hr / 100) * 1.2;
 
-    // Ecuación 2: Longitud de Onda y Periodo
+    // Equation 2: Wavelength and period
     const lambda = c / f;
     const period = 1000 / f; // ms
 
-    // Ecuación 3: Tiempo de Tránsito
+    // Equation 3: Transit time
     const flightTime = (d / c) * 1000; // ms
 
-    // Ecuación 4: Desfase Angular
+    // Equation 4: Angular phase shift
     const dT_sec = dT_ms / 1000;
     const phaseDiff = (dT_sec * f * 360) % 360;
 
-    // Ecuación 8: Suma Vectorial
+    // Equation 8: Vector summation
     const l1_lin = 1.0;
     const l2_lin = Math.pow(10, -dL / 20);
     const phaseRad = (phaseDiff * Math.PI) / 180;
     const sumLin = Math.sqrt(l1_lin*l1_lin + l2_lin*l2_lin + 2*l1_lin*l2_lin*Math.cos(phaseRad));
     const sumDb = 20 * Math.log10(sumLin);
 
-    // Ecuación 9: Límites de Filtro de Peine
+    // Equation 9: Comb filter limits
     const combPeak = 20 * Math.log10(1 + l2_lin);
     const combValley = 20 * Math.log10(Math.max(0.0001, Math.abs(1 - l2_lin)));
 
-    // Ecuación 6: Transición Line Array
+    // Equation 6: Line array transition
     const d_trans = (h * h * f) / (2 * c);
 
-    // Ecuación 7: Pérdida Line Array a la distancia d
+    // Equation 7: Line array loss at distance d
     let arrayLoss = 0;
     if (d <= d_trans) {
       arrayLoss = 10 * Math.log10(d);
@@ -885,15 +885,15 @@ const electroacousticsModule = {
       arrayLoss = 10 * Math.log10(d_trans) + 20 * Math.log10(d / d_trans);
     }
 
-    // Ecuación 10: Arreglo End-Fire (distancia y delay)
+    // Equation 10: End-Fire array (spacing and delay)
     const subLambda = c / f0_sub;
     const efDist = subLambda / 4;
     const efDelay = (efDist / c) * 1000; // ms
 
-    // Ecuación 11: Eficiencia
+    // Equation 11: Efficiency
     const eta = Math.pow(10, (sens - 109) / 10) * 100;
 
-    // Ecuación 12: Voltaje RMS, Pico y Corriente RMS (carga nominal 8 Ohms)
+    // Equation 12: RMS voltage, peak voltage and RMS current (8 Ohm nominal load)
     const z_ref = 8;
     const v_rms = Math.sqrt(P * z_ref);
     const v_peak = v_rms * Math.sqrt(2);
@@ -921,9 +921,9 @@ const electroacousticsModule = {
   }
 };
 
-// VARIABLES GLOBALES DE FÍSICA
+// GLOBAL PHYSICS VARIABLES
 let activeTab = 'A';
-const c_ref = 343.2; // velocidad de referencia
+const c_ref = 343.2; // reference speed
 
 // REFERENCIAS DE ELEMENTOS E INTERACTIVOS
 const ids = [
@@ -941,7 +941,7 @@ const ids = [
   ['pwrS', 'pwrN', 'pwrVal', ' W']
 ];
 
-// Mapeo e interactividad en vivo de Sliders e Inputs numéricos
+// Live mapping and interactivity of sliders and numeric inputs
 ids.forEach(([sId, nId, dispId, unit]) => {
   const se = document.getElementById(sId);
   const ne = document.getElementById(nId);
@@ -970,21 +970,21 @@ function setTab(tabName) {
   document.getElementById('tabContent' + tabName).classList.add('active');
   activeTab = tabName;
   
-  // Forzar redibujado de gráficos asociados
+  // Force a redraw of the associated charts
   setTimeout(() => {
     resizeAndRenderCharts();
   }, 10);
 }
 
 // -------------------------------------------------------------
-// INICIALIZACIÓN DE LOS 9 GRÁFICOS CHART.JS
+// INITIALIZATION OF THE 9 CHART.JS CHARTS
 // -------------------------------------------------------------
 Chart.defaults.color = '#475569';
 Chart.defaults.font.family = 'Fira Code';
 Chart.defaults.font.size = 10;
 const gridColor = '#142538';
 
-// Helper de gráfico de línea
+// Line chart helper
 function createLineChart(ctxId, xLabel, yLabel, color) {
   const ctx = document.getElementById(ctxId).getContext('2d');
   return new Chart(ctx, {
@@ -1002,7 +1002,7 @@ function createLineChart(ctxId, xLabel, yLabel, color) {
   });
 }
 
-// 1. SPL vs Distancia (Logarítmico)
+// 1. SPL vs Distance (logarithmic)
 const splChart = new Chart(document.getElementById('splChart').getContext('2d'), {
   type: 'line',
   data: { datasets: [] },
@@ -1037,7 +1037,7 @@ const phaseSumChart = createLineChart('phaseSumChart', 'Phase shift (degrees)', 
 phaseSumChart.options.scales.x.min = 0;
 phaseSumChart.options.scales.x.max = 360;
 
-// 4. Respuesta de Fase vs Frecuencia (Fase enrollada)
+// 4. Phase Response vs Frequency (wrapped phase)
 const phaseFreqChart = new Chart(document.getElementById('phaseFreqChart').getContext('2d'), {
   type: 'line',
   data: { datasets: [] },
@@ -1055,7 +1055,7 @@ const phaseFreqChart = new Chart(document.getElementById('phaseFreqChart').getCo
 // 5. Deriva vs Temperatura
 const delayTempChart = createLineChart('delayTempChart', 'Temperature (°C)', 'Time Deviation (ms)', 'rgba(240, 192, 64, 0.85)');
 
-// 6. Absorción Aire vs Humedad
+// 6. Air Absorption vs Humidity
 const airAbsHumChart = createLineChart('airAbsHumChart', 'Relative Humidity (%)', 'Air Attenuation (dB/km)', 'rgba(0, 229, 255, 0.85)');
 airAbsHumChart.options.scales.x.min = 0;
 airAbsHumChart.options.scales.x.max = 100;
@@ -1075,7 +1075,7 @@ const efFrontChart = new Chart(document.getElementById('efFrontChart').getContex
   }
 });
 
-// 9. Atenuación Polar Trasera End-Fire
+// 9. End-Fire Rear Polar Attenuation
 const efRearChart = new Chart(document.getElementById('efRearChart').getContext('2d'), {
   type: 'line',
   data: { datasets: [] },
@@ -1110,7 +1110,7 @@ const ampZChart = new Chart(document.getElementById('ampZChart').getContext('2d'
   }
 });
 
-// Redimensionar gráficos para evitar bugs de Chart.js en tabs ocultas
+// Resize charts to avoid Chart.js bugs on hidden tabs
 function resizeAndRenderCharts() {
   const charts = [splChart, combChart, phaseSumChart, phaseFreqChart, delayTempChart, airAbsHumChart, efFrontChart, efRearChart, ampZChart];
   charts.forEach(c => {
@@ -1120,7 +1120,7 @@ function resizeAndRenderCharts() {
 }
 
 // -------------------------------------------------------------
-// MOTOR ACÚSTICO: CÁLCULOS Y ACTUALIZACIÓN
+// ACOUSTIC ENGINE: CALCULATIONS AND UPDATE
 // -------------------------------------------------------------
 function calculateAirAbsorptionCoef(f, T_C, hr, pr) {
   const T = T_C + 273.15;
@@ -1144,7 +1144,7 @@ function calculateAirAbsorptionCoef(f, T_C, hr, pr) {
       0.3607 * Math.exp(-3352 / T) * frN / (f * f + frN * frN)
     )
   );
-  return alphaNp * 8.68589; // dB por metro
+  return alphaNp * 8.68589; // dB per meter
 }
 
 function calculateAll() {
@@ -1167,7 +1167,7 @@ function calculateAll() {
   const res = electroacousticsModule.compute(inputs);
   if (!res) return;
 
-  // Actualizar DOM con resultados
+  // Update the DOM with results
   document.getElementById('eq1Val').innerText = res.c.toFixed(1);
   document.getElementById('eq2ValL').innerText = res.lambda.toFixed(3);
   document.getElementById('eq3Val').innerText = res.flightTime.toFixed(1);
@@ -1185,7 +1185,7 @@ function calculateAll() {
   document.getElementById('eq12ValI').innerText = res.i_rms.toFixed(2);
 
   // -------------------------------------------------------------
-  // RENDERIZADO DE GRÁFICOS LOGARÍTMICOS Y BARRIDOS
+  // RENDERING OF LOGARITHMIC CHARTS AND SWEEPS
   // -------------------------------------------------------------
   
   const f = inputs.freq;
@@ -1200,7 +1200,7 @@ function calculateAll() {
   const l2_lin = res.l2_lin;
   const d_trans = res.d_trans;
 
-  // Gráfico 1: SPL vs Distancia
+  // Chart 1: SPL vs distance
   const airAbsCoef = calculateAirAbsorptionCoef(f, T, hr, pr);
   const spl1m = sens + 10 * Math.log10(P);
   let ptCurve = [];
@@ -1222,7 +1222,7 @@ function calculateAll() {
     lnCurve.push({ x: rVal, y: lnSPL });
   }
   
-  // Nivel del oyente
+  // Listener level
   let listenerSPL = 0;
   if (sourceType === 'point') {
     listenerSPL = spl1m - 20 * Math.log10(d) - (airAbsCoef * d);
@@ -1241,7 +1241,7 @@ function calculateAll() {
   ];
   splChart.update();
 
-  // Gráfico 2: Respuesta Filtro de Peine (20Hz - 20kHz)
+  // Chart 2: Comb filter response (20 Hz - 20 kHz)
   let combCurve = [];
   for (let freqIdx = 20; freqIdx <= 20000; freqIdx *= 1.05) {
     const fPhase = (dT_sec * freqIdx * 360) % 360;
@@ -1252,7 +1252,7 @@ function calculateAll() {
   combChart.data.datasets = [{ data: combCurve, borderColor: 'rgba(0, 229, 255, 0.85)', borderWidth: 1.5, pointRadius: 0 }];
   combChart.update();
 
-  // Gráfico 3: Suma Acústica vs Ángulo de Fase (0° - 360°)
+  // Chart 3: Acoustic summation vs phase angle (0° - 360°)
   let phaseSumCurve = [];
   for (let ang = 0; ang <= 360; ang += 5) {
     const angRad = (ang * Math.PI) / 180;
@@ -1265,7 +1265,7 @@ function calculateAll() {
   ];
   phaseSumChart.update();
 
-  // Gráfico 4: Respuesta de Fase vs Frecuencia (20Hz - 20kHz)
+  // Chart 4: Phase response vs frequency (20 Hz - 20 kHz)
   let phaseFreqCurve = [];
   for (let freqIdx = 20; freqIdx <= 20000; freqIdx *= 1.05) {
     let phaseDeg = (-freqIdx * dT_sec * 360) % 360;
@@ -1276,7 +1276,7 @@ function calculateAll() {
   phaseFreqChart.data.datasets = [{ data: phaseFreqCurve, borderColor: 'rgba(0, 229, 255, 0.8)', borderWidth: 1, pointRadius: 0 }];
   phaseFreqChart.update();
 
-  // Gráfico 5: Deriva vs Temperatura
+  // Chart 5: Drift vs temperature
   let delayTempCurve = [];
   for (let tIdx = -10; tIdx <= 40; tIdx += 2) {
     const c_t = 331.3 * Math.sqrt(1 + tIdx / 273.15) + 0.6 * (hr / 100) * 1.2;
@@ -1290,7 +1290,7 @@ function calculateAll() {
   ];
   delayTempChart.update();
 
-  // Gráfico 6: Absorción de Aire vs Humedad
+  // Chart 6: Air absorption vs humidity
   let airAbsHumCurve = [];
   for (let hIdx = 0; hIdx <= 100; hIdx += 2) {
     const absCoef = calculateAirAbsorptionCoef(f, T, hIdx, pr) * 1000; // dB/km
@@ -1302,7 +1302,7 @@ function calculateAll() {
   ];
   airAbsHumChart.update();
 
-  // Gráficos de Arreglo de Subwoofers End-Fire
+  // End-fire subwoofer array charts
   let efFrontCurve = [];
   let efRearCurve = [];
   
@@ -1326,7 +1326,7 @@ function calculateAll() {
   ];
   efRearChart.update();
 
-  // Gráfico 10: Requisitos Amp vs Carga
+  // Chart 10: Amplifier requirements vs load
   const z_values = [2, 4, 8, 16];
   const volts_data = z_values.map(z => Math.sqrt(P * z));
   const current_data = z_values.map((z, idx) => volts_data[idx] / z);
@@ -1358,7 +1358,7 @@ function drawCoverageCone() {
   ctxCov.fillStyle = '#020710';
   ctxCov.fillRect(0, 0, W, H);
   
-  // Rejilla de Radar / Holograma
+  // Radar / hologram grid
   ctxCov.strokeStyle = 'rgba(0, 229, 255, 0.05)';
   ctxCov.lineWidth = 1;
   for (let x = 0; x < W; x += 40) {
@@ -1368,7 +1368,7 @@ function drawCoverageCone() {
     ctxCov.beginPath(); ctxCov.moveTo(0, y); ctxCov.lineTo(W, y); ctxCov.stroke();
   }
   
-  // Círculos de distancia concéntricos
+  // Concentric distance circles
   ctxCov.strokeStyle = 'rgba(0, 229, 255, 0.08)';
   for (let r = 100; r < W; r += 100) {
     ctxCov.beginPath();
@@ -1380,11 +1380,11 @@ function drawCoverageCone() {
   const angleRad = (angleDeg * Math.PI) / 180;
   const d = parseFloat(document.getElementById('distN').value);
   
-  // Origen de emisión
+  // Emission origin
   const ox = 40;
   const oy = H / 2;
   
-  // Dibujar haz de cobertura (Cono de sonido)
+  // Draw the coverage beam (sound cone)
   const coneLength = W - 120;
   const edgeY1 = oy - coneLength * Math.sin(angleRad / 2);
   const endX = ox + coneLength * Math.cos(angleRad / 2);
@@ -1404,7 +1404,7 @@ function drawCoverageCone() {
   ctxCov.lineTo(ox, oy);
   ctxCov.fill();
   
-  // Dibujar líneas límite de dispersión
+  // Draw the dispersion boundary lines
   ctxCov.strokeStyle = 'rgba(0, 229, 255, 0.35)';
   ctxCov.lineWidth = 1.5;
   ctxCov.setLineDash([6, 4]);
@@ -1414,7 +1414,7 @@ function drawCoverageCone() {
   ctxCov.stroke();
   ctxCov.setLineDash([]);
   
-  // Dibujar oyente (representado como un marcador dorado)
+  // Draw the listener (shown as a gold marker)
   const scale = coneLength / 120; // 120 metros representados
   const targetX = ox + Math.min(d, 120) * scale;
   const targetY = oy;
@@ -1431,12 +1431,12 @@ function drawCoverageCone() {
   ctxCov.arc(targetX, targetY, 11, 0, 2*Math.PI);
   ctxCov.stroke();
   
-  // Texto indicativo del oyente
+  // Listener label text
   ctxCov.fillStyle = '#fff';
   ctxCov.font = '11px Fira Code';
   ctxCov.fillText('LISTENER (' + d.toFixed(1) + 'm)', targetX - 50, targetY - 18);
   
-  // Dibujar ancho de haz en el punto del oyente
+  // Draw beam width at the listener position
   const beamYHalf = Math.min(d, 120) * scale * Math.sin(angleRad / 2);
   ctxCov.strokeStyle = '#b45309';
   ctxCov.lineWidth = 1.5;
@@ -1452,13 +1452,13 @@ function drawCoverageCone() {
   ctxCov.beginPath();
   ctxCov.moveTo(targetX, targetY + beamYHalf); ctxCov.lineTo(targetX-4, targetY + beamYHalf - 6); ctxCov.lineTo(targetX+4, targetY + beamYHalf - 6); ctxCov.fill();
   
-  // Texto del ancho de cobertura
+  // Coverage width text
   const covWidth = 2 * d * Math.tan((angleDeg / 2) * Math.PI / 180);
   ctxCov.fillStyle = '#b45309';
   ctxCov.font = '12px Rajdhani';
   ctxCov.fillText('Width: ' + covWidth.toFixed(1) + ' m', targetX + 12, targetY + 4);
   
-  // Simulación de fuente
+  // Source simulation
   ctxCov.fillStyle = 'var(--border-cyan)';
   ctxCov.beginPath();
   if (sourceType === 'point') {
@@ -1531,7 +1531,7 @@ window.addEventListener('mousemove', (e) => {
   if (isDraggingListener) {
     handleCanvasInteraction(e.clientX);
   } else {
-    // Cambiar cursor al pasar sobre el oyente
+    // Change the cursor when hovering the listener
     const rect = covCanvasEl.getBoundingClientRect();
     const mouseX = (e.clientX - rect.left) * (covCanvasEl.width / rect.width);
     const mouseY = (e.clientY - rect.top) * (covCanvasEl.height / rect.height);
@@ -1625,13 +1625,13 @@ function initThree() {
   renderer.setSize(W, H);
   container.appendChild(renderer.domElement);
   
-  // Onda esférica animada en 3D
+  // Animated 3D spherical wave
   const waveGeo = new THREE.SphereGeometry(1, 32, 32);
   waveMaterial = new THREE.MeshBasicMaterial({ color: 0x0066cc, wireframe: true, transparent: true, opacity: 0.1 });
   waveMesh = new THREE.Mesh(waveGeo, waveMaterial);
   scene.add(waveMesh);
   
-  // Sistema de partículas
+  // Particle system
   const pGeometry = new THREE.BufferGeometry();
   for (let i = 0; i < particlesCount * 3; i += 3) {
     const radius = Math.random() * 8;

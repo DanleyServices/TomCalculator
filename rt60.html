@@ -625,10 +625,10 @@
       <button id="tabBtnD" class="tab-btn" onclick="setTab('D')">Ray Tracing & Waterfall</button>
     </div>
 
-    <!-- PESTAÑA A: RT60 MULTIBANDA -->
+    <!-- TAB A: MULTIBAND RT60 -->
     <div id="tabContentA" class="tab-content active">
       
-      <!-- Fila de Ecuaciones (3) -->
+      <!-- Equation row (3) -->
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Equation 1: Speed of Sound</div>
@@ -658,7 +658,7 @@
         </div>
       </div>
 
-      <!-- Fila de Ecuaciones 4, 5, 6 -->
+      <!-- Equation row 4, 5, 6 -->
       <div class="eq-grid">
         <div class="eq-card">
           <div class="eq-title">Equation 4: Sabine + Air Absorption</div>
@@ -688,7 +688,7 @@
         </div>
       </div>
 
-      <!-- Fila de Ecuaciones 7, 8 -->
+      <!-- Equation row 7, 8 -->
       <div class="eq-grid">
         <div class="eq-card" style="grid-column: span 1.5;">
           <div class="eq-title">Equation 7: Fitzroy Model (Directional)</div>
@@ -709,7 +709,7 @@
         </div>
       </div>
 
-      <!-- Gráficos de RT60 -->
+      <!-- RT60 charts -->
       <div class="charts-grid">
         <div class="chart-card span-2">
           <div class="chart-header">
@@ -743,7 +743,7 @@
       </div>
     </div>
 
-    <!-- PESTAÑA B: MODOS DE SALA Y BOLT -->
+    <!-- TAB B: ROOM MODES AND BOLT -->
     <div id="tabContentB" class="tab-content">
       
       <!-- Ecuaciones 9, 10 -->
@@ -767,7 +767,7 @@
         </div>
       </div>
 
-      <!-- Gráficos Modales -->
+      <!-- Modal charts -->
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
@@ -810,7 +810,7 @@
         </div>
       </div>
 
-      <!-- Tabla de Modos -->
+      <!-- Mode table -->
       <div class="modes-table-container">
         <div class="table-header">First 15 Normal Modes Ordered by Frequency</div>
         <table class="modes-table">
@@ -828,7 +828,7 @@
       </div>
     </div>
 
-    <!-- PESTAÑA C: CAMPO DIFUSO E ISO -->
+    <!-- TAB C: DIFFUSE FIELD AND ISO -->
     <div id="tabContentC" class="tab-content">
       
       <!-- Ecuaciones 11, 12 -->
@@ -852,7 +852,7 @@
         </div>
       </div>
 
-      <!-- Gráficos de Campo Difuso -->
+      <!-- Diffuse field charts -->
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
@@ -876,10 +876,10 @@
       </div>
     </div>
 
-    <!-- PESTAÑA D: TRAZADO Y CASCADA -->
+    <!-- TAB D: RAY TRACING AND WATERFALL -->
     <div id="tabContentD" class="tab-content">
       
-      <!-- Gráficos de Simulación Física 2D -->
+      <!-- 2D physical simulation charts -->
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
@@ -916,7 +916,7 @@
 </div>
 
 <script>
-  // Paleta de materiales y coeficientes
+  // Material palette and coefficients
   const materials = {
     brick: { name: "Unpainted brick", coeffs: [0.02, 0.02, 0.03, 0.03, 0.04, 0.05], color: '#f06292' },
     concrete: { name: "Polished concrete", coeffs: [0.01, 0.01, 0.02, 0.02, 0.02, 0.02], color: '#90a4ae' },
@@ -930,7 +930,7 @@
     reflective: { name: "Perfect Reflector (0.0)", coeffs: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00], color: '#ff5722' }
   };
 
-  // Coeficientes estándar de atenuación del aire a 20C y 50% HR por banda (m en nepers/m)
+  // Standard air attenuation coefficients at 20C and 50% RH per band (m in nepers/m)
   const airAbsorptionRef = [0.00002, 0.0001, 0.00035, 0.0012, 0.0038, 0.014]; // 125, 250, 500, 1k, 2k, 4k Hz
 
   // Inicializar selectores
@@ -958,7 +958,7 @@
     });
   }
 
-  // Pestañas
+  // Tabs
   function setTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -966,7 +966,7 @@
     document.getElementById(`tabBtn${tab}`).classList.add('active');
     document.getElementById(`tabContent${tab}`).classList.add('active');
     
-    // Forzar actualización de gráficos/renderizado correspondientes a la pestaña activa
+    // Force refresh of the charts/rendering belonging to the active tab
     if (tab === 'A') {
       rt60BandsChart.resize();
       materialsChart.resize();
@@ -985,7 +985,7 @@
     }
   }
 
-  // Controladores de Sliders acoplados a Inputs Numéricos
+  // Slider controllers coupled to numeric inputs
   const sliders = [
     ['lS', 'lN', 'lVal', ' m'],
     ['wS', 'wN', 'wVal', ' m'],
@@ -1013,7 +1013,7 @@
     });
   });
 
-  // Sliders de modo activo en 3D
+  // Active-mode sliders in 3D
   const modeSliders = ['modePS', 'modeQS', 'modeRS'];
   modeSliders.forEach(id => {
     document.getElementById(id).addEventListener('input', () => {
@@ -1027,16 +1027,16 @@
   // Datos globales calculados
   let computedResults = {};
 
-  // Calcular Coeficiente de Atenuación de Aire Dinámico
+  // Compute the dynamic air attenuation coefficient
   function getAirAbsorption(fIndex, tempC, rhPct) {
     const mRef = airAbsorptionRef[fIndex];
-    // Ajuste empírico razonable por humedad (la absorción aumenta a baja humedad)
+    // Reasonable empirical humidity fit (absorption rises at low humidity)
     const humFactor = 50 / Math.max(10, rhPct);
     const tempFactor = (tempC + 273.15) / 293.15;
     return mRef * humFactor * tempFactor;
   }
 
-  // CÁLCULO PRINCIPAL
+  // MAIN CALCULATION
   function calc() {
     const L = parseFloat(document.getElementById('lN').value);
     const W = parseFloat(document.getElementById('wN').value);
@@ -1046,11 +1046,11 @@
     const Q = parseFloat(document.getElementById('qN').value);
     const dRec = parseFloat(document.getElementById('recDistN').value);
 
-    // Ecuación 1: Velocidad del Sonido
+    // Equation 1: Speed of sound
     const c = 331.3 * Math.sqrt(1 + T / 273.15) + 0.6 * (RH / 100) * 1.2;
     document.getElementById('eq1Val').innerText = c.toFixed(1);
 
-    // Ecuación 2: Volumen y Superficies
+    // Equation 2: Volume and surfaces
     const V = L * W * H;
     const S = 2 * (L * W + L * H + W * H);
     document.getElementById('eq2ValV').innerText = V.toFixed(1);
@@ -1070,7 +1070,7 @@
 
     const octaveBands = [125, 250, 500, 1000, 2000, 4000];
     
-    // Arrays para guardar datos por banda
+    // Arrays holding per-band data
     const sabineRT = [];
     const sabineAirRT = [];
     const eyringRT = [];
@@ -1081,7 +1081,7 @@
     const equivalentAbsArea = [];
 
     for (let f = 0; f < 6; f++) {
-      // Coeficientes por pared
+      // Per-surface coefficients
       const aFloor = matFloorCoeffs[f];
       const aCeiling = matCeilingCoeffs[f];
       const aLeft = matLeftCoeffs[f];
@@ -1089,49 +1089,49 @@
       const aFront = matFrontCoeffs[f];
       const aBack = matBackCoeffs[f];
 
-      // Ponderación de absorción direccional
+      // Directional absorption weighting
       const alphaX = Math.min(0.99, (aFront * (W * H) + aBack * (W * H)) / (W * H * 2));
       const alphaY = Math.min(0.99, (aLeft * (L * H) + aRight * (L * H)) / (L * H * 2));
       const alphaZ = Math.min(0.99, (aFloor * (L * W) + aCeiling * (L * W)) / (L * W * 2));
 
-      // Área de absorción equivalente total
+      // Total equivalent absorption area
       const A = (aFloor + aCeiling) * (L * W) + (aLeft + aRight) * (L * H) + (aFront + aBack) * (W * H);
       equivalentAbsArea.push(A);
 
-      // Coeficiente de absorción promedio
+      // Average absorption coefficient
       const alphaBar = A / S;
       avgAlphaBands.push(alphaBar);
 
-      // Ecuación 3: Sabine Estándar
+      // Equation 3: Standard Sabine
       const rtSab = (0.161 * V) / Math.max(0.01, A);
       sabineRT.push(rtSab);
 
-      // Ecuación 4: Sabine + Aire
+      // Equation 4: Sabine + air
       const m = getAirAbsorption(f, T, RH);
       const rtSabAir = (0.161 * V) / (A + 4 * m * V);
       sabineAirRT.push(rtSabAir);
 
-      // Ecuación 5: Eyring Estándar
+      // Equation 5: Standard Eyring
       const alphaEyring = Math.min(0.99, alphaBar);
       const rtEyr = (0.161 * V) / (-S * Math.log(1 - alphaEyring));
       eyringRT.push(rtEyr);
 
-      // Ecuación 6: Eyring + Aire
+      // Equation 6: Eyring + air
       const rtEyrAir = (0.161 * V) / (-S * Math.log(1 - alphaEyring) + 4 * m * V);
       eyringAirRT.push(rtEyrAir);
 
-      // Ecuación 7: Fitzroy
+      // Equation 7: Fitzroy
       const rtFitz = ((0.161 * V) / S) * (Sx / alphaX + Sy / alphaY + Sz / alphaZ) / S;
       fitzroyRT.push(rtFitz);
 
-      // Ecuación 8: Arau-Puchades
+      // Equation 8: Arau-Puchades
       const rtArau = Math.pow((0.161 * V) / (-S * Math.log(1 - alphaX)), Sx / S) *
                      Math.pow((0.161 * V) / (-S * Math.log(1 - alphaY)), Sy / S) *
                      Math.pow((0.161 * V) / (-S * Math.log(1 - alphaZ)), Sz / S);
       arauRT.push(rtArau);
     }
 
-    // Actualizar outputs de ecuaciones en interfaz (referencia a 500 Hz [index 2])
+    // Update equation outputs in the UI (referenced to 500 Hz [index 2])
     document.getElementById('eq3Val').innerText = sabineRT[2].toFixed(2);
     document.getElementById('eq4Val').innerText = sabineAirRT[2].toFixed(2);
     document.getElementById('eq5Val').innerText = eyringRT[2].toFixed(2);
@@ -1139,20 +1139,20 @@
     document.getElementById('eq7Val').innerText = fitzroyRT[2].toFixed(2);
     document.getElementById('eq8Val').innerText = arauRT[2].toFixed(2);
 
-    // Ecuación 10: Frecuencia de Schroeder (basada en Sabine 500 Hz con Aire)
+    // Equation 10: Schroeder frequency (based on Sabine 500 Hz with air)
     const rt500 = sabineAirRT[2];
     const fs = 2000 * Math.sqrt(rt500 / V);
     document.getElementById('eq10Val').innerText = fs.toFixed(1);
 
-    // Ecuación 12: Coeficiente de absorción promedio en 500 Hz
+    // Equation 12: Average absorption coefficient at 500 Hz
     const alpha500 = avgAlphaBands[2];
     document.getElementById('eq12Val').innerText = alpha500.toFixed(2);
 
-    // Ecuación 11: Distancia Crítica (500 Hz)
+    // Equation 11: Critical distance (500 Hz)
     const Dc = 0.141 * Math.sqrt(Q * S * alpha500);
     document.getElementById('eq11Val').innerText = Dc.toFixed(2);
 
-    // Guardar resultados para gráficos
+    // Store results for the charts
     computedResults = {
       L, W, H, T, RH, Q, dRec, c, V, S,
       octaveBands, sabineRT, sabineAirRT, eyringRT, eyringAirRT, fitzroyRT, arauRT,
@@ -1162,11 +1162,11 @@
     // Calcular modos propios
     calcRoomModes();
 
-    // Actualizar todos los gráficos visuales activos
+    // Update every active visual chart
     updateCharts();
   }
 
-  // CÁLCULO DE MODOS DE SALA (20 - 250 Hz)
+  // ROOM MODE CALCULATION (20 - 250 Hz)
   let roomModesList = [];
   function calcRoomModes() {
     const { L, W, H, c } = computedResults;
@@ -1192,7 +1192,7 @@
       }
     }
 
-    // Ordenar por frecuencia
+    // Sort by frequency
     roomModesList.sort((a, b) => a.freq - b.freq);
 
     // Llenar tabla HTML (primeros 15)
@@ -1232,20 +1232,20 @@
         // Actualizar visualizador 3D
         update3DModePressure();
         
-        // Re-pintar tabla para reflejar la fila activa
+        // Repaint the table to reflect the active row
         calcRoomModes();
       });
 
       tbody.appendChild(tr);
     });
 
-    // Actualizar valor de ecuación modal 9
+    // Update the value of modal equation 9
     const fSel = (c / 2) * Math.sqrt(Math.pow(activeP / L, 2) + Math.pow(activeQ / W, 2) + Math.pow(activeR / H, 2));
     document.getElementById('eq9Mode').innerText = `${activeP},${activeQ},${activeR}`;
     document.getElementById('eq9Val').innerText = fSel.toFixed(1);
   }
 
-  // INICIALIZACIÓN DE GRÁFICOS (CHART.JS Y CANVAS)
+  // CHART INITIALIZATION (CHART.JS AND CANVAS)
   let rt60BandsChart, materialsChart, sabinesChart, bonelloChart, splFieldChart, schroederSweepChart;
 
   function initCharts() {
@@ -1253,7 +1253,7 @@
     Chart.defaults.font.family = 'Rajdhani';
     Chart.defaults.font.size = 11;
 
-    // Gráfico 1: Comparación RT60 por octavas
+    // Chart 1: RT60 comparison per octave
     const ctx1 = document.getElementById('rt60BandsChart').getContext('2d');
     rt60BandsChart = new Chart(ctx1, {
       type: 'line',
@@ -1279,7 +1279,7 @@
       }
     });
 
-    // Gráfico 5: Coeficientes de absorción de materiales elegidos
+    // Chart 5: Absorption coefficients of the chosen materials
     const ctx5 = document.getElementById('materialsChart').getContext('2d');
     materialsChart = new Chart(ctx5, {
       type: 'line',
@@ -1298,7 +1298,7 @@
       }
     });
 
-    // Gráfico 10: Área de Absorción Equivalente por octavas (sabines)
+    // Chart 10: Equivalent absorption area per octave (sabins)
     const ctx10 = document.getElementById('sabinesChart').getContext('2d');
     sabinesChart = new Chart(ctx10, {
       type: 'bar',
@@ -1316,7 +1316,7 @@
       }
     });
 
-    // Gráfico 3: Densidad de Modos (Criterio de Bonello)
+    // Chart 3: Mode density (Bonello criterion)
     const ctx3 = document.getElementById('bonelloChart').getContext('2d');
     bonelloChart = new Chart(ctx3, {
       type: 'bar',
@@ -1335,7 +1335,7 @@
       }
     });
 
-    // Gráfico 6: SPL vs Distancia (Directo, Difuso, Total)
+    // Chart 6: SPL vs distance (direct, diffuse, total)
     const ctx6 = document.getElementById('splFieldChart').getContext('2d');
     splFieldChart = new Chart(ctx6, {
       type: 'line',
@@ -1358,7 +1358,7 @@
       }
     });
 
-    // Gráfico 7: Schroeder Transition Frequency vs RT60 sweep
+    // Chart 7: Schroeder transition frequency vs RT60 sweep
     const ctx7 = document.getElementById('schroederSweepChart').getContext('2d');
     schroederSweepChart = new Chart(ctx7, {
       type: 'line',
@@ -1379,7 +1379,7 @@
     });
   }
 
-  // ACTUALIZAR GRÁFICOS CON RESULTADOS COMPUTADOS
+  // UPDATE CHARTS WITH COMPUTED RESULTS
   function updateCharts() {
     if (!computedResults.sabineRT) return;
 
@@ -1449,7 +1449,7 @@
     const colors = [];
     for (let i = 0; i < bonelloBands.length; i++) {
       if (i > 0 && counts[i] < counts[i - 1]) {
-        // Violación de Bonello: densidad decrece
+        // Bonello violation: density decreases
         colors.push('rgba(255, 68, 68, 0.7)'); // rojo
       } else {
         colors.push('rgba(0, 229, 255, 0.6)'); // cyan
@@ -1460,8 +1460,8 @@
     bonelloChart.update();
 
     // 6. SPL Field vs Distance
-    const Lw = 100; // Nivel de potencia de referencia
-    const R = (S * alpha500) / Math.max(0.001, 1 - alpha500); // constante de sala
+    const Lw = 100; // Reference power level
+    const R = (S * alpha500) / Math.max(0.001, 1 - alpha500); // room constant
     const splDirect = [];
     const splDiffuse = [];
     const splTotal = [];
@@ -1478,7 +1478,7 @@
     splFieldChart.data.datasets[0].data = splDirect;
     splFieldChart.data.datasets[1].data = splDiffuse;
     splFieldChart.data.datasets[2].data = splTotal;
-    // Poner marcador de Dc
+    // Place the Dc marker
     const dcSPL = Lw + 10 * Math.log10(computedResults.Q / (4 * Math.PI * Dc * Dc) + 4 / R);
     splFieldChart.data.datasets[3].data = [{ x: Dc, y: dcSPL }];
     splFieldChart.update();
@@ -1505,7 +1505,7 @@
     const canvas = document.getElementById('modalSpectrumCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Configurar resoluciones lógicas vs físicas
+    // Set up logical vs physical resolutions
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * window.devicePixelRatio;
     canvas.height = rect.height * window.devicePixelRatio;
@@ -1518,7 +1518,7 @@
     ctx.fillStyle = '#e0e7ff';
     ctx.fillRect(0, 0, w, h);
 
-    // Dibujar cuadrícula y frecuencias indicadas
+    // Draw the grid and the marked frequencies
     ctx.strokeStyle = 'rgba(255,255,255,0.06)';
     ctx.lineWidth = 1;
     ctx.fillStyle = '#475569';
@@ -1531,7 +1531,7 @@
       return 40 + ((f - fMin) / (fMax - fMin)) * (w - 60);
     }
 
-    // Dibujar frecuencias guía
+    // Draw guide frequencies
     const guides = [20, 50, 100, 150, 200, 250];
     guides.forEach(f => {
       const x = fToX(f);
@@ -1550,11 +1550,11 @@
     roomModesList.forEach(m => {
       const x = fToX(m.freq);
       let color = 'var(--oblique-color)';
-      let height = h - 60; // oblicuos más pequeños
+      let height = h - 60; // oblique modes drawn smaller
       
       if (m.type === 'axial') {
         color = 'var(--axial-color)';
-        height = h - 35; // axial más altos
+        height = h - 35; // axial modes drawn taller
       } else if (m.type === 'tangential') {
         color = 'var(--tangential-color)';
         height = h - 45; // tangencial mediano
@@ -1598,7 +1598,7 @@
     ctx.fillStyle = '#e0e7ff';
     ctx.fillRect(0, 0, w, h);
 
-    // Rango de diagramas Bolt: Ancho/Alto (X) 1.0 a 3.0, Largo/Alto (Y) 1.0 a 3.0
+    // Bolt diagram range: Width/Height (X) 1.0 to 3.0, Length/Height (Y) 1.0 to 3.0
     const minVal = 1.0;
     const maxVal = 3.0;
 
@@ -1609,14 +1609,14 @@
       return [px, py];
     }
 
-    // Dibujar cuadrícula
+    // Draw the grid
     ctx.strokeStyle = 'rgba(255,255,255,0.06)';
     ctx.lineWidth = 1;
     ctx.fillStyle = '#475569';
     ctx.font = '10px Fira Code, monospace';
 
     for (let v = 1.0; v <= 3.0; v += 0.5) {
-      // Líneas horizontales (Y = L/H)
+      // Horizontal lines (Y = L/H)
       const [, py] = valToXY(1.0, v);
       ctx.beginPath();
       ctx.moveTo(40, py);
@@ -1624,7 +1624,7 @@
       ctx.stroke();
       ctx.fillText(v.toFixed(1), 12, py + 4);
 
-      // Líneas verticales (X = W/H)
+      // Vertical lines (X = W/H)
       const [px,] = valToXY(v, 1.0);
       ctx.beginPath();
       ctx.moveTo(px, 20);
@@ -1640,8 +1640,8 @@
     ctx.rotate(-Math.PI / 2);
     ctx.restore();
 
-    // Dibujar la zona óptima de Bolt
-    // Vértices del polígono de Bolt aproximados
+    // Draw the Bolt optimum area
+    // Approximate vertices of the Bolt polygon
     const boltVertices = [
       [1.2, 1.5], [1.4, 2.1], [1.6, 2.4], [1.9, 2.5],
       [1.8, 1.9], [1.5, 1.45], [1.3, 1.3]
@@ -1662,14 +1662,14 @@
     ctx.fill();
     ctx.stroke();
 
-    // Obtener relación actual de la sala
+    // Get the current room ratio
     const L = computedResults.L;
     const W = computedResults.W;
     const H = computedResults.H;
     const ratioW = W / H;
     const ratioL = L / H;
 
-    // Verificar si el punto está dentro del polígono
+    // Check whether the point is inside the polygon
     function isInside(x, y, vs) {
       let inside = false;
       for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
@@ -1683,7 +1683,7 @@
 
     const compliant = isInside(ratioW, ratioL, boltVertices);
     
-    // Graficar punto de la sala actual
+    // Plot the current room point
     const [cpx, cpy] = valToXY(ratioW, ratioL);
     
     // Halo brillante
@@ -1697,7 +1697,7 @@
     ctx.fillStyle = compliant ? 'var(--tangential-color)' : 'var(--axial-color)';
     ctx.fill();
 
-    // Textos informativos en el gráfico
+    // Informational text on the chart
     ctx.font = '11px Rajdhani, sans-serif';
     ctx.fillStyle = '#fff';
     ctx.fillText(`Current room: ${ratioW.toFixed(2)} : ${ratioL.toFixed(2)} : 1`, 48, 30);
@@ -1711,13 +1711,13 @@
   let recPos = { x: 0.70, y: 0.55 };  // receptor normalizado 0-1
   let draggingNode = null; // 'source' o 'receiver'
 
-  // Eventos de arrastre
+  // Drag events
   refCanvas.addEventListener('mousedown', (e) => {
     const rect = refCanvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
-    // Obtener variables de dibujo usadas en drawReflections
+    // Get the drawing variables used in drawReflections
     const L = computedResults.L || 6;
     const W = computedResults.W || 4.5;
     const padding = 20;
@@ -1765,7 +1765,7 @@
     let nx = (mx - xOffset) / boxW;
     let ny = (my - yOffset) / boxH;
 
-    // Mantener dentro de bordes con margen de seguridad
+    // Keep inside the edges with a safety margin
     nx = Math.max(0.02, Math.min(0.98, nx));
     ny = Math.max(0.02, Math.min(0.98, ny));
 
@@ -1817,18 +1817,18 @@
     ctx.lineWidth = 3;
     ctx.strokeRect(xOffset, yOffset, boxW, boxH);
 
-    // Nodos en pixeles de pantalla
+    // Nodes in screen pixels
     const sx = xOffset + srcPos.x * boxW;
     const sy = yOffset + srcPos.y * boxH;
     const rx = xOffset + recPos.x * boxW;
     const ry = yOffset + recPos.y * boxH;
 
-    // Calcular caminos y reflexiones físicas
+    // Compute physical paths and reflections
     // Camino directo
     const d0 = Math.hypot((recPos.x - srcPos.x) * L, (recPos.y - srcPos.y) * W);
     const t0 = (d0 / c) * 1000;
 
-    // Dibujar rayo directo (Línea verde/cian)
+    // Draw the direct ray (green/cyan line)
     ctx.beginPath();
     ctx.moveTo(sx, sy);
     ctx.lineTo(rx, ry);
@@ -1836,7 +1836,7 @@
     ctx.lineWidth = 2.5;
     ctx.stroke();
 
-    // Listado de caminos reflejados de primer orden
+    // List of first-order reflection paths
     // 1. Techo virtual / Pared Superior (y = 0)
     const dTop = Math.hypot((recPos.x - srcPos.x) * L, (recPos.y + srcPos.y) * W);
     const tTop = (dTop / c) * 1000;
@@ -1908,7 +1908,7 @@
     ctx.fillStyle = '#000';
     ctx.fillText("L", rx - 3, ry + 3);
 
-    // Actualizar lista textual de delays en el DOM
+    // Update the textual delay list in the DOM
     document.getElementById('reflPathsList').innerHTML = `
       <div class="eq-sub-row"><span>Direct Ray (S → L):</span><span class="sub-val">${d0.toFixed(2)} m (${t0.toFixed(1)} ms) [Ref]</span></div>
       <div class="eq-sub-row"><span>Floor Reflection:</span><span class="sub-val" style="color:#81c784">${dBot.toFixed(2)} m (${tBot.toFixed(1)} ms) [Δt: +${(tBot - t0).toFixed(1)} ms]</span></div>
@@ -1918,7 +1918,7 @@
     `;
   }
 
-  // GRÁFICO CASCADA DE DECAIMIENTO ESPECTRAL MODAL (CHART 9)
+  // MODAL SPECTRAL DECAY WATERFALL CHART (CHART 9)
   function drawWaterfall() {
     const canvas = document.getElementById('waterfallCanvas');
     const ctx = canvas.getContext('2d');
@@ -1938,16 +1938,16 @@
     const rtVal = computedResults.sabineAirRT ? computedResults.sabineAirRT[2] : 1.2;
     const modes = roomModesList.slice(0, 15); // Utilizar primeros 15 modos
 
-    // Puntos del eje X de frecuencia de 20 Hz a 200 Hz
+    // X-axis frequency points from 20 Hz to 200 Hz
     const steps = 120;
     const fMin = 20;
     const fMax = 200;
 
-    // Dibujar 6 rodajas de cascada (0 a 250ms, paso de 50ms)
+    // Draw 6 waterfall slices (0 to 250 ms, 50 ms step)
     for (let k = 5; k >= 0; k--) {
       const tSec = (k * 50) / 1000;
       
-      // Desplazamiento 3D isométrico simulado
+      // Simulated isometric 3D offset
       const dx = (5 - k) * 12;
       const dy = k * 14;
 
@@ -1958,28 +1958,28 @@
       for (let j = 0; j < steps; j++) {
         const f = fMin + (j / (steps - 1)) * (fMax - fMin);
         
-        // Calcular la respuesta de presión acústica sintética sumando modos resonantes
-        let magnitude = 0.05; // piso de ruido
+        // Compute the synthetic sound pressure response by summing resonant modes
+        let magnitude = 0.05; // noise floor
         
         modes.forEach(m => {
           if (m.freq > 200) return;
-          // Amortiguamiento modal en función del tiempo y RT60 del modo
+          // Modal damping as a function of time and the mode's RT60
           const decay = Math.pow(10, -3 * tSec / rtVal);
-          const Qmodal = 40; // Factor Q de resonancia modal
+          const Qmodal = 40; // Modal resonance Q factor
           const resp = decay / Math.sqrt(1 + Math.pow(Qmodal * (f / m.freq - m.freq / f), 2));
           magnitude += resp;
         });
 
-        // Convertir a dB y escalar para graficar
-        const splVal = 20 * Math.log10(magnitude + 0.005); // agregar épsilon
+        // Convert to dB and scale for plotting
+        const splVal = 20 * Math.log10(magnitude + 0.005); // add epsilon
         const yPx = (h - 90) + dy - (splVal * 1.5);
         const xPx = 40 + dx + (j / (steps - 1)) * (w - 110);
         
         points.push([xPx, yPx]);
       }
 
-      // Relleno de fondo de la rebanada para ocultar las de atrás
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)'; // color del panel
+      // Slice background fill so the slices behind stay hidden
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)'; // panel color
       ctx.beginPath();
       ctx.moveTo(points[0][0], h - 10);
       for (let i = 0; i < points.length; i++) {
@@ -1989,7 +1989,7 @@
       ctx.closePath();
       ctx.fill();
 
-      // Dibujar la línea de la curva
+      // Draw the curve line
       ctx.strokeStyle = k === 0 ? '#ff9100' : `rgba(${255 - k*40}, ${145 + k*10}, 255, ${1 - k*0.12})`;
       ctx.lineWidth = k === 0 ? 2 : 1;
       ctx.beginPath();
@@ -1999,7 +1999,7 @@
       }
       ctx.stroke();
 
-      // Etiqueta de tiempo
+      // Time label
       if (k % 2 === 0) {
         ctx.fillStyle = 'rgba(15, 23, 42, 0.5)';
         ctx.font = '9px Fira Code';
@@ -2007,7 +2007,7 @@
       }
     }
 
-    // Eje de frecuencias base
+    // Base frequency axis
     ctx.strokeStyle = 'rgba(15, 23, 42, 0.12)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -2024,7 +2024,7 @@
     });
   }
 
-  // VISUALIZACIÓN DE SALA EN 3D (THREE.JS - CHART 11)
+  // 3D ROOM VISUALIZATION (THREE.JS - CHART 11)
   let scene3D, camera3D, renderer3D, points3D, roomOutline3D, sourceMesh3D, receiverMesh3D;
   let rotX3D = -0.4, rotY3D = 0.5;
   let isDragging3D = false;
@@ -2036,7 +2036,7 @@
 
     renderer3D = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
     
-    // Obtener dimensiones correctas del contenedor
+    // Get the correct container dimensions
     const rect = container.getBoundingClientRect();
     renderer3D.setSize(rect.width, rect.height);
     
@@ -2045,12 +2045,12 @@
     camera3D = new THREE.PerspectiveCamera(45, rect.width / rect.height, 0.1, 100);
     camera3D.position.set(0, 0, 12);
 
-    // Grupo contenedor para rotación interactiva
+    // Container group for interactive rotation
     const group = new THREE.Group();
     group.name = "roomGroup";
     scene3D.add(group);
 
-    // Contorno del Cuarto (Cube 1, 1, 1 scaled dynamically to keep proportions)
+    // Room outline (cube 1, 1, 1 scaled dynamically to keep proportions)
     const boxGeom = new THREE.BoxGeometry(1, 1, 1);
     const boxMat = new THREE.MeshBasicMaterial({ 
       color: '#0066cc', 
@@ -2101,7 +2101,7 @@
     receiverMesh3D.add(recRing);
     group.add(receiverMesh3D);
 
-    // Cuadrícula de partículas de presión modal
+    // Grid of modal pressure particles
     const pGridSide = 10;
     const numParticles = pGridSide * pGridSide * pGridSide;
     const positions = new Float32Array(numParticles * 3);
@@ -2131,7 +2131,7 @@
     points3D = new THREE.Points(pGeom, pMat);
     group.add(points3D);
 
-    // Eventos de arrastre 3D
+    // 3D drag events
     container.addEventListener('mousedown', (e) => {
       isDragging3D = true;
       prevMouseX = e.clientX;
@@ -2152,7 +2152,7 @@
 
     window.addEventListener('mouseup', () => { isDragging3D = false; });
 
-    // Loop de render
+    // Render loop
     function animate() {
       requestAnimationFrame(animate);
       group.rotation.x = rotX3D;
@@ -2162,7 +2162,7 @@
     animate();
   }
 
-  // REDIMENSIONAR WEBGL AL ENTRAR EN LA PESTAÑA
+  // RESIZE WEBGL WHEN THE TAB IS OPENED
   function resize3D() {
     const container = document.getElementById('canvas3dContainer');
     const rect = container.getBoundingClientRect();
@@ -2171,16 +2171,16 @@
     camera3D.updateProjectionMatrix();
   }
 
-  // ACTUALIZAR COLORES DE PLANOS DE PRESIÓN MODAL 3D
+  // UPDATE COLORS OF THE 3D MODAL PRESSURE PLANES
   function update3DModePressure() {
     if (!points3D) return;
     
-    // Obtener las dimensiones actuales de la sala
+    // Get the current room dimensions
     const L = computedResults.L || 6;
     const W = computedResults.W || 4.5;
     const H = computedResults.H || 3;
 
-    // Escalar la caja del contorno según la escala real de la sala normalizada
+    // Scale the outline box to the normalized real room scale
     const maxDim = Math.max(L, W, H);
     
     const lScale = L / maxDim * 6;
@@ -2225,11 +2225,11 @@
           const w = z / (pGridSide - 1);
           const cosZ = Math.cos(activeR * Math.PI * w);
 
-          // Ecuación de presión estacionaria modal
+          // Modal standing-pressure equation
           const pressure = cosX * cosY * cosZ;
           const absPres = Math.abs(pressure);
 
-          // Actualizar posición de la partícula según las dimensiones del cuarto
+          // Update particle position according to the room dimensions
           positionsAttr.setXYZ(
             idx,
             (u - 0.5) * (L / maxDim * 6),
@@ -2237,9 +2237,9 @@
             (w - 0.5) * (W / maxDim * 6)
           );
 
-          // Interpolación de color:
-          // Antinodo (Presión máxima, absPres -> 1.0) => Rojo/Naranja (#ff4400)
-          // Nodo (Presión cero, absPres -> 0.0) => Azul/Cian (#00d5ff)
+          // Color interpolation:
+          // Antinode (max pressure, absPres -> 1.0) => Red/Orange (#ff4400)
+          // Node (zero pressure, absPres -> 0.0) => Blue/Cyan (#00d5ff)
           colorsAttr.setXYZ(
             idx,
             absPres * 1.0 + (1 - absPres) * 0.0,
@@ -2256,7 +2256,7 @@
     colorsAttr.needsUpdate = true;
   }
 
-  // Al redimensionar la pantalla
+  // On window resize
   window.addEventListener('resize', () => {
     if (renderer3D) {
       const tab = document.querySelector('.tab-btn.active').id;
@@ -2269,7 +2269,7 @@
     initSelectors();
     initCharts();
     init3D();
-    calc(); // Primer disparo de cálculos
+    calc(); // First calculation pass
   };
 </script>
 </body>

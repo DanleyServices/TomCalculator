@@ -646,7 +646,7 @@
           
           <h4 style="margin-top:15px; font-size:0.9rem; color:var(--accent);">Normal Modes Spectrum (&lt; 250 Hz):</h4>
           <div class="modes-list" id="lstModes">
-            <!-- Items generados dinámicamente -->
+            <!-- Dynamically generated items -->
           </div>
         </div>
       </div>
@@ -783,7 +783,7 @@
           <div class="formula-display">
             <strong>Comb Filter Ripple and Cancellation:</strong>
             $$\text{Ripple} = 20 \log_{10}\left(\frac{1+a}{1-a}\right)\text{ dB}, \quad \text{Valley} = 20 \log_{10}(1-a)\text{ dB}$$
-            $$\text{donde } a = 10^{-\Delta L/20}$$
+            $$\text{where } a = 10^{-\Delta L/20}$$
           </div>
         </div>
       </div>
@@ -1003,9 +1003,9 @@
         </div>
 
         <div class="calculator-card">
-          <h3>12. Límites de Campo de Line Array (McCarthy Ch 5)</h3>
+          <h3>12. Line Array Field Limits (McCarthy Ch 5)</h3>
           <div class="input-group">
-            <label>Altura del Line Array (H) <span id="lblArrayH">4.0 m</span></label>
+            <label>Line Array Height (H) <span id="lblArrayH">4.0 m</span></label>
             <div class="control-row">
               <input type="range" id="arrayHS" min="1" max="12" step="0.2" value="4">
               <input type="number" id="arrayHN" min="0.1" max="30" step="0.1" value="4">
@@ -1013,7 +1013,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Frecuencia de Operación <span id="lblArrayF">2000 Hz</span></label>
+            <label>Operating Frequency <span id="lblArrayF">2000 Hz</span></label>
             <div class="control-row">
               <input type="range" id="arrayFS" min="100" max="8000" step="100" value="2000">
               <input type="number" id="arrayFN" min="20" max="20000" step="10" value="2000">
@@ -1023,25 +1023,25 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Límite Campo Cercano (d_trans)</span>
+              <span class="output-label">Near Field Limit (d_trans)</span>
               <span class="output-value highlight"><span id="outDtrans">46.6</span> m</span>
             </div>
             <div class="output-row">
-              <span class="output-label">Atenuación a Distancia Oyente</span>
+              <span class="output-label">Attenuation at Listener Distance</span>
               <span class="output-value"><span id="outAttenAtD">-8.7</span> dB</span>
             </div>
           </div>
           
           <div class="formula-display">
-            <strong>Límite de Campo Cercano (Cilíndrico):</strong>
+            <strong>Near Field Limit (Cylindrical):</strong>
             $$d_{\text{trans}} = \frac{H^2 \cdot f}{2c}\text{ metros}$$
           </div>
         </div>
 
         <div class="calculator-card">
-          <h3>13. Espaciamiento Subwoofers (Sub Aliasing)</h3>
+          <h3>13. Subwoofer Spacing (Sub Aliasing)</h3>
           <div class="input-group">
-            <label>Frecuencia de Corte Alta <span id="lblSubF">100 Hz</span></label>
+            <label>High Cutoff Frequency <span id="lblSubF">100 Hz</span></label>
             <div class="control-row">
               <input type="range" id="subFS" min="40" max="250" step="5" value="100">
               <input type="number" id="subFN" min="20" max="500" step="1" value="100">
@@ -1049,7 +1049,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Ángulo de Cobertura Deseado <span id="lblSubAngle">60°</span></label>
+            <label>Desired Coverage Angle <span id="lblSubAngle">60°</span></label>
             <div class="control-row">
               <input type="range" id="subAngleS" min="10" max="120" step="5" value="60">
               <input type="number" id="subAngleN" min="5" max="180" step="1" value="60">
@@ -1059,12 +1059,12 @@
           
           <div class="output-box">
             <div class="output-row">
-              <span class="output-label">Espaciamiento Máximo Centro-Centro</span>
+              <span class="output-label">Maximum Center-to-Center Spacing</span>
               <span class="output-value highlight"><span id="outMaxSubDist">2.29</span> m</span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Límite de Espaciamiento Anti-Aliasing:</strong>
+            <strong>Anti-Aliasing Spacing Limit:</strong>
             $$d_{\text{max}} = \frac{c}{f (1 + \sin\theta_{\text{steer}})}$$
           </div>
         </div>
@@ -1087,9 +1087,9 @@
         </div>
 
         <div class="calculator-card" style="margin-bottom:0;">
-          <h3>14. Damping Factor en Bornes del Altavoz</h3>
+          <h3>14. Damping Factor at the Speaker Terminals</h3>
           <div class="input-group">
-            <label>DF del Amplificador <span id="lblAmpDf">200</span></label>
+            <label>Amplifier DF <span id="lblAmpDf">200</span></label>
             <div class="control-row">
               <input type="range" id="ampDfS" min="10" max="1000" step="10" value="200">
               <input type="number" id="ampDfN" min="1" max="10000" step="1" value="200">
@@ -1097,7 +1097,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Impedancia Altavoz (Z_spk) <span id="lblZspk">8.0 Ω</span></label>
+            <label>Speaker Impedance (Z_spk) <span id="lblZspk">8.0 Ω</span></label>
             <div class="control-row">
               <input type="range" id="zspkS" min="2" max="16" step="1" value="8">
               <input type="number" id="zspkN" min="1" max="32" step="0.1" value="8">
@@ -1105,7 +1105,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Longitud Cable (Dos vías) <span id="lblCableLen">15 m</span></label>
+            <label>Cable Length (Two-way run) <span id="lblCableLen">15 m</span></label>
             <div class="control-row">
               <input type="range" id="cableLenS" min="1" max="50" step="1" value="15">
               <input type="number" id="cableLenN" min="0.5" max="200" step="0.5" value="15">
@@ -1113,7 +1113,7 @@
             </div>
           </div>
           <div class="input-group">
-            <label>Calibre del Cable (AWG)</label>
+            <label>Cable Gauge (AWG)</label>
             <select id="cableGauge">
               <option value="10">10 AWG (5.26 mm²)</option>
               <option value="12">12 AWG (3.31 mm²)</option>
@@ -1125,16 +1125,16 @@
           
           <div class="output-box" style="margin-top: 10px;">
             <div class="output-row">
-              <span class="output-label">Resistencia Cable (R_cable)</span>
+              <span class="output-label">Cable Resistance (R_cable)</span>
               <span class="output-value"><span id="outRcable">0.248</span> Ω</span>
             </div>
             <div class="output-row">
-              <span class="output-label">DF Neto Bornes Altavoz</span>
+              <span class="output-label">Net DF at Speaker Terminals</span>
               <span class="output-value highlight"><span id="outNetDf">27.8</span></span>
             </div>
           </div>
           <div class="formula-display">
-            <strong>Factor de Amortiguamiento y Pérdida en Cable:</strong>
+            <strong>Damping Factor and Cable Loss:</strong>
             $$DF_{\text{net}} = \frac{Z_{\text{spk}}}{R_{\text{amp}} + R_{\text{cable}}}, \quad R_{\text{cable}} = \frac{2 \cdot L \cdot 0.0172}{A_{\text{wire}}}$$
           </div>
         </div>
@@ -1193,9 +1193,9 @@ const sengpielModule = {
     subAngle: 60.0
   },
   compute: function(inputs) {
-    const c = 331.3 * Math.sqrt(1 + inputs.temp / 273.15); // Velocidad del sonido
+    const c = 331.3 * Math.sqrt(1 + inputs.temp / 273.15); // Speed of sound
     
-    // 1. Grabación Estéreo Williams
+    // 1. Williams Stereo Recording
     const dMeters = inputs.micDist / 100;
     const alphaRad = (inputs.micAngle * Math.PI) / 180;
     let polarFactor = 1.0;
@@ -1674,7 +1674,7 @@ function drawRoomModesChart(modesData) {
     type: 'scatter',
     data: {
       datasets: [{
-        label: 'Resonancias de Sala (Hz)',
+        label: 'Room Resonances (Hz)',
         data: modesData.map(d => ({ x: d.f, y: 1 })),
         backgroundColor: '#0066cc',
         borderColor: '#0066cc',
@@ -1686,7 +1686,7 @@ function drawRoomModesChart(modesData) {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Frecuencia Modal (Hz)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: 20, max: 250 },
+        x: { title: { display: true, text: 'Modal Frequency (Hz)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: 20, max: 250 },
         y: { display: false }
       },
       plugins: { legend: { display: false } }
@@ -1713,7 +1713,7 @@ function drawHaasChart(dt, dl) {
     type: 'line',
     data: {
       datasets: [
-        { label: 'Límite Haas (dB)', data: curve, borderColor: '#0066cc', borderDash: [5, 3], pointRadius: 0, fill: false },
+        { label: 'Haas Limit (dB)', data: curve, borderColor: '#0066cc', borderDash: [5, 3], pointRadius: 0, fill: false },
         { label: 'Ajuste Actual', data: [{ x: dt, y: Math.abs(dl) }], backgroundColor: '#0066cc', pointRadius: 8, showLine: false }
       ]
     },
@@ -1722,7 +1722,7 @@ function drawHaasChart(dt, dl) {
       maintainAspectRatio: false,
       scales: {
         x: { title: { display: true, text: 'Retardo (ms)', color: '#fff', font: { size: 10 } }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: 0, max: 80 },
-        y: { title: { display: true, text: 'Nivel (dB)', color: '#fff', font: { size: 10 } }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: 0, max: 20 }
+        y: { title: { display: true, text: 'Level (dB)', color: '#fff', font: { size: 10 } }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: 0, max: 20 }
       },
       plugins: { legend: { display: false } }
     }
@@ -1739,7 +1739,7 @@ function drawCombChart(dtMs, dlDb) {
   const a = Math.pow(10, -dlDb / 20);
   let curve = [];
   
-  // Trazado de respuesta desde 20Hz a 4000Hz (escala lineal para ver las cancelaciones del peine)
+  // Response plot from 20 Hz to 4000 Hz (linear scale to reveal the comb cancellations)
   for (let f = 20; f <= 3000; f += 5) {
     const rVal = 10 * Math.log10(1 + a*a + 2*a*Math.cos(2*Math.PI*f*dt));
     curve.push({ x: f, y: rVal });
@@ -1761,7 +1761,7 @@ function drawCombChart(dtMs, dlDb) {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Frecuencia (Hz)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
+        x: { title: { display: true, text: 'Frequency (Hz)', color: '#0066cc' }, grid: { color: 'rgba(0, 102, 204, 0.06)' } },
         y: { title: { display: true, text: 'Amplitud (dB)', color: '#fff' }, grid: { color: 'rgba(0, 102, 204, 0.06)' }, min: -25, max: 7 }
       },
       plugins: { legend: { display: false } }
