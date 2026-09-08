@@ -498,8 +498,8 @@
     <div class="input-control">
       <label>Length (L) <span class="val" id="lVal">6.0 m</span></label>
       <div class="ctrl-row">
-        <input type="range" id="lS" min="2" max="30" step="0.1" value="6.0">
-        <input type="number" id="lN" min="1.5" max="100" step="0.05" value="6.0">
+        <input type="range" data-unit="m" id="lS" min="2" max="30" step="0.1" value="6.0">
+        <input type="number" data-unit-native="m" id="lN" min="1.5" max="100" step="0.05" value="6.0">
         <span class="lbl-unit">m</span>
       </div>
     </div>
@@ -507,8 +507,8 @@
     <div class="input-control">
       <label>Width (W) <span class="val" id="wVal">4.5 m</span></label>
       <div class="ctrl-row">
-        <input type="range" id="wS" min="2" max="25" step="0.1" value="4.5">
-        <input type="number" id="wN" min="1.5" max="100" step="0.05" value="4.5">
+        <input type="range" data-unit="m" id="wS" min="2" max="25" step="0.1" value="4.5">
+        <input type="number" data-unit-native="m" id="wN" min="1.5" max="100" step="0.05" value="4.5">
         <span class="lbl-unit">m</span>
       </div>
     </div>
@@ -516,8 +516,8 @@
     <div class="input-control">
       <label>Height (H) <span class="val" id="hVal">3.0 m</span></label>
       <div class="ctrl-row">
-        <input type="range" id="hS" min="2" max="15" step="0.1" value="3.0">
-        <input type="number" id="hN" min="1.0" max="50" step="0.05" value="3.0">
+        <input type="range" data-unit="m" id="hS" min="2" max="15" step="0.1" value="3.0">
+        <input type="number" data-unit-native="m" id="hN" min="1.0" max="50" step="0.05" value="3.0">
         <span class="lbl-unit">m</span>
       </div>
     </div>
@@ -556,8 +556,8 @@
     <div class="input-control">
       <label>Receiver Distance <span class="val" id="recDistVal">3.0 m</span></label>
       <div class="ctrl-row">
-        <input type="range" class="gold-range" id="recDistS" min="0.5" max="25" step="0.1" value="3.0">
-        <input type="number" id="recDistN" min="0.1" max="100" step="0.1" value="3.0">
+        <input type="range" data-unit="m" class="gold-range" id="recDistS" min="0.5" max="25" step="0.1" value="3.0">
+        <input type="number" data-unit-native="m" id="recDistN" min="0.1" max="100" step="0.1" value="3.0">
         <span class="lbl-unit">m</span>
       </div>
     </div>
@@ -2272,5 +2272,6 @@
     calc(); // First calculation pass
   };
 </script>
+<script src="units.js"></script>
 </body>
 </html>

@@ -924,7 +924,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Particle Velocity Amplitude (u₀) [cm/s]</label>
-                            <input type="range" id="velPlane" min="0.1" max="10" step="0.1" value="2">
+                            <input type="range" data-unit="cm/s" id="velPlane" min="0.1" max="10" step="0.1" value="2">
                             <div class="control-value"><span id="velPlaneVal">2.0</span> cm/s</div>
                         </div>
                     </div>
@@ -956,7 +956,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Distance from source (r) [meters]</label>
-                            <input type="range" id="distSphere" min="0.01" max="2" step="0.01" value="0.1">
+                            <input type="range" data-unit="m" id="distSphere" min="0.01" max="2" step="0.01" value="0.1">
                             <div class="control-value"><span id="distSphereVal">0.10</span> m</div>
                         </div>
                     </div>
@@ -1120,17 +1120,17 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Source Velocity [m/s]</label>
-                            <input type="range" id="dopSrc" min="-80" max="80" step="1" value="30">
+                            <input type="range" data-unit="m/s" id="dopSrc" min="-80" max="80" step="1" value="30">
                             <div class="control-value"><span id="dopSrcVal">30</span> m/s</div>
                         </div>
                         <div class="control-group">
                             <label>Observer Velocity [m/s]</label>
-                            <input type="range" id="dopObs" min="-80" max="80" step="1" value="0">
+                            <input type="range" data-unit="m/s" id="dopObs" min="-80" max="80" step="1" value="0">
                             <div class="control-value"><span id="dopObsVal">0</span> m/s</div>
                         </div>
                         <div class="control-group">
                             <label>Wind [m/s]</label>
-                            <input type="range" id="dopWind" min="-30" max="30" step="1" value="0">
+                            <input type="range" data-unit="m/s" id="dopWind" min="-30" max="30" step="1" value="0">
                             <div class="control-value"><span id="dopWindVal">0</span> m/s</div>
                         </div>
                     </div>
@@ -1163,7 +1163,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Obstacle Size [m]</label>
-                            <input type="range" id="refSize" min="0.1" max="5" step="0.1" value="1">
+                            <input type="range" data-unit="m" id="refSize" min="0.1" max="5" step="0.1" value="1">
                             <div class="control-value"><span id="refSizeVal">1</span> m</div>
                         </div>
                     </div>
@@ -2105,7 +2105,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Length (l) [Meters]</label>
-                            <input type="range" id="barLength" min="0.1" max="1.0" step="0.05" value="0.5">
+                            <input type="range" data-unit="m" id="barLength" min="0.1" max="1.0" step="0.05" value="0.5">
                             <div class="control-value"><span id="barLengthVal">0.5</span> m</div>
                         </div>
                     </div>
@@ -2172,12 +2172,12 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Thickness t [mm]</label>
-                            <input type="range" id="plateT" min="0.5" max="20" step="0.5" value="3">
+                            <input type="range" data-unit="mm" id="plateT" min="0.5" max="20" step="0.5" value="3">
                             <div class="control-value"><span id="plateTVal">3</span> mm</div>
                         </div>
                         <div class="control-group">
                             <label>Radius R [cm]</label>
-                            <input type="range" id="plateR" min="2" max="40" step="1" value="10">
+                            <input type="range" data-unit="cm" id="plateR" min="2" max="40" step="1" value="10">
                             <div class="control-value"><span id="plateRVal">10</span> cm</div>
                         </div>
                     </div>
@@ -2210,7 +2210,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Bar Length l [cm]</label>
-                            <input type="range" id="barLen" min="5" max="200" step="1" value="50">
+                            <input type="range" data-unit="cm" id="barLen" min="5" max="200" step="1" value="50">
                             <div class="control-value"><span id="barLenVal">50</span> cm</div>
                         </div>
                     </div>
@@ -2243,7 +2243,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Bar Length l [cm]</label>
-                            <input type="range" id="torLen" min="5" max="200" step="1" value="50">
+                            <input type="range" data-unit="cm" id="torLen" min="5" max="200" step="1" value="50">
                             <div class="control-value"><span id="torLenVal">50</span> cm</div>
                         </div>
                         <div class="control-group">
@@ -2281,12 +2281,12 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Pipe Length l [cm]</label>
-                            <input type="range" id="pipeLen" min="10" max="300" step="5" value="100">
+                            <input type="range" data-unit="cm" id="pipeLen" min="10" max="300" step="5" value="100">
                             <div class="control-value"><span id="pipeLenVal">100</span> cm</div>
                         </div>
                         <div class="control-group">
                             <label>Pipe Radius R [cm]</label>
-                            <input type="range" id="pipeRad" min="0.5" max="15" step="0.5" value="3">
+                            <input type="range" data-unit="cm" id="pipeRad" min="0.5" max="15" step="0.5" value="3">
                             <div class="control-value"><span id="pipeRadVal">3</span> cm</div>
                         </div>
                     </div>
@@ -2428,12 +2428,12 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Tube Length l [cm]</label>
-                            <input type="range" id="inertLen" min="1" max="60" step="1" value="12">
+                            <input type="range" data-unit="cm" id="inertLen" min="1" max="60" step="1" value="12">
                             <div class="control-value"><span id="inertLenVal">12</span> cm</div>
                         </div>
                         <div class="control-group">
                             <label>Tube Radius R [cm]</label>
-                            <input type="range" id="inertRad" min="0.5" max="12" step="0.5" value="4">
+                            <input type="range" data-unit="cm" id="inertRad" min="0.5" max="12" step="0.5" value="4">
                             <div class="control-value"><span id="inertRadVal">4</span> cm</div>
                         </div>
                     </div>
@@ -2466,7 +2466,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Enclosed Volume V [litres]</label>
-                            <input type="range" id="compVol" min="1" max="200" step="1" value="20">
+                            <input type="range" data-unit="L" id="compVol" min="1" max="200" step="1" value="20">
                             <div class="control-value"><span id="compVolVal">20</span> L</div>
                         </div>
                     </div>
@@ -2606,12 +2606,12 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Tube Radius R [mm]</label>
-                            <input type="range" id="c5TubeR" min="0.1" max="5" step="0.1" value="1">
+                            <input type="range" data-unit="mm" id="c5TubeR" min="0.1" max="5" step="0.1" value="1">
                             <div class="control-value"><span id="c5TubeRVal">1</span> mm</div>
                         </div>
                         <div class="control-group">
                             <label>Tube Length l [cm]</label>
-                            <input type="range" id="c5TubeL" min="0.1" max="10" step="0.1" value="2">
+                            <input type="range" data-unit="cm" id="c5TubeL" min="0.1" max="10" step="0.1" value="2">
                             <div class="control-value"><span id="c5TubeLVal">2</span> cm</div>
                         </div>
                     </div>
@@ -2644,7 +2644,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Slit Thickness t [mm]</label>
-                            <input type="range" id="c5SlitT" min="0.02" max="1" step="0.02" value="0.2">
+                            <input type="range" data-unit="mm" id="c5SlitT" min="0.02" max="1" step="0.02" value="0.2">
                             <div class="control-value"><span id="c5SlitTVal">0.2</span> mm</div>
                         </div>
                     </div>
@@ -2752,7 +2752,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Piston Radius a [cm]</label>
-                            <input type="range" id="c5PistonA" min="1" max="30" step="1" value="10">
+                            <input type="range" data-unit="cm" id="c5PistonA" min="1" max="30" step="1" value="10">
                             <div class="control-value"><span id="c5PistonAVal">10</span> cm</div>
                         </div>
                     </div>
@@ -2935,12 +2935,12 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Orifice Radius a [cm]</label>
-                            <input type="range" id="c5OrificeA" min="0.2" max="8" step="0.1" value="2">
+                            <input type="range" data-unit="cm" id="c5OrificeA" min="0.2" max="8" step="0.1" value="2">
                             <div class="control-value"><span id="c5OrificeAVal">2</span> cm</div>
                         </div>
                         <div class="control-group">
                             <label>Wall Thickness l [cm]</label>
-                            <input type="range" id="c5OrificeL" min="0" max="10" step="0.5" value="1">
+                            <input type="range" data-unit="cm" id="c5OrificeL" min="0" max="10" step="0.5" value="1">
                             <div class="control-value"><span id="c5OrificeLVal">1</span> cm</div>
                         </div>
                     </div>
@@ -3061,7 +3061,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Throat Area S&#8321; [cm&sup2;]</label>
-                            <input type="range" id="cylArea" min="1" max="100" step="1" value="10">
+                            <input type="range" data-unit="cm2" id="cylArea" min="1" max="100" step="1" value="10">
                             <div class="control-value"><span id="cylAreaVal">10</span> cm&sup2;</div>
                         </div>
                     </div>
@@ -3096,7 +3096,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Throat Distance x&#8321; [cm]</label>
-                            <input type="range" id="parX1" min="1" max="60" step="1" value="10">
+                            <input type="range" data-unit="cm" id="parX1" min="1" max="60" step="1" value="10">
                             <div class="control-value"><span id="parX1Val">10</span> cm</div>
                         </div>
                     </div>
@@ -3129,7 +3129,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Distance to Apex (r) [Meters]</label>
-                            <input type="range" id="distApex" min="0.1" max="2.0" step="0.1" value="0.5">
+                            <input type="range" data-unit="m" id="distApex" min="0.1" max="2.0" step="0.1" value="0.5">
                             <div class="control-value"><span id="distApexVal">0.5</span> m</div>
                         </div>
                     </div>
@@ -3265,12 +3265,12 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Pipe Length l [cm]</label>
-                            <input type="range" id="finCylLen" min="10" max="200" step="5" value="50">
+                            <input type="range" data-unit="cm" id="finCylLen" min="10" max="200" step="5" value="50">
                             <div class="control-value"><span id="finCylLenVal">50</span> cm</div>
                         </div>
                         <div class="control-group">
                             <label>Pipe Radius a [cm]</label>
-                            <input type="range" id="finCylRad" min="1" max="15" step="0.5" value="5">
+                            <input type="range" data-unit="cm" id="finCylRad" min="1" max="15" step="0.5" value="5">
                             <div class="control-value"><span id="finCylRadVal">5.0</span> cm</div>
                         </div>
                     </div>
@@ -3305,12 +3305,12 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Horn Length l [cm]</label>
-                            <input type="range" id="finConLen" min="20" max="250" step="5" value="100">
+                            <input type="range" data-unit="cm" id="finConLen" min="20" max="250" step="5" value="100">
                             <div class="control-value"><span id="finConLenVal">100</span> cm</div>
                         </div>
                         <div class="control-group">
                             <label>Throat Distance from Apex x&#8321; [cm]</label>
-                            <input type="range" id="finConX1" min="1" max="40" step="1" value="10">
+                            <input type="range" data-unit="cm" id="finConX1" min="1" max="40" step="1" value="10">
                             <div class="control-value"><span id="finConX1Val">10</span> cm</div>
                         </div>
                     </div>
@@ -3338,7 +3338,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Horn Length (Meters)</label>
-                            <input type="range" id="finiteLength" min="0.5" max="3.0" step="0.1" value="1.0">
+                            <input type="range" data-unit="m" id="finiteLength" min="0.5" max="3.0" step="0.1" value="1.0">
                             <div class="control-value"><span id="finiteLengthVal">1.0</span> m</div>
                         </div>
                     </div>
@@ -3367,7 +3367,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Horn Length L [m]</label>
-                            <input type="range" id="c5FtLen" min="0.3" max="4" step="0.1" value="1.5">
+                            <input type="range" data-unit="m" id="c5FtLen" min="0.3" max="4" step="0.1" value="1.5">
                             <div class="control-value"><span id="c5FtLenVal">1.5</span> m</div>
                         </div>
                         <div class="control-group">
@@ -3455,7 +3455,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Pipe Length l [cm]</label>
-                            <input type="range" id="c5CpLen" min="5" max="200" step="5" value="50">
+                            <input type="range" data-unit="cm" id="c5CpLen" min="5" max="200" step="5" value="50">
                             <div class="control-value"><span id="c5CpLenVal">50</span> cm</div>
                         </div>
                     </div>
@@ -3551,7 +3551,7 @@
                         </div>
                         <div class="control-group">
                             <label>Section Length [cm]</label>
-                            <input type="range" id="c5TpLen" min="5" max="150" step="5" value="30">
+                            <input type="range" data-unit="cm" id="c5TpLen" min="5" max="150" step="5" value="30">
                             <div class="control-value"><span id="c5TpLenVal">30</span> cm</div>
                         </div>
                     </div>
@@ -3907,7 +3907,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Baffle Size (Meters)</label>
-                            <input type="range" id="baffleSize" min="0.2" max="3.0" step="0.1" value="1.0">
+                            <input type="range" data-unit="m" id="baffleSize" min="0.2" max="3.0" step="0.1" value="1.0">
                             <div class="control-value"><span id="baffleSizeVal">1.0</span> m</div>
                         </div>
                     </div>
@@ -3978,7 +3978,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Box Volume V [litres]</label>
-                            <input type="range" id="sealVol" min="5" max="300" step="5" value="50">
+                            <input type="range" data-unit="L" id="sealVol" min="5" max="300" step="5" value="50">
                             <div class="control-value"><span id="sealVolVal">50</span> L</div>
                         </div>
                         <div class="control-group">
@@ -4048,17 +4048,17 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Box Volume V [litres]</label>
-                            <input type="range" id="brVol" min="10" max="400" step="5" value="80">
+                            <input type="range" data-unit="L" id="brVol" min="10" max="400" step="5" value="80">
                             <div class="control-value"><span id="brVolVal">80</span> L</div>
                         </div>
                         <div class="control-group">
                             <label>Port Diameter [cm]</label>
-                            <input type="range" id="brPortD" min="2" max="20" step="0.5" value="8">
+                            <input type="range" data-unit="cm" id="brPortD" min="2" max="20" step="0.5" value="8">
                             <div class="control-value"><span id="brPortDVal">8.0</span> cm</div>
                         </div>
                         <div class="control-group">
                             <label>Port Length [cm]</label>
-                            <input type="range" id="brPortL" min="1" max="40" step="1" value="12">
+                            <input type="range" data-unit="cm" id="brPortL" min="1" max="40" step="1" value="12">
                             <div class="control-value"><span id="brPortLVal">12</span> cm</div>
                         </div>
                     </div>
@@ -4098,7 +4098,7 @@
                         </div>
                         <div class="control-group">
                             <label>Box Volume V [litres]</label>
-                            <input type="range" id="drnVol" min="10" max="400" step="10" value="200">
+                            <input type="range" data-unit="L" id="drnVol" min="10" max="400" step="10" value="200">
                             <div class="control-value"><span id="drnVolVal">200</span> L</div>
                         </div>
                     </div>
@@ -4134,7 +4134,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Labyrinth Length L [m]</label>
-                            <input type="range" id="labLen" min="0.5" max="4.0" step="0.1" value="1.8">
+                            <input type="range" data-unit="m" id="labLen" min="0.5" max="4.0" step="0.1" value="1.8">
                             <div class="control-value"><span id="labLenVal">1.8</span> m</div>
                         </div>
                         <div class="control-group">
@@ -4712,7 +4712,7 @@
                         </div>
                         <div class="control-group">
                             <label>Voice Coil Length l [cm]</label>
-                            <input type="range" id="hornL" min="100" max="1500" step="10" value="600">
+                            <input type="range" data-unit="cm" id="hornL" min="100" max="1500" step="10" value="600">
                             <div class="control-value"><span id="hornLVal">600</span> cm</div>
                         </div>
                         <div class="control-group">
@@ -4762,7 +4762,7 @@
                         </div>
                         <div class="control-group">
                             <label>Horn Length x [m]</label>
-                            <input type="range" id="distLen" min="0.3" max="4.0" step="0.1" value="1.5">
+                            <input type="range" data-unit="m" id="distLen" min="0.3" max="4.0" step="0.1" value="1.5">
                             <div class="control-value"><span id="distLenVal">1.5</span> m</div>
                         </div>
                     </div>
@@ -4932,7 +4932,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Diaphragm Diameter [mm]</label>
-                            <input type="range" id="c8PressD" min="3" max="50" step="1" value="12">
+                            <input type="range" data-unit="mm" id="c8PressD" min="3" max="50" step="1" value="12">
                             <div class="control-value"><span id="c8PressDVal">12</span> mm</div>
                         </div>
                     </div>
@@ -5933,7 +5933,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Separation d [cm]</label>
-                            <input type="range" id="c10CalD" min="10" max="300" step="5" value="100">
+                            <input type="range" data-unit="cm" id="c10CalD" min="10" max="300" step="5" value="100">
                             <div class="control-value"><span id="c10CalDVal">100</span> cm</div>
                         </div>
                         <div class="control-group">
@@ -6230,7 +6230,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Room Volume [m&sup3;]</label>
-                            <input type="range" id="c10AbsVol" min="50" max="1000" step="25" value="200">
+                            <input type="range" data-unit="m3" id="c10AbsVol" min="50" max="1000" step="25" value="200">
                             <div class="control-value"><span id="c10AbsVolVal">200</span> m&sup3;</div>
                         </div>
                         <div class="control-group">
@@ -6562,7 +6562,7 @@
                     <div class="controls">
                         <div class="control-group">
                             <label>Room Volume [m&sup3;]</label>
-                            <input type="range" id="collVol" min="50" max="5000" step="50" value="500">
+                            <input type="range" data-unit="m3" id="collVol" min="50" max="5000" step="50" value="500">
                             <div class="control-value"><span id="collVolVal">500</span> m&sup3;</div>
                         </div>
                         <div class="control-group">
@@ -11389,5 +11389,6 @@
             });
         });
     </script>
+<script src="units.js"></script>
 </body>
 </html>

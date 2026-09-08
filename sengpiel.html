@@ -463,8 +463,8 @@
           <div class="input-group">
             <label>Distance between Mics (d) <span id="lblMicDist">17.0 cm</span></label>
             <div class="control-row">
-              <input type="range" id="micDistS" min="0" max="100" step="1" value="17">
-              <input type="number" id="micDistN" min="0" max="300" step="0.5" value="17">
+              <input type="range" data-unit="cm" id="micDistS" min="0" max="100" step="1" value="17">
+              <input type="number" data-unit-native="cm" id="micDistN" min="0" max="300" step="0.5" value="17">
               <span class="unit">cm</span>
             </div>
           </div>
@@ -516,8 +516,8 @@
           <div class="input-group">
             <label>Mid/Side Gain Ratio <span id="lblMsRatio">1.0</span></label>
             <div class="control-row">
-              <input type="range" id="msRatioS" min="0.1" max="3.0" step="0.1" value="1.0">
-              <input type="number" id="msRatioN" min="0" max="10" step="0.05" value="1.0">
+              <input type="range" data-unit="m/s" id="msRatioS" min="0.1" max="3.0" step="0.1" value="1.0">
+              <input type="number" data-unit-native="m/s" id="msRatioN" min="0" max="10" step="0.05" value="1.0">
               <span class="unit">M/S</span>
             </div>
           </div>
@@ -611,24 +611,24 @@
           <div class="input-group">
             <label>Room Length (L) <span id="lblRoomL">6.0 m</span></label>
             <div class="control-row">
-              <input type="range" id="roomLS" min="2" max="30" step="0.5" value="6">
-              <input type="number" id="roomLN" min="1" max="100" step="0.1" value="6">
+              <input type="range" data-unit="m" id="roomLS" min="2" max="30" step="0.5" value="6">
+              <input type="number" data-unit-native="m" id="roomLN" min="1" max="100" step="0.1" value="6">
               <span class="unit">m</span>
             </div>
           </div>
           <div class="input-group">
             <label>Room Width (W) <span id="lblRoomW">4.5 m</span></label>
             <div class="control-row">
-              <input type="range" id="roomWS" min="2" max="25" step="0.5" value="4.5">
-              <input type="number" id="roomWN" min="1" max="100" step="0.1" value="4.5">
+              <input type="range" data-unit="m" id="roomWS" min="2" max="25" step="0.5" value="4.5">
+              <input type="number" data-unit-native="m" id="roomWN" min="1" max="100" step="0.1" value="4.5">
               <span class="unit">m</span>
             </div>
           </div>
           <div class="input-group">
             <label>Room Height (H) <span id="lblRoomH">3.0 m</span></label>
             <div class="control-row">
-              <input type="range" id="roomHS" min="2" max="15" step="0.1" value="3">
-              <input type="number" id="roomHN" min="1" max="50" step="0.1" value="3">
+              <input type="range" data-unit="m" id="roomHS" min="2" max="15" step="0.1" value="3">
+              <input type="number" data-unit-native="m" id="roomHN" min="1" max="50" step="0.1" value="3">
               <span class="unit">m</span>
             </div>
           </div>
@@ -976,8 +976,8 @@
           <div class="input-group">
             <label>Listener Distance <span id="lblSysDist">30 m</span></label>
             <div class="control-row">
-              <input type="range" id="sysDistS" min="1" max="150" step="1" value="30">
-              <input type="number" id="sysDistN" min="0.5" max="1000" step="0.5" value="30">
+              <input type="range" data-unit="m" id="sysDistS" min="1" max="150" step="1" value="30">
+              <input type="number" data-unit-native="m" id="sysDistN" min="0.5" max="1000" step="0.5" value="30">
               <span class="unit">m</span>
             </div>
           </div>
@@ -1007,8 +1007,8 @@
           <div class="input-group">
             <label>Line Array Height (H) <span id="lblArrayH">4.0 m</span></label>
             <div class="control-row">
-              <input type="range" id="arrayHS" min="1" max="12" step="0.2" value="4">
-              <input type="number" id="arrayHN" min="0.1" max="30" step="0.1" value="4">
+              <input type="range" data-unit="m" id="arrayHS" min="1" max="12" step="0.2" value="4">
+              <input type="number" data-unit-native="m" id="arrayHN" min="0.1" max="30" step="0.1" value="4">
               <span class="unit">m</span>
             </div>
           </div>
@@ -1107,8 +1107,8 @@
           <div class="input-group">
             <label>Cable Length (Two-way run) <span id="lblCableLen">15 m</span></label>
             <div class="control-row">
-              <input type="range" id="cableLenS" min="1" max="50" step="1" value="15">
-              <input type="number" id="cableLenN" min="0.5" max="200" step="0.5" value="15">
+              <input type="range" data-unit="m" id="cableLenS" min="1" max="50" step="1" value="15">
+              <input type="number" data-unit-native="m" id="cableLenN" min="0.5" max="200" step="0.5" value="15">
               <span class="unit">m</span>
             </div>
           </div>
@@ -2072,5 +2072,6 @@ initThree();
 updateAll();
 drawRoomModesChart(sengpielModule.compute(sengpielModule.inputs).modes);
 </script>
+<script src="units.js"></script>
 </body>
 </html>
